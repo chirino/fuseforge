@@ -1,0 +1,15 @@
+<p>
+  <b>Name:</b>
+  <%=h @prospective_project_member.user.full_name %>
+</p>
+<p>
+  <b>Comments:</b>
+  <%=h @prospective_project_member.comment %>
+</p>
+
+
+<%= link_to 'Accept', project_prospective_project_member_path(:project_id => @project,
+     :id => @prospective_project_member), :method => :put %> |
+<%= link_to 'Deny', project_prospective_project_member_path(:project_id => @project,
+     :id => @prospective_project_member), :confirm => 'Are you sure?', :method => :delete %> |
+<%= link_to 'Back', project_prospective_project_members_path(@project) %>

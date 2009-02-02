@@ -1,0 +1,31 @@
+<div id="project-header">
+	<%= image_tag @unapproved_project.image.url(:medium) %>
+	<div id="project-heading">
+    <h2><%= @unapproved_project.name -%></h2>
+  </div>
+  <div id="project-attributes">
+	  <ul>
+      <% if @unapproved_project.is_private? %>
+      <li><strong>*** Private ***</strong></li>
+      <% end %>
+	    <li>Status: <%= @unapproved_project.status.name -%></li>
+	    <li>Maturity: <%= @unapproved_project.maturity.name -%></li>
+	    <li>Created By: <%= @unapproved_project.created_by.full_name -%></li>
+	  </ul>
+	</div>
+</div>	
+<div style="clear:both;"></div>
+<div id="left-column">
+	<div class="section">
+    <h3>Description</h3>
+    <p><%= sanitize @unapproved_project.description %></p>
+	</div>
+</div>
+<div id="right-column">
+	<%= link_to 'Approve Project', unapproved_project_path(@unapproved_project), :confirm => 'Are you sure?', :method => :put %>
+  <br />
+	<%= link_to 'Remove Project', unapproved_project_path(@unapproved_project), :confirm => 'Are you sure?', :method => :delete %>
+</div>
+<div style="clear:both;">
+  <%= link_to 'Back', unapproved_projects_path %>
+</div>

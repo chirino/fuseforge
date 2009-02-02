@@ -1,0 +1,13 @@
+<p>
+  <b>Project:</b>
+  <%=h @featured_project.project_id %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @featured_project.position %>
+</p>
+
+
+<%= link_to 'Edit', edit_featured_project_path(@featured_project) %> |
+<%= link_to 'Back', featured_projects_path %>

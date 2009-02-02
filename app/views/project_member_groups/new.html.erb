@@ -1,0 +1,20 @@
+<div class="wrapper">
+  <div class="section">
+    <h2>Add Crowd Member Group to <%= h @project.name -%></h2>
+
+    <% form_for( [@project, @project_member_group] ) do |f| %>
+      <%= f.error_messages %>
+
+      <p>
+        <%= f.label :name %><br />
+        <%= f.select :name, options_for_select, { :prompt => true } %>
+      </p>
+      <p>
+        <%= f.submit "Add" %>
+      </p>
+    <% end %>
+  </div>
+  <p>
+    <%= link_to 'Back', project_project_member_groups_path(:project_id => @project) %>
+  </p>
+</div>

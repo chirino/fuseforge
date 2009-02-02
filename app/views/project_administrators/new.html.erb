@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <div class="section">
+    <h2>Add Administrator to <%= h @project.name -%></h2>
+    <% form_tag( project_project_administrators_path(@project), :method => :post) do %>
+      <p>
+        <label>User Login</label><br />
+        <%= text_field_tag 'login', @login %>
+      </p>
+      <p>
+        <%= submit_tag "Add" %>
+      </p>
+    <% end %>
+  </div>
+  <p>
+    <%= link_to 'Back', project_project_administrators_path(:project_id => @project) %>
+  </p>
+</div>

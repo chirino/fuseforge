@@ -1,0 +1,11 @@
+<h1>Editing Project Maturity</h1>
+
+<% form_for(@project_maturity) do |f| %>
+  <%= render :partial => 'form', :object => f %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @project_maturity %> |
+<%= link_to 'Back', project_maturities_path %>

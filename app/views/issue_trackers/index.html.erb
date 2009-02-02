@@ -1,0 +1,26 @@
+<h1>Listing issue_trackers</h1>
+
+<table>
+  <tr>
+    <th>Project</th>
+    <th>Active</th>
+    <th>Use internal</th>
+    <th>External url</th>
+  </tr>
+
+<% for issue_tracker in @issue_trackers %>
+  <tr>
+    <td><%=h issue_tracker.project_id %></td>
+    <td><%=h issue_tracker.active %></td>
+    <td><%=h issue_tracker.use_internal %></td>
+    <td><%=h issue_tracker.external_url %></td>
+    <td><%= link_to 'Show', issue_tracker %></td>
+    <td><%= link_to 'Edit', edit_issue_tracker_path(issue_tracker) %></td>
+    <td><%= link_to 'Destroy', issue_tracker, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<%= link_to 'New issue_tracker', new_issue_tracker_path %>

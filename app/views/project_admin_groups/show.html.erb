@@ -1,0 +1,37 @@
+<div class="wrapper">
+  <div class="two_column section">
+    <h2>Admin Group for <%= h @project.name -%></h2>
+    <p>
+      <b>Name:</b>
+      <%=h @project_admin_group.name %>
+    </p>
+    <p>
+      <b>Created by:</b>
+      <%=h @project_admin_group.created_by.full_name %>
+    </p>
+    <p>
+      <b>Updated by:</b>
+      <%=h @project_admin_group.updated_by.full_name %>
+    </p>
+  </div>
+  <div class="two_column section">
+    <h2>Users in this Group</h2>
+
+    <table>
+      <tr>
+        <th>Login Name</th>
+      </tr>
+
+    <% @project_admin_group.user_names.sort.each do |name| %>
+      <tr>
+        <td><%=h name -%></td>
+      </tr>
+    <% end %>
+    </table>
+  </div>
+  <p>
+    <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+    <%= link_to 'Back to Project Admin Groups', project_project_admin_groups_path(:project_id => @project) %>
+    <% end %>
+  </p>
+</div>

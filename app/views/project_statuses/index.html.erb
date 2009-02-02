@@ -1,0 +1,17 @@
+<h1>Listing Project Statuses</h1>
+
+<div id="project_statuses">
+  <ul id="sortable_list">
+    <% @project_statuses.each do |project_status| %>	
+    <li id="project_status_<%= project_status.id %>">
+      <%= project_status.name -%>
+      <%= link_to 'Edit', edit_project_status_path(project_status) %>
+      <%= link_to 'Destroy', project_status_path(project_status), :confirm => 'Are you sure?', :method => :delete -%>
+    </li>  
+    <% end %>
+  </ul>
+</div>
+
+<%= sortable_element('sortable_list', :url => {:action => :update_positions}) %>
+<br />
+<%= link_to 'New Project Status', new_project_status_path %>

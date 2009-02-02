@@ -1,0 +1,4 @@
+<div id="flash">
+  <%= content_tag('div', h(flash[:notice]), :class => 'notice', :id => 'notice') if flash[:notice] %>
+  <%= content_tag('div', h(flash[:error]), :class => 'notice error', :id => 'error') if flash[:error] %>
+</div>

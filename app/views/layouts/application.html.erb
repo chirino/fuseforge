@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>FUSEForge by FUSESource</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_link_tag 'basic' %>
+    <%= javascript_include_tag :defaults %>
+    <%= yield :script %>
+  </head>
+  <body>
+    <div id="header">
+      <div class="wrapper">
+        <%= link_to(image_tag('fuseforge-logo.png'), '/', :alt => 'FUSE Forge Community') -%>
+        <ul>
+          <li> <b><%= link_to 'Register!', "#{FUSESOURCE_URL}register" -%></b></li>
+          <% if logged_in? %>
+          <li id="loggedIn">
+            <span id="greeting">Welcome <%= current_user.full_name -%></span>, 
+            <%= link_to 'Log Out', session_path, :method => :delete %>
+          </li>
+          <% else %>
+          <li id="loggedOut">
+            <%= link_to 'Log in', new_session_path -%>
+          </li>
+          <% end %>
+        </ul>
+        <!-- this actually points to the fusesource custom google search engine as a placeholder.  We need to replace this with the code
+             for the fuseforge custom google search engine when it gets created.  -->
+        <form id="searchbox_001819255554683003878:rafxkr0azge" action="/search-results">
+          <div>
+            <input type="hidden" name="cx" value="001819255554683003878:rafxkr0azge">
+            <input type="hidden" name="cof" value="FORID:11">
+            <input name="q" type="text" size="20">
+            <input type="submit" name="sa" value="Search">
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="navigation">
+    	<div class="wrapper">
+    		<ul>
+    			<li class="home"><%= link_to 'Home', '/' -%></li>
+	        <li><%= link_to 'Projects', projects_path -%></li>
+	        <li><%= link_to 'Search', projects_path(:show_search_form => true) -%></li>
+	        <li><%= link_to 'Forums', '/phpBB3/index.php', :popup => true -%></li>
+	        <li><%= link_to 'Create', new_project_path -%></li>
+		      <% allow :user => :is_site_admin? do %>
+		      <li><%= link_to 'Admin', admin_path -%></li>
+		      <% end %>
+	        <li><a href="#">Help</a></li>
+    		</ul>
+    	</div>
+    </div>    
+    <div id="content">
+      <%= render :partial => 'shared/flash_msg' %>
+      <%= yield %>
+      <div style="clear:both"></div>
+    </div>
+
+    <div id="footer_center"></div>
+    <div id="footer_right"></div>
+    <div id="footer_left"></div>
+    <div id="footer">
+    	<div class="wrapper">
+    		<p id="copyright">
+    		  Copyright &copy; 2008 <a href="http://fusesource.com">FUSE Source</a> | 
+    		  <a href="/contact">Contact Us</a> | 
+    		  <a href="/about-this-site/">About This Site</a> | 
+    		  <a href="/about-this-site/legal-terms-and-privacy-policy">Legal Terms and Privacy Policy</a> | 
+    		  <a href="/about-this-site/site-index/">Site Index</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp
+    		</p>
+        <p>IONA Technologies is a wholly owned subsidiary of Progress Software</p>
+    	</div>
+    </div>
+  </body>
+</html>

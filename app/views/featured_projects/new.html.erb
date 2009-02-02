@@ -1,0 +1,19 @@
+<h1>New Featured Project</h1>
+
+<% form_for(@featured_project) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :project_id %><br />
+    <%= f.select :project_id, Project.unfeatured_options_for_select, { :prompt => 'Select a project' } %>
+  </p>
+  <p>
+    <%= f.label :position %><br />
+    <%= f.text_field :position %>
+  </p>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', featured_projects_path %>

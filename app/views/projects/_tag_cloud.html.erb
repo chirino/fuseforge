@@ -1,0 +1,10 @@
+<div id="tag_cloud" class="section">
+  <h3>Tag Cloud</h3>
+  <% if @tags.empty? -%>
+  <p>No tags :/</p>
+  <% else -%>
+    <% tag_cloud(@tags, @levels) do |tag, level| -%>
+      <%= link_to tag.name, projects_path(:tag => tag.name, :show_search_form => true), :class => level -%>
+    <% end -%>
+  <% end -%>
+</div>  

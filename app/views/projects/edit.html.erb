@@ -1,0 +1,13 @@
+<%= render :partial => 'js_validation' %>
+<div class="wrapper">
+  <h1>Editing <%= @project.name -%></h1>
+  <% form_for(@project, :html => { :multipart => true, :onsubmit => 'return validate_form()' }) do |f| %>
+    <%= render :partial => 'form', :object => f %>
+    <p>
+      <%= f.submit "Update" %>
+    </p>
+  <% end %>
+
+  <%= link_to 'Show', @project %> |
+  <%= link_to 'Back to Project Administration', project_administration_path(@project) %>
+</div>

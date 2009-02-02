@@ -1,0 +1,20 @@
+<h1>Editing featured_project</h1>
+
+<% form_for(@featured_project) do |f| %>
+  <%= f.error_messages %>
+
+  <p>
+    <%= f.label :project_id %><br />
+    <%= f.text_field :project_id %>
+  </p>
+  <p>
+    <%= f.label :position %><br />
+    <%= f.text_field :position %>
+  </p>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @featured_project %> |
+<%= link_to 'Back', featured_projects_path %>

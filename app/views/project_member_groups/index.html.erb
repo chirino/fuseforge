@@ -1,0 +1,37 @@
+<div class="wrapper">
+  <div class="section">
+    <h2>Listing Member Groups of <%= @project.name -%></h2>
+
+    <table>
+      <tr>
+        <th>Name</th>
+      </tr>
+
+    <% @project_member_groups.each do |group| %>
+      <tr>
+        <td>
+          <%= link_to h(group.name), project_project_member_group_path(@project, group) -%>
+        </td>
+        <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+        <td>
+          <% if group.default? %>
+          DEFAULT GROUP
+          <% else %>  
+          <%= link_to 'Remove crowd group from project', project_project_member_group_path(@project, group), 
+           :confirm => 'Are you sure?', :method => :delete %>
+          <% end %> 
+        </td>
+        <% end %>
+      </tr>
+    <% end %>
+    </table>
+  </div>
+  <p>
+    <% allow :exec => proc { @current_user.is_company_employee? and @current_user.is_project_administrator_for?(@project) } do %>
+    <%= link_to 'Add crowd group', new_project_project_member_group_path(@project) -%> |
+    <% end %>
+    <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+    <%= link_to 'Back to Project Administration', project_administration_path(@project) %>
+    <% end %>
+  </p>
+</div>

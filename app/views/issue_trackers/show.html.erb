@@ -1,0 +1,23 @@
+<p>
+  <b>Project:</b>
+  <%=h @issue_tracker.project_id %>
+</p>
+
+<p>
+  <b>Active:</b>
+  <%=h @issue_tracker.active %>
+</p>
+
+<p>
+  <b>Use internal:</b>
+  <%=h @issue_tracker.use_internal %>
+</p>
+
+<p>
+  <b>External url:</b>
+  <%=h @issue_tracker.external_url %>
+</p>
+
+
+<%= link_to 'Edit', edit_issue_tracker_path(@issue_tracker) %> |
+<%= link_to 'Back', issue_trackers_path %>

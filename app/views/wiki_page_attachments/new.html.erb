@@ -1,0 +1,13 @@
+<h1>New Attachment for <%= @wiki_page.title -%></h1>
+
+<% form_for([@project, @wiki_page, @wiki_page_attachment], :html => { :multipart => true }) do |f| %>
+  <%= render :partial => 'form', :object => f %>
+    
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<br />
+
+<%= link_to 'Back', project_wiki_page_wiki_page_attachments_path(:project_id => @project, :id => @wiki_page) %>

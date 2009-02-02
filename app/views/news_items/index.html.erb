@@ -1,0 +1,32 @@
+<h1>Listing News Items</h1>
+
+<table>
+  <tr>
+    <th>Title</th>
+    <th>Contents</th>
+  </tr>
+
+<% for news_item in @news_items %>
+  <tr>
+    <td><%=h news_item.title %></td>
+    <td><%=h news_item.contents %></td>
+    <td><%= link_to 'Show', news_item %></td>
+    <% allow :user => :is_site_admin? do %>  
+    <td><%= link_to 'Edit', edit_news_item_path(news_item) %></td>
+    <td><%= link_to 'Destroy', news_item, :confirm => 'Are you sure?', :method => :delete %></td>
+    <% end %>
+  </tr>
+<% end %>
+</table>
+
+<br />
+
+<% allow :user => :is_site_admin? do %>
+<%= link_to 'New news_item', new_news_item_path %> |
+<% end %>
+
+<% allow :user => :is_site_admin? do %>
+<%= link_to 'Back to Site Administration', admin_path %> |
+<% end %>
+
+<%= link_to 'Back to Homepage', '/' %>

@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <h2>News for <%= h @project.name -%></h2>
+  <% @project_news_items.each do |project_news_item| %>
+  <div class="section">
+    <h2><%=h project_news_item.title %></h2>
+    <p>
+      By <%=h project_news_item.created_by.full_name -%> Published at <%= project_news_item.created_at %>
+    </p>  
+    <p>
+      <%= sanitize project_news_item.contents -%>
+    </p>
+  </div>
+  <% end %>
+  <p>
+    <%= link_to 'Back to Project Home', project_path(@project) %>
+  </p>
+</div>

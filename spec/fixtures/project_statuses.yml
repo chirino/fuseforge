@@ -1,0 +1,12 @@
+active:
+  id: 1
+  name: 'Active'
+  position: 1
+unapproved:
+  id: 2
+  name: 'Unapproved'
+  position: 2
+inactive:
+  id: 3
+  name: 'Inactive'
+  position: 3

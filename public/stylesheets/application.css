@@ -1,0 +1,159 @@
+#project_filters {
+  float: left;	
+  width: 70%;
+}
+
+#search_results {
+  clear: both;	
+}
+
+#wiki-page-filters {
+  border: 1px solid black;
+  padding: 10px;
+  float: left;
+  margin: 10px;
+  width: 65%;
+}
+
+#wiki-page-filters h3 {
+  margin: 0;
+}
+
+#tag_cloud {
+  float: left;
+  width: 20%;
+}
+
+
+#tag-cloud h3 {
+  margin: 0;
+}
+
+#tag-cloud a:link, #tag-cloud a:visited, #tag-cloud a:active, #tag-cloud a:hover {
+  text-decoration: none;
+  color: lightblue;	
+}
+
+.level-1 { font-size: 1.0em; }
+.level-2 { font-size: 1.2em; }
+.level-3 { font-size: 1.4em; }
+.level-4 { font-size: 1.6em; }
+.level-5 { font-size: 1.8em; }
+
+#project_header {
+  margin:20px 10px;
+}
+
+#project_title {
+  float: left;
+}
+
+#project_image {
+  float: left;
+}
+
+#project_menu {
+  float:left;
+  margin-left: 20px;
+}
+
+#project_attributes {
+  float: right;
+  width: 175px;
+  text-align: left;
+}
+
+#project_attributes ul {
+  list-style-type: none;
+}
+
+.section {
+  background:#FFFFFF url(../images/shadow_nw.png) no-repeat scroll left top;
+  color: #545C62;
+  margin-bottom: 10px;
+  margin-left: -14px;
+  margin-right: 20px;
+  padding: 14px 0 0 14px;
+}
+
+.section .interior {
+  background: #F1F5F9 url(../images/shadow_se.png) no-repeat scroll right bottom;
+  float: left;
+  margin-bottom: -14px;
+  padding: 10px 24px 24px 10px;
+  min-height: 200px;
+}
+
+.one_column {
+  width: 860px;
+}
+
+.one_column .interior {
+  width: 840px;
+}
+
+.two_column {
+  float: left;
+  width: 420px;
+}
+
+.two_column .interior {
+  width: 400px;
+}
+
+.section h2, .section h3, .section p, .section form, .section table {
+  padding:0 10px;
+}
+
+.section ul
+  margin-bottom:0;
+}
+
+#sortable_list li {
+  cursor: move;	
+}
+
+.terms_and_conditions {
+  border : solid 1px #000000;
+  background : #ffffff;
+  color : #000000;
+  margin : 10px; 
+  width: 400px;
+  height : 100px;
+  padding : 4px;
+  overflow-y : auto;
+  overflow-x : hidden;  
+}
+
+.scrollable_div {
+  border : solid 1px #000000;
+  background : #ffffff;
+  color : #000000;
+  margin : 10px; 
+  width: 400px;
+  padding : 4px;
+  overflow-y : auto;
+  overflow-x : hidden;  
+  line-height: 2em;
+  min-height: 300px;
+}
+
+#content {
+  line-height:1.5em;
+  background-color:white;
+  padding:30px 0 62px;
+  min-width: 960px;
+  width: 100%;
+}
+
+#header, #content, #footer, #lightbox {
+  font-size:0.75em;
+}
+
+#content h1 {
+  color:#003399;
+}
+
+#content h2 {
+  color:#74C244;
+}

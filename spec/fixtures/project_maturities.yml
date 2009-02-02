@@ -1,0 +1,24 @@
+proposal:
+  id: 1
+  name: 'Proposal'
+  position: 1
+planning:
+  id: 2
+  name: 'Planning'
+  position: 2  
+pre_alpha:
+  id: 3
+  name: 'Pre-Alpha'
+  position: 3
+alpha:
+  id: 4
+  name: 'Alpha'
+  position: 4
+beta:
+  id: 5
+  name: 'Beta'
+  position: 5
+production:
+  id: 6
+  name: 'Production'
+  position: 6  

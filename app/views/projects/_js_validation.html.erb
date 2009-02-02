@@ -1,0 +1,57 @@
+<% content_for :script do %>
+  <script type="text/javascript">
+    <% if @project.terms_and_conditions.blank? or @project.terms_and_conditions == '0' %>
+    Event.observe(window, 'load',
+      function() { $('project_terms_and_conditions').disabled = true }
+    );
+    <% end %>
+
+    function validate_form() {   
+      var error_count = 0;
+      var error_word = " errors ";
+      var error_msgs = "prohibited this project from being saved</h2>\n<p>There were problems with the following fields:</p>\n<ul>\n";
+      var return_value = true;
+
+      if ($('project_name').getValue() == '') {
+        error_count = error_count + 1;
+        error_msgs = error_msgs + "<li>Project name can't be blank</li>\n";
+      }
+      <% if ['new', 'create'].include?(controller.action_name) %>
+      if ($('project_shortname').getValue() == '') {
+        error_count = error_count + 1;
+        error_msgs = error_msgs + "<li>Project shortname can't be blank</li>\n";
+      }
+      <% end %>
+      if ($('project_description').getValue() == '') {
+        error_count = error_count + 1;
+        error_msgs = error_msgs + "<li>Project description can't be blank</li>\n";
+      }
+      if ($('project_project_maturity_id').getValue() == '') {
+        error_count = error_count + 1;
+        error_msgs = error_msgs + "<li>Project maturity can't be blank</li>\n";
+      }
+      if ($('project_project_category_id').getValue() == '') {
+        error_count = error_count + 1;
+        error_msgs = error_msgs + "<li>Project category can't be blank</li>\n";
+      }
+      <% if ['new', 'create'].include?(controller.action_name) %>
+      if ($('project_terms_and_conditions').getValue() == null) {
+        error_count = error_count + 1;
+        error_msgs = error_msgs + "<li>Terms and Conditions must be checked</li>\n";
+      }
+      <% end %>
+      if (error_count > 0) {
+        if (error_count == 1) {
+          error_word = " error ";
+        }
+        $('js_errors').innerHTML = "<h2>" + error_count + error_word + error_msgs + "</ul>\n";
+        $('js_errors').show();
+        return_value = false;
+      } else {
+        $('js_errors').inner_HTML = '';
+        $('js_errors').hide();
+      }
+      return return_value;
+    }
+  </script>
+<% end %>

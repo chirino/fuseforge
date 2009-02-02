@@ -1,0 +1,26 @@
+<p>
+  <b>Title:</b>
+  <%=h @news_item.title %>
+</p>
+
+<p>
+  <b>Contents:</b>
+  <%= sanitize @news_item.contents %>
+</p>
+
+<p>
+  <b>Created by:</b>
+  <%=h @news_item.created_by.full_name %>
+</p>
+
+<p>
+  <b>Updated by:</b>
+  <%=h @news_item.updated_by.full_name %>
+</p>
+
+
+<% allow :user => :is_site_admin? do %>
+<%= link_to 'Edit', edit_news_item_path(@news_item) %> |
+<% end %>
+<%= link_to 'Back to News', news_items_path %> |
+<%= link_to 'Back to Homepage', '/' %>

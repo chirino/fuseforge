@@ -1,0 +1,36 @@
+<div class="wrapper">
+  <div class="section">
+    <h2>Listing News Items for <%= h @project.name -%></h2>
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Created by</th>
+        <th>Updated by</th>
+      </tr>
+
+    <% @project_news_items.each do |project_news_item| %>
+      <tr>
+        <td><%=h project_news_item.title %></td>
+        <td><%=h project_news_item.created_by.full_name %></td>
+        <td><%=h project_news_item.updated_by.full_name %></td>
+        <td><%= link_to 'Show', project_project_news_item_path(:project_id => @project, :id => project_news_item) -%></td>
+        <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+        <td><%= link_to 'Edit', edit_project_project_news_item_path(:project_id => @project, :id => project_news_item) -%></td>
+        <td><%= link_to 'Destroy', project_project_news_item_path(:project_id => @project, :id => project_news_item), 
+                 :confirm => 'Are you sure?', :method => :delete -%></td>
+        <% end %>
+      </tr>
+    <% end %>
+    </table>
+  </div>
+  <p>
+    <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+    <%= link_to 'New Project News Item', new_project_project_news_item_path(:project_id => @project) %> |
+    <% end %>
+
+    <%= link_to 'Back to Project', project_path(@project) -%> |
+    <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+    <%= link_to 'Back to Project Administration', project_administration_path(@project) -%>
+    <% end %>
+  </p>
+</div>

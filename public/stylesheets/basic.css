@@ -1,0 +1,101 @@
+/* Basic styles */
+
+body, html {margin: 0; padding: 0; color: #4c545b; font: 100% Verdana, sans-serif; line-height: 1;}
+body {background: #11539c url(../images/background_sample.png); }
+
+ul {margin: 0;}
+li {list-style-position: inside;}
+
+h1, h2, h3, h4, h5, h6 {font-family: 'Trebuchet MS', Trebuchet, Verdana, sans-serif; overflow: visible;}
+
+a {color: #003399; text-decoration: none;}
+a:hover {text-decoration: underline !important;}
+a img {border: none;}
+
+#column_right ul {padding: 0;}
+
+/* Font sizing */
+
+#header, #content, #footer, #lightbox {
+    font-size:0.75em;
+}
+
+/* Basic layout */
+
+#content, #navigation, #header, #footer {width: 100%; min-width: 960px; float: left;}
+.wrapper {width: 920px; padding: 0 20px; margin: 0 auto;}
+
+/* Header and navigation */
+
+#header {color: white; float: left; background: #00509e url(/images/banner_curve.png) no-repeat center top;}
+#header img {padding: 25px 0 25px 0; float: left;}
+
+#header ul {float: right; margin-top: 25px;}
+#header a {color: #8bb7e2;}
+#header input {border: 1px solid #4c545b; color: #4c545b; font-size: 1.2em;}
+#header input[type=submit] {background-color: #13599b; border-color: #3373b1; color: white;}
+#header input[type=submit]:hover {background-color: white; border-color: #3373b1; color: #13599b;}
+#header ul li {float: left; list-style: none; margin-left: 2.75em;}
+#header form {float: right; clear: right; margin-top: 1.5em; padding: 0 0 0 0;}
+
+#navigation { background: #4c545b url(../images/navigation_background.png) repeat-x; clear: left; border-top: 2px solid #8ca3d1; }
+#navigation .wrapper {display: table; font-size: .9em; padding: 0; width: 960px;}
+#navigation ul {display: table-row; padding: 0; }
+#navigation li {list-style: none; color: white; display: inline; text-align: center; display: table-cell; vertical-align:middle; padding: 1em 0 1.2em 0; z-index: 100;}
+#navigation a {text-decoration: none; color: white; display: block;}
+
+#navigation dl {position: absolute; text-align: left; padding: 0; margin: 0; padding-right: 10px; margin-left: -10000px; margin-top: 1.2em; background: transparent url(../images/navigation_list_back.png) repeat-y top right; /*border-top: 4px solid white;*/ z-index: 100;}
+#navigation dt, #navigation dd {margin: 0; padding: 0; background: #004796 url(../images/navigation_background_sample.png);}
+#navigation li:hover, #navigation li.hover {background: #004796 url(../images/navigation_background_hover.png) repeat-x;}
+#navigation li:hover a, #navigation li.hover a {}
+#navigation li:hover dl, #navigation li.hover dl  {margin-left: 0;}
+#navigation dl a:hover {text-decoration: none !important;}
+#navigation dd a:focus, #navigation dt a:focus {outline: none;}
+
+#navigation dt:hover, #navigation dt.hover {background: #1e5ea3 none;}
+#navigation dt {padding: 1.12em 0.96em 2em 0.96em; margin-bottom: -2em; border-top: 1px solid #1e5ea3; }
+#navigation dd {background: none;}
+#navigation dd {padding: 0 1.2em 1.3em 1.2em; line-height: 1.2em; font-size: .8em;}
+#navigation dd a {color:#8cb0d3;}
+#navigation dd.last-child {padding: 0; border: none; margin-bottom: -11px; padding: 0 15px 2.2em 1.2em; width: 94%; background: transparent url(../images/navigation_shadow.png) bottom right no-repeat;}
+
+#navigation li.about dl {width: 240px !important;}
+#navigation li.about:hover dl {margin-left: -125px !important;}
+
+/* Content */
+
+#content {background-color: white; float: left;}
+
+#content #content {min-width: auto !important; width: auto !important; padding: 0 !important; margin: 0 !important; float: none !important; clear: none !important; font-size: inherit !important;}
+
+/* Footer */
+
+#footer {color: white; background: transparent url(../images/footer_background.png) repeat-x; float: left; clear: left; height: 146px;}
+#footer .wrapper {padding: 30px 20px;}
+
+#footer_center { height: 23px; margin-top: -23px; width: 100%; min-width: 960px; padding-right: 450px; margin-left: -450px; float: left;}
+#footer_center div {height: 23px; background: transparent url(../images/curve_center.png) repeat-x;}
+#footer_right {height: 23px; width: 100%; min-width: 960px; margin-top: -23px; float: left; background: transparent url(../images/curve_right.png) top right no-repeat;}
+#footer_left {width: 450px; height: 23px; float: left; margin-top: -23px; background: white url(../images/curve_sides.png) -450px 0px no-repeat;}
+	
+#footer h2 {margin: 0 0 1em 0; font-size: 2em;}
+#footer hr {color: white; clear: both; width: 100%; opacity: .5;}
+
+#footer a {color: white;}
+
+#footer #copyright a {padding: 0 0.5em;}
+
+#content h2.subtitle {color: gray; margin-top: -0.5em; font-style: italic;}
+
+/* Fixes 4/17/2008 */
+
+#navigation dl {min-width: 200px;}
+p.subscribe {width: 460px !important;}
+
+img.c1 {
+  float: left; 
+  margin: 0 10px 10px 0; 
+  cursor: pointer;
+  cursor: hand; 
+  width: 200px;
+}

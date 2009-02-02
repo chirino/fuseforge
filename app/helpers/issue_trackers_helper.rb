@@ -1,0 +1,2 @@
+module IssueTrackersHelper
+end

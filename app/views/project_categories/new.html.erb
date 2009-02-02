@@ -1,0 +1,10 @@
+<h1>New Project Category</h1>
+
+<% form_for(@project_category) do |f| %>
+  <%= render :partial => 'form', :object => f %>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', project_categories_path %>

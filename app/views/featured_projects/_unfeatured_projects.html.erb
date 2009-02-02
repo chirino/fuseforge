@@ -1,0 +1,13 @@
+<div id="unfeatured_projects" class="two_column section" style="height:400px;">
+  <h2>Unfeatured Projects</h2>
+  <p>Drag a project to <strong>Featured Projects</strong> to feature it.</p>
+  <div class="scrollable_div">
+    <% Project.unfeatured.each do |project| %>
+    <div id="project_<%= project.id -%>" style="cursor:move;">
+      <%= h(project.name) %>  
+    </div> 
+    <%= draggable_element("project_#{project.id}", :revert => false) %>
+    <% end %>
+  </div>
+</div>
+<%= drop_receiving_element("unfeatured_projects", :url => { :action => "destroy" }) %>

@@ -1,0 +1,11 @@
+<h1>Editing Project Status</h1>
+
+<% form_for(@project_status) do |f| %>
+  <%= render :partial => 'form', :object => f %>
+  <p>
+    <%= f.submit "Update" %>
+  </p>
+<% end %>
+
+<%= link_to 'Show', @project_status %> |
+<%= link_to 'Back', project_statuses_path %>

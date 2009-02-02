@@ -1,0 +1,30 @@
+<div class="wrapper">
+  <div class="section">
+    <h2>Listing Administrators of <%= @project.name -%></h2>
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Email Address</th>
+      </tr>
+  
+      <% show_maintenance_links = @current_user.is_project_administrator_for?(@project) %>
+
+      <% @project_administrators.each do |user| %>
+      <tr>
+        <td><%=h user.full_name -%></td>
+        <td><%=h user.email -%></td>
+        <% if show_maintenance_links and user.crowd_group_names.include?(@project.default_admin_group_name) %>
+        <td><%= link_to 'Remove from project', project_project_administrator_path(@project, user), :confirm => 'Are you sure?', 
+                 :method => :delete -%></td>
+        <% end %>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+  <p>
+    <% if show_maintenance_links %>
+    <%= link_to 'Add project administrator', new_project_project_administrator_path(@project) -%> |
+    <% end %>
+    <%= link_to 'Back to project', project_path(@project) %>
+  </p>
+</div>

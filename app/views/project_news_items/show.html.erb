@@ -1,0 +1,33 @@
+<div class="wrapper">
+  <div class="section">
+    <h2>News Item for <%= h @project_news_item.project.name -%></h2>
+    <p>
+      <b>Title:</b>
+      <%=h @project_news_item.title %>
+    </p>
+    <p>
+      <b>Contents:</b>
+      <%= sanitize @project_news_item.contents %>
+    </p>
+    <p>
+      <b>Created by:</b>
+      <%=h @project_news_item.created_by.full_name %>
+    </p>
+    <p>
+      <b>Updated by:</b>
+      <%=h @project_news_item.updated_by.full_name %>
+    </p>
+  </div>
+  <p>
+    <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+    <%= link_to 'Edit', edit_project_project_news_item_path(:project_id => @project, :id => @project_news_item) %> |
+    <% end %>
+
+    <%= link_to 'Back to Project News', project_project_news_items_path(:project_id => @project) %> |
+    <%= link_to 'Back to Project Home', project_path(@project) %>
+
+    <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+    | <%= link_to 'Back to Project Administration', project_administration_path(@project) %>
+    <% end %>
+  </p>
+</div>

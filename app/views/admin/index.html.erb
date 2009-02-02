@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <div class="section">
+    <h2>Site Administration</h2>
+    <ul>
+    	<li><%= link_to 'Maintain Featured Projects', featured_projects_path -%></li>
+    	<li><%= link_to 'Maintain News Items', news_items_path -%></li>
+    	<li><%= link_to 'Approve New Projects', unapproved_projects_path -%></li>
+    	<li><%= link_to 'Maintain Project Statuses', project_statuses_path -%></li>
+    	<li><%= link_to 'Maintain Project Maturities', project_maturities_path -%></li>
+    	<li><%= link_to 'Maintain Project Categories', project_categories_path -%></li>
+    </ul>	
+  </div>
+
+  <p>
+    <%= link_to 'Back to Home', '/' %>
+  </p>
+</div>

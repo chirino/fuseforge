@@ -1,0 +1,19 @@
+<%= form.error_messages %>
+
+<p>
+  <%= form.label :attached_file, 'File to Upload' %><br />
+  <% if ['edit', 'update'].include?(controller.action_name) %>
+  Current file: <%= @wiki_page_attachment.attached_file_file_name %><br />
+  <% end %>
+  <%= form.file_field :attached_file %>
+</p>
+
+<p>
+  <%= form.label :track_downloads, 'Track Downloads?' %><br />
+  <%= form.check_box :track_downloads %>
+</p>
+
+<p>
+  <%= form.label :include_in_project_homepage_download_stats, 'Include in Project Homepage Download Stats?' %><br />
+  <%= form.check_box :include_in_project_homepage_download_stats %>
+</p>

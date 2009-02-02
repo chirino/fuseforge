@@ -1,0 +1,22 @@
+<h1>Listing Prospective Project Members for <%= @project.name -%></h1>
+
+<table>
+  <tr>
+    <th>User</th>
+  </tr>
+
+<% for prospective_project_member in @prospective_project_members %>
+  <tr>
+    <td>
+      <%=h prospective_project_member.user.full_name %>
+    </td>
+    <td>
+      <%= link_to 'Show', project_prospective_project_member_path(:project_id => @project, 
+           :id => prospective_project_member) %>
+    </td>
+  </tr>
+<% end %>
+</table>
+
+<%= link_to 'Back to Project', project_path(@project) -%> |
+<%= link_to 'Back to Project Administration', project_administration_path(@project) -%>

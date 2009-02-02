@@ -1,0 +1,17 @@
+<h1>Listing Project Maturities</h1>
+
+<div id="project_maturities">
+  <ul id="sortable_list">
+    <% @project_maturities.each do |project_maturity| %>	
+    <li id="project_maturity_<%= project_maturity.id %>">
+      <%= project_maturity.name -%>
+      <%= link_to 'Edit', edit_project_maturity_path(project_maturity) %>
+      <%= link_to 'Destroy', project_maturity_path(project_maturity), :confirm => 'Are you sure?', :method => :delete -%>
+    </li>  
+    <% end %>
+  </ul>
+</div>
+
+<%= sortable_element('sortable_list', :url => {:action => :update_positions}) %>
+<br />
+<%= link_to 'New Project Maturity', new_project_maturity_path %>

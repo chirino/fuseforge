@@ -1,0 +1,18 @@
+<p>
+  <b>Name:</b>
+  <%=h @project_category.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @project_category.description %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @project_category.position %>
+</p>
+
+
+<%= link_to 'Edit', edit_project_category_path(@project_category) %> |
+<%= link_to 'Back', project_categories_path %>

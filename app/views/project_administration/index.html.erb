@@ -1,0 +1,17 @@
+<div class="wrapper">
+  <div class="section">
+    <h2>Project Administration for <%= h @project.name -%></h2>
+    <ul>
+    	<li><%= link_to 'Edit', edit_project_path(@project) -%></li>
+    	<li><%= link_to 'Maintain News Items', project_project_news_items_path(:project_id => @project, :from_project_admin => true) -%></li>
+    	<li><%= link_to 'Maintain Admin Groups', project_project_admin_groups_path(:project_id => @project) -%></li>
+    	<li><%= link_to 'Maintain Member Groups', project_project_member_groups_path(:project_id => @project) -%></li>
+      <% allow :user => :is_site_admin? do %>
+      <li><%= link_to 'Destroy', @project, :confirm => 'Are you sure?', :method => :delete %></li>
+      <% end %>
+    </ul>	
+  </div>
+  <p>
+    <%= link_to 'Back to Project Home', project_path(@project) %>
+  </p>
+</div>
