@@ -66,8 +66,13 @@ class JiraInterface
       username = "iona" 
       password = "logicblaze" 
       @jira_soap_service.options["protocol.http.basic_auth"] << [relm, username, password]    
+    elsif ENDPOINT_URL.include?('forge.fusesource')
+      relm = "http://forge.fusesource.com/" 
+      username = "fuseforge" 
+      password = "gong6.afield" 
+      @jira_soap_service.options["protocol.http.basic_auth"] << [relm, username, password]    
     end
-    
+
     @ctx = login
   end
   
