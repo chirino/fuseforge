@@ -85,7 +85,7 @@ class WebDavLocation < ActiveRecord::Base
   Alias /#{webdav_alias} #{webdav_collection_path}
 
   <Location /#{webdav_alias}>
-    Dav filesystem
+    Dav On
     AuthType Basic
     AuthName "FUSE Forge Webdav"
     PerlAuthenHandler Apache::CrowdAuth
