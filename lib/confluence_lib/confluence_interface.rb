@@ -24,6 +24,11 @@ class ConfluenceInterface
       username = "iona" 
       password = "logicblaze" 
       @confluence_soap_service.options["protocol.http.basic_auth"] << [relm, username, password]    
+    elsif ENDPOINT_URL.include?('forge.fusesource')
+      relm = "http://forge.fusesource.com/" 
+      username = "fuseforge" 
+      password = "gong6.afield" 
+      @confluence_soap_service.options["protocol.http.basic_auth"] << [relm, username, password]    
     end
   end
   
