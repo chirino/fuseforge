@@ -101,6 +101,16 @@
   width: 400px;
 }
 
+.two_column .interior ul {
+  margin-left: 1em;
+  padding-left: 0;
+}
+
+.two_column .interior li {
+  margin: 0;
+  padding: 0;
+}
+
 .section h2, .section h3, .section p, .section form, .section table {
   padding:0 10px;
 }
