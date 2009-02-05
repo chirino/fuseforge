@@ -123,6 +123,9 @@ class ConfluenceInterface
         @confluence_soap_service.addPermissionToSpace(@ctx,perm,"forge-#{project_sname}-members".downcase,project_sname)
       else
         @confluence_soap_service.addPermissionToSpace(@ctx,perm,ApplicationHelper.get_default_confluence_group,project_sname)
+        if perm=="VIEWSPACE"
+          @confluence_soap_service.addAnonymousPermissionToSpace(@ctx,perm,project_sname) 
+        end
       end
       
     end
