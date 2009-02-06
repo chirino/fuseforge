@@ -50,12 +50,12 @@
 
 #project_image {
   float: left;
-  font-size: 0.25em;
 }
 
 #project_menu {
   float:left;
   margin-left: 20px;
+  font-size: 0.25em;
 }
 
 #project_attributes {
