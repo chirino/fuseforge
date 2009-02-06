@@ -11,15 +11,10 @@
          onscroll="check_accept_text_scroll_pos('terms_text', 'project_terms_and_conditions')">	
           <%= @terms_and_conditions_text %> 		  
         </div>
-        <p>
-  		    You must scroll to the bottom before you can accept the terms
-  		  </p>  
+  		  You must scroll to the bottom before you can accept the terms
         <p>
           <%= f.label :terms_and_conditions, "Accept Terms and Conditions?" %>
           <%= f.check_box :terms_and_conditions %>
-        </p>
-        <p>  
-          To check this box, you must scroll to the bottom of the Terms and Conditions
         </p>
       </div>  
     </div>
