@@ -61,10 +61,10 @@ class JiraInterface
   def initialize
     @jira_soap_service = JiraSoapService.new(ENDPOINT_URL)
 
-    if ENDPOINT_URL.include?('ionadev')
-      relm = "http://www.ionadev.com/" 
-      username = "iona" 
-      password = "logicblaze" 
+    if ENDPOINT_URL.include?('fusesourcedev')
+      relm = "http://forge.fusesourcedev.com/" 
+      username = "fusesource" 
+      password = "gong6.afield" 
       @jira_soap_service.options["protocol.http.basic_auth"] << [relm, username, password]    
     elsif ENDPOINT_URL.include?('forge.fusesource')
       relm = "http://forge.fusesource.com/" 
