@@ -3,111 +3,129 @@
      :object => [@project, @project.issue_tracker, @project.repository, @project.forum, @project.wiki] %>
 <p>*Required fields</p>
 <div class="two_column section">
-  <p>
-    <%= form.label :name %>*<br />
-    <%= form.text_field :name %>
-  </p>
-  <% if ['new', 'create'].include?(controller.action_name) %>
-  <p>
-    <%= form.label :shortname %>*<br />
-    <%= form.text_field :shortname %>
-    <%= observe_field  "project_shortname", :frequency => 0.10, :url => { :action=>'validate_proj_sname' }, 
-        :with => "'proj_sname='+escape(value)", :update => "status" %>
-    <div id="status"></div>
-  </p>
-  <% end %>
-</div>
-<div class="two_column section">
-  <p>
-    <%= form.label :description %>*<br />
-    <%= form.text_area :description, :rows => 6, :cols => 50 %>
-  </p>
-</div>
-<div class="two_column section">
-  <p>
-    <%= form.label :project_maturity_id %>*<br />
-    <%= form.select :project_maturity_id, ProjectMaturity.options_for_select, { :prompt => true } %>
-  </p>
-  <p>
-    <%= form.label :project_category_id %>*<br />
-    <%= form.select :project_category_id, ProjectCategory.options_for_select, { :prompt => true } %>
-  </p>
-</div>
-<div class="two_column section">
-  <p>
-    <%= form.label :image %><br />
-    <% if ['edit', 'update'].include?(controller.action_name) %>
-    <%= image_tag @project.image.url(:medium) %><br />
+  <div class="interior">
+    <p>
+      <%= form.label :name %>*<br />
+      <%= form.text_field :name %>
+    </p>
+    <% if ['new', 'create'].include?(controller.action_name) %>
+    <p>
+      <%= form.label :shortname %>*<br />
+      <%= form.text_field :shortname %>
+      <%= observe_field  "project_shortname", :frequency => 0.10, :url => { :action=>'validate_proj_sname' }, 
+          :with => "'proj_sname='+escape(value)", :update => "status" %>
+      <div id="status"></div>
+    </p>
     <% end %>
-    <%= form.file_field :image %>
-  </p>
-  <p>
-    <%= form.label :is_private, 'Make project private?' %><br />
-    <%= form.check_box :is_private %>
-  </p>
+  </div>  
 </div>
 <div class="two_column section">
-  <h2>Issue Tracker</h2>
-  <% fields_for @project.issue_tracker do |issue_tracker_fields| %>
-  <p>
-    <%= issue_tracker_fields.label :use_internal, "Use FUSE Forge for issue tracking?" %><br />
-    <%= issue_tracker_fields.check_box :use_internal, :onchange => "Element.toggle('issue-tracker-external-url')" %>
-  </p>
-  <p id="issue-tracker-external-url" style="display:<%= @display_issue_tracker_external_url -%>;">
-    <%= issue_tracker_fields.label :external_url, "URL of an external issue tracker" %><br />
-    <%= issue_tracker_fields.text_field :external_url, :size => 55 %>
-  </p>
-  <% end %>
+  <div class="interior">
+    <p>
+      <%= form.label :description %>*<br />
+      <%= form.text_area :description, :rows => 6, :cols => 50 %>
+    </p>
+  </div>
 </div>
 <div class="two_column section">
-  <h2>Code Repository</h2>
-  <% fields_for @project.repository do |repository_fields| %>
-  <p>
-    <%= repository_fields.label :use_internal, "Use FUSE Forge's code repository?" %><br />
-    <%= repository_fields.check_box :use_internal, :onchange => "Element.toggle('repository-external-url')" %>
-  </p>
-  <p id="repository-external-url" style="display:<%= @display_repository_external_url -%>;">
-    <%= repository_fields.label :external_url, "URL of an external code repository" %><br />
-    <%= repository_fields.text_field :external_url, :size => 55 %>
-  </p>
-  <% end %>
+  <div class="interior">
+    <p>
+      <%= form.label :project_maturity_id %>*<br />
+      <%= form.select :project_maturity_id, ProjectMaturity.options_for_select, { :prompt => true } %>
+    </p>
+    <p>
+      <%= form.label :project_category_id %>*<br />
+      <%= form.select :project_category_id, ProjectCategory.options_for_select, { :prompt => true } %>
+    </p>
+  </div>
 </div>
 <div class="two_column section">
-  <h2>Forum</h2>
-  <% fields_for @project.forum do |forum_fields| %>
-  <p>
-    <%= forum_fields.label :use_internal, "Use FUSE Forge's forum?" %><br />
-    <%= forum_fields.check_box :use_internal, :onchange => "Element.toggle('forum-external-url')" %>
-  </p>
-  <p id="forum-external-url" style="display:<%= @display_forum_external_url -%>;">
-    <%= forum_fields.label :external_url, "URL of an external forum" %><br />
-    <%= forum_fields.text_field :external_url, :size => 55 %>
-  </p>
-  <% end %>
+  <div class="interior">
+    <p>
+      <%= form.label :image %><br />
+      <% if ['edit', 'update'].include?(controller.action_name) %>
+      <%= image_tag @project.image.url(:medium) %><br />
+      <% end %>
+      <%= form.file_field :image %>
+    </p>
+    <p>
+      <%= form.label :is_private, 'Make project private?' %><br />
+      <%= form.check_box :is_private %>
+    </p>
+  </div>
 </div>
 <div class="two_column section">
-  <h2>Wiki</h2>
-  <% fields_for @project.wiki do |wiki_fields| %>
-  <p>
-    <%= wiki_fields.label :use_internal, "Use FUSE Forge's wiki?" %><br />
-    <%= wiki_fields.check_box :use_internal, :onchange => "Element.toggle('wiki-external-url')" %>
-  </p>
-  <p id="wiki-external-url" style="display:<%= @display_wiki_external_url -%>;">
-    <%= wiki_fields.label :external_url, "URL of an external wiki" %><br />
-    <%= wiki_fields.text_field :external_url, :size => 55 %>
-  </p>
-  <% end %>
+  <div class="interior">
+    <h2>Issue Tracker</h2>
+    <% fields_for @project.issue_tracker do |issue_tracker_fields| %>
+    <p>
+      <%= issue_tracker_fields.label :use_internal, "Use FUSE Forge for issue tracking?" %><br />
+      <%= issue_tracker_fields.check_box :use_internal, :onchange => "Element.toggle('issue-tracker-external-url')" %>
+    </p>
+    <p id="issue-tracker-external-url" style="display:<%= @display_issue_tracker_external_url -%>;">
+      <%= issue_tracker_fields.label :external_url, "URL of an external issue tracker" %><br />
+      <%= issue_tracker_fields.text_field :external_url, :size => 55 %>
+    </p>
+    <% end %>
+  </div>
 </div>
 <div class="two_column section">
-  <h2>WebDAV</h2>
-  <% fields_for @project.web_dav_location do |web_dav_location_fields| %>
-  <p>
-    <%= web_dav_location_fields.label :use_internal, "Use FUSE Forge's Web DAV?" %><br />
-    <%= web_dav_location_fields.check_box :use_internal, :onchange => "Element.toggle('web-dav-location-external-url')" %>
-  </p>
-  <p id="web-dav-location-external-url" style="display:<%= @display_web_dav_location_external_url -%>;">
-    <%= web_dav_location_fields.label :external_url, "URL of an external Web DAV location" %><br />
-    <%= web_dav_location_fields.text_field :external_url, :size => 55 %>
-  </p>
-  <% end %>
+  <div class="interior">
+    <h2>Code Repository</h2>
+    <% fields_for @project.repository do |repository_fields| %>
+    <p>
+      <%= repository_fields.label :use_internal, "Use FUSE Forge's code repository?" %><br />
+      <%= repository_fields.check_box :use_internal, :onchange => "Element.toggle('repository-external-url')" %>
+    </p>
+    <p id="repository-external-url" style="display:<%= @display_repository_external_url -%>;">
+      <%= repository_fields.label :external_url, "URL of an external code repository" %><br />
+      <%= repository_fields.text_field :external_url, :size => 55 %>
+    </p>
+    <% end %>
+  </div>
+</div>
+<div class="two_column section">
+  <div class="interior">
+    <h2>Forum</h2>
+    <% fields_for @project.forum do |forum_fields| %>
+    <p>
+      <%= forum_fields.label :use_internal, "Use FUSE Forge's forum?" %><br />
+      <%= forum_fields.check_box :use_internal, :onchange => "Element.toggle('forum-external-url')" %>
+    </p>
+    <p id="forum-external-url" style="display:<%= @display_forum_external_url -%>;">
+      <%= forum_fields.label :external_url, "URL of an external forum" %><br />
+      <%= forum_fields.text_field :external_url, :size => 55 %>
+    </p>
+    <% end %>
+  </div>
+</div>
+<div class="two_column section">
+  <div class="interior">
+    <h2>Wiki</h2>
+    <% fields_for @project.wiki do |wiki_fields| %>
+    <p>
+      <%= wiki_fields.label :use_internal, "Use FUSE Forge's wiki?" %><br />
+      <%= wiki_fields.check_box :use_internal, :onchange => "Element.toggle('wiki-external-url')" %>
+    </p>
+    <p id="wiki-external-url" style="display:<%= @display_wiki_external_url -%>;">
+      <%= wiki_fields.label :external_url, "URL of an external wiki" %><br />
+      <%= wiki_fields.text_field :external_url, :size => 55 %>
+    </p>
+    <% end %>
+  </div>
+</div>
+<div class="two_column section">
+  <div class="interior">
+    <h2>WebDAV</h2>
+    <% fields_for @project.web_dav_location do |web_dav_location_fields| %>
+    <p>
+      <%= web_dav_location_fields.label :use_internal, "Use FUSE Forge's Web DAV?" %><br />
+      <%= web_dav_location_fields.check_box :use_internal, :onchange => "Element.toggle('web-dav-location-external-url')" %>
+    </p>
+    <p id="web-dav-location-external-url" style="display:<%= @display_web_dav_location_external_url -%>;">
+      <%= web_dav_location_fields.label :external_url, "URL of an external Web DAV location" %><br />
+      <%= web_dav_location_fields.text_field :external_url, :size => 55 %>
+    </p>
+    <% end %>
+  </div>
 </div>
