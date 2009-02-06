@@ -1,9 +1,9 @@
 <div class="wrapper">
   <h1><%= @project.name -%></h1>
   <div class="one_column section">
-    <div class="interior" style="height: 100px;">
+    <div class="interior" style="min-height: 100px;">
       <div id="project_image">
-  	    <%= image_tag @project.image.url(:medium) if @project.image_file_name%>
+  	    <%= image_tag @project.image.url(:medium) if @project.image_file_name %>
       </div>
     	<div id="project_menu">
         <% if logged_in? %>
