@@ -58,7 +58,10 @@
 }
 
 #project_attributes {
-  clear:both;	
+  clear:both;
+  width: 100%;
+  text-align: center;
+  margin-top: 20px;	
 }
 
 #project_attributes ul {
