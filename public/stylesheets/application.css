@@ -64,8 +64,8 @@
   margin-top: 50px;	
 }
 
-#project_attributes ul {
-  list-style-type: none;
+#project_attributes strong {
+  margin-left: 5em;
 }
 
 .section {
