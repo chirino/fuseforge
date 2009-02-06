@@ -6,12 +6,12 @@
   <div class="interior">
     <p>
       <%= form.label :name %>*<br />
-      <%= form.text_field :name %>
+      <%= form.text_field :name, :size => 50 %>
     </p>
     <% if ['new', 'create'].include?(controller.action_name) %>
     <p>
       <%= form.label :shortname %>*<br />
-      <%= form.text_field :shortname %>
+      <%= form.text_field :shortname, :size => 20 %>
       <%= observe_field  "project_shortname", :frequency => 0.10, :url => { :action=>'validate_proj_sname' }, 
           :with => "'proj_sname='+escape(value)", :update => "status" %>
       <div id="status"></div>
