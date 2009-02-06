@@ -29,16 +29,14 @@
    	    <%= image_tag "administration.jpeg" %>
             <%= link_to 'Administration', project_administration_path(@project) %>
    	    <% end %>
-        <div id="project_attributes">
-      	  <ul>
-      	    <% if @project.is_private? %>
-      	    <li><strong>*** Private ***</strong></li>
-      	    <% end %>
-      	    <li>Status: <%= @project.status.name -%></li>
-      	    <li>Maturity: <%= @project.maturity.name -%></li>
-      	    <li>Category: <%= @project.category.name -%></li>
-      	  </ul>
-      	</div>
+      </div>
+      <div id="project_attributes">
+    	  <% if @project.is_private? %>
+    	  <strong>*** Private ***</strong>
+    	  <% end %>
+      	<strong>Status:</strong> <%= @project.status.name -%>
+      	<strong>Maturity:</stron> <%= @project.maturity.name -%>
+      	<strong>Category:</strong> <%= @project.category.name -%>
       </div>
     </div>
     <div style="clear:both;"></div>
