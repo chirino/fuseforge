@@ -3,6 +3,7 @@
   <h1>Editing <%= @project.name -%></h1>
   <% form_for(@project, :html => { :multipart => true, :onsubmit => 'return validate_form()' }) do |f| %>
     <%= render :partial => 'form', :object => f %>
+    <div style="clear:both;"></div>
     <p>
       <%= f.submit "Update" %>
     </p>
