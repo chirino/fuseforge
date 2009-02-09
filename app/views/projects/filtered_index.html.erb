@@ -1,32 +1,34 @@
 <div class="wrapper">
   <%= render(:partial => 'search') %>
   <%= render(:partial => 'tag_cloud') %>
-  <div id="search_results" class="section">
-    <% if @projects_count.zero? %>
-    <p>No projects were found.</p>
-    <% else %>
-    <h2>Filtered Projects</h2>
-    <table>
-      <tr>
-        <th></th>
-        <th><%= order_by_link :name -%></th>
-        <th><%= order_by_link :shortname -%></th>
-        <th><%= order_by_link :description -%></th>
-      </tr>
+  <div id="search_results" class="one_column section">
+    <div class="interior">
+      <% if @projects_count.zero? %>
+      <p>No projects were found.</p>
+      <% else %>
+      <h2>Filtered Projects</h2>
+      <table>
+        <tr>
+          <th></th>
+          <th><%= order_by_link :name -%></th>
+          <th><%= order_by_link :shortname -%></th>
+          <th><%= order_by_link :description -%></th>
+        </tr>
 
-    <% for project in @projects %>
-      <tr>
-        <td><%= image_tag project.image.url(:thumb) %></td>
-        <td><%=link_to h(project.name), project %></td>
-        <td><%=h project.shortname %></td>
-        <td><%= sanitize project.description %></td>
-      </tr>
-    <% end %>
-    </table>
+      <% for project in @projects %>
+        <tr>
+          <td><%= image_tag project.image.url(:thumb) %></td>
+          <td><%=link_to h(project.name), project %></td>
+          <td><%=h project.shortname %></td>
+          <td><%= sanitize project.description %></td>
+        </tr>
+      <% end %>
+      </table>
+    </div>
+    <p>
+      Per page: <%= per_page_select -%>
+      Page: <%= page_select -%>
+    </p>
+    <% end %> 
   </div>
-  <p>
-    Per page: <%= per_page_select -%>
-    Page: <%= page_select -%>
-  </p>
-  <% end %> 
 </div> 
