@@ -25,11 +25,11 @@
 
 #tag_cloud {
   float: left;
-  width: 240px;
+  width: 200px;
 }
 
 #tag_cloud .interior {
-  width: 220px;
+  width: 180px;
 }
 
 #tag-cloud h3 {
@@ -41,11 +41,11 @@
   color: lightblue;	
 }
 
-.level-1 { font-size: 1.0em; }
-.level-2 { font-size: 1.2em; }
-.level-3 { font-size: 1.4em; }
-.level-4 { font-size: 1.6em; }
-.level-5 { font-size: 1.8em; }
+.level-1 { font-size: .6em; }
+.level-2 { font-size: .8em; }
+.level-3 { font-size: 1.0em; }
+.level-4 { font-size: 1.2em; }
+.level-5 { font-size: 1.4em; }
 
 #project_header {
   margin:20px 10px;
