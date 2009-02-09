@@ -3,12 +3,14 @@
 
   <% @projects.group_by(&:category).each do |category, projects| %>
   <div class="two_column section">
-    <h2><%= category.name -%></h2>
-    <ul>
-      <% for project in projects %>
-      <li><%= link_to project.name, project -%></li>
-      <% end %>
-    </ul>
+    <div class="interior">
+      <h2><%= category.name -%></h2>
+      <ul>
+        <% for project in projects %>
+        <li><%= link_to project.name, project -%></li>
+        <% end %>
+      </ul>
+    </div>  
   </div>  
   <% end %>
 </div>
