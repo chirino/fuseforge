@@ -1,6 +1,10 @@
 #project_filters {
   float: left;	
-  width: 70%;
+  width: 680%;
+}
+
+#project_filters .interior {
+  width: 660px;
 }
 
 #search_results {
