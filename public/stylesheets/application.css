@@ -24,11 +24,11 @@
 
 #tag_cloud {
   float: left;
-  width: 200px;
+  width: 180px;
 }
 
 #tag_cloud .interior {
-  width: 180px;
+  width: 160px;
 }
 
 #tag-cloud h3 {
