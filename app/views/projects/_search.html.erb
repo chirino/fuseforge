@@ -1,45 +1,47 @@
 <div id="project_filters" class="section">
-  <h2>Search Filter</h2>
-  <% form_for @search, :html => { :id => "project-search" } do |f| %>
-    <% f.fields_for @search.conditions do |projects| %>
-      <%= hidden_field_tag :show_search_form, true %>
-      <p>
-        Advanced Search
-        <%= check_box_tag :advanced_search, "1", @advanced_search, 
-             :onchange => "Element.toggle('basic_search_fields');Element.toggle('advanced_search_fields')" %>
-      </p>
-      <div id="basic_search_fields" style="display:<%= @advanced_search ? 'none' : 'block' -%>;">
-        <label>Keywords:</label>
-        <%= text_field_tag :keywords, @keywords %>
-      </div>
-      <table id="advanced_search_fields" style="display:<%= @advanced_search ? 'block' : 'none' -%>;">
-        <tr>
-          <td><label>Name:</label></td>
-          <td><%= projects.text_field :name_kw_using_or %></td>
-          <td><label>Shortname:</label></td>
-          <td><%= projects.text_field :shortname_kw_using_or %></td>
-        </tr>
-        <tr>
-          <td><label>Description:</label></td>
-          <td><%= projects.text_field :description_kw_using_or %></td>
-          <% projects.fields_for projects.object.tags do |tags| %>
-          <td><label>Tag:</label></td>
-          <td><%= tags.text_field :name_kw_using_or %></td>
-          <% end %>      
-        </tr>
-        <tr>
-          <td><label>Status:</label></td>
-          <td><%= projects.select :project_status_id, search_select_options_for_project_status, { :include_blank => 'All' } %></td>
-          <td><label>Maturity:</label></td>
-          <td><%= projects.select :project_maturity_id, ProjectMaturity.options_for_select, { :include_blank => 'All' } %></td>
-        </tr>
-        <tr>
-          <td><label>Category:</label></td>
-          <td><%= projects.select :project_category_id, ProjectCategory.options_for_select, { :include_blank => 'All' } %></td>
-        </tr>
-      </table>    
+  <div class="interior">
+    <h2>Search Filter</h2>
+    <% form_for @search, :html => { :id => "project-search" } do |f| %>
+      <% f.fields_for @search.conditions do |projects| %>
+        <%= hidden_field_tag :show_search_form, true %>
+        <p>
+          Advanced Search
+          <%= check_box_tag :advanced_search, "1", @advanced_search, 
+               :onchange => "Element.toggle('basic_search_fields');Element.toggle('advanced_search_fields')" %>
+        </p>
+        <div id="basic_search_fields" style="display:<%= @advanced_search ? 'none' : 'block' -%>;">
+          <label>Keywords:</label>
+          <%= text_field_tag :keywords, @keywords %>
+        </div>
+        <table id="advanced_search_fields" style="display:<%= @advanced_search ? 'block' : 'none' -%>;">
+          <tr>
+            <td><label>Name:</label></td>
+            <td><%= projects.text_field :name_kw_using_or %></td>
+            <td><label>Shortname:</label></td>
+            <td><%= projects.text_field :shortname_kw_using_or %></td>
+          </tr>
+          <tr>
+            <td><label>Description:</label></td>
+            <td><%= projects.text_field :description_kw_using_or %></td>
+            <% projects.fields_for projects.object.tags do |tags| %>
+            <td><label>Tag:</label></td>
+            <td><%= tags.text_field :name_kw_using_or %></td>
+            <% end %>      
+          </tr>
+          <tr>
+            <td><label>Status:</label></td>
+            <td><%= projects.select :project_status_id, search_select_options_for_project_status, { :include_blank => 'All' } %></td>
+            <td><label>Maturity:</label></td>
+            <td><%= projects.select :project_maturity_id, ProjectMaturity.options_for_select, { :include_blank => 'All' } %></td>
+          </tr>
+          <tr>
+            <td><label>Category:</label></td>
+            <td><%= projects.select :project_category_id, ProjectCategory.options_for_select, { :include_blank => 'All' } %></td>
+          </tr>
+        </table>    
+      <% end %>
+      <%= f.submit "Search" %>
+      <%= link_to 'Reset', projects_path(:show_search_form => true) -%> 
     <% end %>
-    <%= f.submit "Search" %>
-    <%= link_to 'Reset', projects_path(:show_search_form => true) -%> 
-  <% end %>
-</div>
+  </div>
+</div>  
