@@ -1,23 +1,7 @@
 <div class="wrapper">
   <h1>New News Item for <%= h @project.name -%></h1>
   <% form_for( [@project, @project_news_item] ) do |f| %>
-    <%= f.error_messages %>
-    <div class="two_column section">    
-      <div class="interior">
-        <p>
-          <%= f.label :title %><br />
-          <%= f.text_field :title, :size => 50 %>
-        </p>
-      </div>
-    </div>
-    <div class="two_column section">
-      <div class="interior">  
-        <p>
-          <%= f.label :contents %><br />
-          <%= f.text_area :contents, :rows => 10, :cols => 45 %>
-        </p>
-      </div>
-    </div>    
+    <%= render :partial => :form -%>
     <div class="form_button">
       <%= f.submit "Create" %>
     </div>
