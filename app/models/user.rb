@@ -60,9 +60,16 @@ class User < ActiveRecord::Base
     
   def after_initialize
     unless self.login.blank?
+      retries = 0
       begin
         @crowd_user = Crowd.new.find_by_name(self.login)
       rescue SOAP::FaultError
+      rescue SOAP::EmptyResponseError
+        if retries < 5
+          retry
+        else
+          raise
+        end
       end
 
       @crowd_group_names = Crowd.new.find_group_memberships(@crowd_user.name)  
