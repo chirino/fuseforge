@@ -23,10 +23,10 @@
       </table>
     </div>
   </div>
-  <p style="clear:both;">
+  <div style="clear:both;">
     <% if show_maintenance_links %>
     <%= link_to 'Add project administrator', new_project_project_administrator_path(@project) -%> |
     <% end %>
     <%= link_to 'Back to project', project_path(@project) %>
-  </p>
+  </div>
 </div>
