@@ -14,7 +14,6 @@ class User < ActiveRecord::Base
   
   def self.authenticate_with_crowd_token(crowd_token, request)
     return false if crowd_token.nil?
-
     return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
 
     begin
@@ -25,16 +24,7 @@ class User < ActiveRecord::Base
 
     return false unless RegisteredUserGroup.new.user_names.include?(crowd_user.name)
   
-    retries = 0
-    begin  
-      self.find_or_create_by_login(crowd_user.name)
-    rescue SOAP::EmptyResponseError
-      if retries < 5
-        retry
-      else
-        raise
-      end
-    end  
+    self.find_or_create_by_login(crowd_user.name)
   end
   
   # dummy method for restful_authentication plugin
@@ -60,16 +50,9 @@ class User < ActiveRecord::Base
     
   def after_initialize
     unless self.login.blank?
-      retries = 0
       begin
         @crowd_user = Crowd.new.find_by_name(self.login)
       rescue SOAP::FaultError
-      rescue SOAP::EmptyResponseError
-        if retries < 5
-          retry
-        else
-          raise
-        end
       end
 
       @crowd_group_names = Crowd.new.find_group_memberships(@crowd_user.name)  
