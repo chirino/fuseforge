@@ -1,26 +1,27 @@
 <div class="wrapper">
-  <div class="section">
-    <h2>Listing Unapproved Projects</h2>
+  <h1>Listing Unapproved Projects</h1>
+  <div class="one_column section">
+    <div class="interior">
+      <table>
+        <tr>
+          <th></th>
+          <th>Name</th>
+          <th>Shortname</th>
+          <th>Description</th>
+        </tr>
 
-    <table>
-      <tr>
-        <th></th>
-        <th>Name</th>
-        <th>Shortname</th>
-        <th>Description</th>
-      </tr>
-
-      <% for unapproved_project in @unapproved_projects %>
-      <tr>
-        <td><%= image_tag unapproved_project.image.url(:thumb) %></td>
-        <td><%=link_to h(unapproved_project.name), unapproved_project_path(unapproved_project) %></td>
-        <td><%=h unapproved_project.shortname %></td>
-        <td><%=sanitize unapproved_project.description %></td>
-      </tr>
-      <% end %>
-    </table>
+        <% for unapproved_project in @unapproved_projects %>
+        <tr>
+          <td><%= image_tag unapproved_project.image.url(:thumb) %></td>
+          <td><%=link_to h(unapproved_project.name), unapproved_project_path(unapproved_project) %></td>
+          <td><%=h unapproved_project.shortname %></td>
+          <td><%=sanitize unapproved_project.description %></td>
+        </tr>
+        <% end %>
+      </table>
+    </div>
   </div>
-  <p>  
+  <div class="bottom_links">  
     <%= link_to 'Back to Site Administration', admin_path %>
-  </p>
+  </div>
 </div>
