@@ -24,8 +24,17 @@ class User < ActiveRecord::Base
     end
 
     return false unless RegisteredUserGroup.new.user_names.include?(crowd_user.name)
-    
-    self.find_or_create_by_login(crowd_user.name)
+  
+    retries = 0
+    begin  
+      self.find_or_create_by_login(crowd_user.name)
+    rescue SOAP::EmptyResponseError
+      if retries < 5
+        retry
+      else
+        raise
+      end
+    end  
   end
   
   # dummy method for restful_authentication plugin
