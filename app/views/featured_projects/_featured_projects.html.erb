@@ -1,15 +1,17 @@
 <div id="featured_projects" class="two_column section" style="height:400px;">
-  <h2>Featured Projects</h2>
-  <p>Drag a project to <strong>Unfeatured Projects</strong> to no longer feature it.</p>
-  <div class="scrollable_div">
-    <% @featured_projects.each do |featured_project| %>
-    <div id="featured_project_<%= featured_project.id -%>" style="float:left;text-align:center;margin:10px;cursor:move;">
-      <%= image_tag(featured_project.project.image.url(:thumb)) %>
-      <br />
-      <%= h(featured_project.project.name) %>  
-    </div>  
-    <%= draggable_element("featured_project_#{featured_project.id}", :revert => false) %>
-    <% end %>
+  <div class="interior">
+    <h2>Featured Projects</h2>
+    <p>Drag a project to <strong>Unfeatured Projects</strong> to no longer feature it.</p>
+    <div class="scrollable_div">
+      <% @featured_projects.each do |featured_project| %>
+      <div id="featured_project_<%= featured_project.id -%>" style="float:left;text-align:center;margin:10px;cursor:move;">
+        <%= image_tag(featured_project.project.image.url(:thumb)) %>
+        <br />
+        <%= h(featured_project.project.name) %>  
+      </div>  
+      <%= draggable_element("featured_project_#{featured_project.id}", :revert => false) %>
+      <% end %>
+    </div>
   </div>
 </div>
 <%= drop_receiving_element("featured_projects", :url => { :action => "create" }) %>
