@@ -1,13 +1,11 @@
 <div class="wrapper">
   <h1>Editing News Item for <%= h @project.name -%></h1>
-  <div class="section">
-    <% form_for( [@project, @project_news_item] ) do |f| %>
-      <%= render :partial => 'form', :object => f %>
-      <div class="form_button">
-        <%= f.submit "Update" %>
-      </div>
-    <% end %>
-  </div>
+  <% form_for( [@project, @project_news_item] ) do |f| %>
+    <%= render :partial => 'form', :object => f %>
+    <div class="form_button">
+      <%= f.submit "Update" %>
+    </div>
+  <% end %>
   <div class="bottom_links">
     <%= link_to 'Show', project_project_news_item_path(:project_id => @project, :id => @project_news_item) %> |
     <%= link_to 'Back', project_project_news_items_path(:project_id => @project) %>
