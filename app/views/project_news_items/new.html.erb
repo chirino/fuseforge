@@ -6,7 +6,7 @@
       <div class="interior">
         <p>
           <%= f.label :title %><br />
-          <%= f.text_field :title %>
+          <%= f.text_field :title, :size => 50 %>
         </p>
       </div>
     </div>
@@ -14,7 +14,7 @@
       <div class="interior">  
         <p>
           <%= f.label :contents %><br />
-          <%= f.text_area :contents %>
+          <%= f.text_area :contents, :rows => 20, :cols => 40 %>
         </p>
       </div>
     </div>    
