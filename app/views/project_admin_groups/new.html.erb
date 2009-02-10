@@ -1,19 +1,19 @@
 <div class="wrapper">
   <h1>Add Crowd Admin Group to <%= h @project.name -%></h1>
-  <div class="one_column section">
-    <div class="interior">
-      <% form_for( [@project, @project_admin_group] ) do |f| %>
-        <%= f.error_messages %>
+  <% form_for( [@project, @project_admin_group] ) do |f| %>
+    <%= f.error_messages %>
+    <div class="one_column section">
+      <div class="interior">
         <p>
           <%= f.label :name %><br />
           <%= f.select :name, options_for_select, { :prompt => true } %>
         </p>
-        <div class="form_button">
-          <%= f.submit "Add" %>
-        </div>
-      <% end %>
-    </div>  
-  </div>
+      </div>  
+    </div>
+    <div class="form_button">
+      <%= f.submit "Add" %>
+    </div>
+  <% end %>
   <div class="bottom_links">
     <%= link_to 'Back', project_project_admin_groups_path(:project_id => @project) %>
   </div>
