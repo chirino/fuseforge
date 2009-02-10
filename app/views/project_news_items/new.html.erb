@@ -1,7 +1,7 @@
 <div class="wrapper">
   <h1>New News Item for <%= h @project.name -%></h1>
   <% form_for( [@project, @project_news_item] ) do |f| %>
-    <%= render :partial => :form -%>
+    <%= render :partial => 'form', :object => f %>
     <div class="form_button">
       <%= f.submit "Create" %>
     </div>

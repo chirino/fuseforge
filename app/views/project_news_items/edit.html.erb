@@ -2,7 +2,7 @@
   <h1>Editing News Item for <%= h @project.name -%></h1>
   <div class="section">
     <% form_for( [@project, @project_news_item] ) do |f| %>
-      <%= render :partial => :form -%>
+      <%= render :partial => 'form', :object => f %>
       <div class="form_button">
         <%= f.submit "Update" %>
       </div>
