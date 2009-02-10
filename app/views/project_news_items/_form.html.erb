@@ -1,0 +1,17 @@
+<%= form.error_messages %>
+<div class="two_column section">    
+  <div class="interior">
+    <p>
+      <%= form.label :title %><br />
+      <%= form.text_field :title, :size => 50 %>
+    </p>
+  </div>
+</div>
+<div class="two_column section">
+  <div class="interior">  
+    <p>
+      <%= form.label :contents %><br />
+      <%= form.text_area :contents, :rows => 10, :cols => 45 %>
+    </p>
+  </div>
+</div>    
