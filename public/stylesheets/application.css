@@ -179,3 +179,8 @@
   margin: 0 20px 20px 0;
   color: #74C244;	
 }
+
+.bottom_links {
+  clear:both;
+  margin-top: 20px;	
+}
