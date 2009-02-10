@@ -39,7 +39,7 @@ class ProjectNewsItemsController < ApplicationController
 
     respond_to do |format|
       if @project_news_item.save
-        flash[:notice] = 'ProjectNewsItem was successfully created.'
+        flash[:notice] = 'Project News Item was successfully created.'
         format.html { redirect_to(project_project_news_item_path(:project_id => @project.id, :id => @project_news_item.id)) }
         format.xml  { render :xml => @project_news_item, :status => :created, :location => @project_news_item }
       else
@@ -52,7 +52,7 @@ class ProjectNewsItemsController < ApplicationController
   def update
     respond_to do |format|
       if @project_news_item.update_attributes(params[:project_news_item])
-        flash[:notice] = 'ProjectNewsItem was successfully updated.'
+        flash[:notice] = 'Project News Item was successfully updated.'
         format.html { redirect_to(project_project_news_item_path(:project_id => @project.id, :id => @project_news_item.id)) }
         format.xml  { head :ok }
       else
