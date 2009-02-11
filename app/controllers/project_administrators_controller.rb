@@ -49,7 +49,7 @@ class ProjectAdministratorsController < ApplicationController
   end
   
   def destroy
-    @project.remove_admin(@project_administrator)
+    @project.remove_administrator(@project_administrator)
     
     respond_to do |format|
       format.html { redirect_to(project_project_admins_path(@project)) }

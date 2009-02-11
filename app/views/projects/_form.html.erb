@@ -15,7 +15,7 @@
       <%= observe_field  "project_shortname", :frequency => 0.10, :url => { :action=>'validate_proj_sname' }, 
           :with => "'proj_sname='+escape(value)", :update => "status" %>
       <div id="status"></div>
-      Must be between 3-16 uppercase, alphabetic characters.  No numbers, spaces, hyphens, or underscores.
+      Shortname must be between 3-16 uppercase, alphabetic characters.  No numbers, spaces, hyphens, or underscores.
     </p>
     <% end %>
   </div>  
