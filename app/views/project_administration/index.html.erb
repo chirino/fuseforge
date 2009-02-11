@@ -1,7 +1,7 @@
 <div class="wrapper">
+  <h1>Project Administration for <%= h @project.name -%></h1>
   <div class="one_column section">
     <div class="interior">
-      <h2>Project Administration for <%= h @project.name -%></h2>
       <ul>
       	<li><%= link_to 'Edit', edit_project_path(@project) -%></li>
       	<li><%= link_to 'Maintain News Items', project_project_news_items_path(:project_id => @project, :from_project_admin => true) -%></li>
