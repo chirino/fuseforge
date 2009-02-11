@@ -1,17 +1,21 @@
-<h1>Listing Project Categories</h1>
-
-<div id="project_categories">
-  <ul id="sortable_list">
-    <% @project_categories.each do |project_category| %>	
-    <li id="project_category_<%= project_category.id %>">
-      <%= project_category.name -%>
-      <%= link_to 'Edit', edit_project_category_path(project_category) %>
-      <%= link_to 'Destroy', project_category_path(project_category), :confirm => 'Are you sure?', :method => :delete -%>
-    </li>  
-    <% end %>
-  </ul>
+<div class="wrapper">
+  <h1>Listing Project Categories</h1>
+  <div id="project_categories" class="one_column section">
+    <div class="interior">
+      <ul id="sortable_list">
+        <% @project_categories.each do |project_category| %>	
+        <li id="project_category_<%= project_category.id %>">
+          <%= project_category.name -%>
+          <%= link_to 'Edit', edit_project_category_path(project_category) %>
+          <%= link_to 'Destroy', project_category_path(project_category), :confirm => 'Are you sure?', :method => :delete -%>
+        </li>  
+        <% end %>
+      </ul>
+    </div>
+  </div>
+  <div class="bottom_links">
+    <%= link_to 'New Project Category', new_project_category_path %>
+  </div>  
 </div>
 
 <%= sortable_element('sortable_list', :url => {:action => :update_positions}) %>
-<br />
-<%= link_to 'New Project Category', new_project_category_path %>
