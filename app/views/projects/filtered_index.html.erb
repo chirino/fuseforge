@@ -22,7 +22,7 @@
         <tr>
           <td><%= image_tag project.image.url(:thumb) %></td>
           <td><%=link_to h(project.name), project %></td>
-          <td><%= sanitize(truncate(project.description, 100) %></td>
+          <td><%= sanitize(truncate(project.description, 100)) %></td>
         </tr>
         <% end %>
       </table>
