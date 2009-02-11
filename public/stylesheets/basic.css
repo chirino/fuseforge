@@ -85,6 +85,10 @@ a img {border: none;}
 
 #footer #copyright a {padding: 0 0.5em;}
 
+#footer p {
+  text-align: center;
+}
+
 #content h2.subtitle {color: gray; margin-top: -0.5em; font-style: italic;}
 
 /* Fixes 4/17/2008 */
