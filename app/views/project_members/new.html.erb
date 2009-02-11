@@ -1,7 +1,7 @@
 <div class="wrapper">
+  <h1>Add Member to <%= h @project.name -%></h1>
   <div class="one_column section">
     <div class="interior">
-      <h2>Add Member to <%= h @project.name -%></h2>
       <% form_tag( project_project_members_path(@project), :method => :post) do %>
         <p>
           <label>User Login</label><br />
