@@ -1,7 +1,7 @@
-<div id="project_filters" class="section">
-  <div class="interior">
-    <h2>Search Filter</h2>
-    <% form_for @search, :html => { :id => "project-search" } do |f| %>
+<% form_for @search, :html => { :id => "project-search" } do |f| %>
+  <div id="project_filters" class="section">
+    <div class="interior">
+      <h2>Search Filter</h2>
       <% f.fields_for @search.conditions do |projects| %>
         <%= hidden_field_tag :show_search_form, true %>
         <p>
@@ -40,8 +40,10 @@
           </tr>
         </table>    
       <% end %>
-      <%= f.submit "Search" %>
-      <%= link_to 'Reset', projects_path(:show_search_form => true) -%> 
-    <% end %>
+    </div>
   </div>
-</div>  
+  <div class="form_button">  
+    <%= f.submit "Search" %>
+    <%= link_to 'Reset', projects_path(:show_search_form => true) -%> 
+  </div>
+<% end %>
