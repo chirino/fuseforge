@@ -7,12 +7,12 @@
           <label>User Login</label><br />
           <%= text_field_tag 'login', @login %>
         </p>
-        <p>
-          <%= submit_tag "Add" %>
-        </p>
-      <% end %>
+      </div>
     </div>
-  </div>
+    <div class="form_button">
+      <%= submit_tag "Add" %>
+    </div>
+  <% end %>
   <div class="bottom_links">
     <%= link_to 'Back', project_project_members_path(:project_id => @project) %>
   </div>
