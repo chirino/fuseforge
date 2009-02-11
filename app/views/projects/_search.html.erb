@@ -1,14 +1,12 @@
 <% form_for @search, :html => { :id => "project-search" } do |f| %>
   <div id="project_filters" class="section">
     <div class="interior">
-      <h2>Search Filter</h2>
+      <h2 style="display:inline;">Search Filter</h2>
       <% f.fields_for @search.conditions do |projects| %>
         <%= hidden_field_tag :show_search_form, true %>
-        <p>
           Advanced Search
           <%= check_box_tag :advanced_search, "1", @advanced_search, 
                :onchange => "Element.toggle('basic_search_fields');Element.toggle('advanced_search_fields')" %>
-        </p>
         <div id="basic_search_fields" style="display:<%= @advanced_search ? 'none' : 'block' -%>;">
           <label>Keywords:</label>
           <%= text_field_tag :keywords, @keywords %>
