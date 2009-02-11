@@ -1,11 +1,13 @@
-<h1>Editing Project Category</h1>
-
-<% form_for(@project_category) do |f| %>
-  <%= render :partial => 'form', :object => f %>
-  <p>
-    <%= f.submit "Update" %>
-  </p>
-<% end %>
-
-<%= link_to 'Show', @project_category %> |
-<%= link_to 'Back', project_categories_path %>
+<div class="wrapper">
+  <h1>Editing Project Category</h1>
+  <% form_for(@project_category) do |f| %>
+    <%= render :partial => 'form', :object => f %>
+    <div class="form_button">
+      <%= f.submit "Update" %>
+    </div>
+  <% end %>
+  <div class="bottom_links">
+    <%= link_to 'Show', @project_category %> |
+    <%= link_to 'Back', project_categories_path %>
+  </div>
+</div>  
