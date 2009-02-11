@@ -1,0 +1,8 @@
+The following project has been created in FUSE Forge and is awaiting approval:
+
+Name:         <%= @project.name %>
+Shortname:    <%= @project.shortname %>
+Created By:   <%= @project.created_by.full_name %>
+Description:  <%= @project.description %>
+
+To approve or reject the project, go here:  <%= url_for(:host => FUSEFORGE_URL.delete('http://'), :controller => 'unapproved_projects', :action => 'show', :id => @project) %>

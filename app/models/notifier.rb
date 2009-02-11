@@ -5,4 +5,11 @@ class Notifier < ActionMailer::Base
     subject    "Your FUSE Forge project has been approved."
     body       :project => project
   end
+
+  def project_creation_notification(project)
+    recipients SiteAdminGroup.users.collect { |u| "#{u.full_name} <#{u.email}>" }
+    from       FUSEFORGE_EMAIL_ADDRESS
+    subject    "A new FUSE Forge project is awaiting approval."
+    body       :project => project
+  end
 end

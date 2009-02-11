@@ -96,6 +96,7 @@ class Project < ActiveRecord::Base
     
   def after_create
     init_groups
+    Notifier.deliver_project_creation_notification(self)
   end
   
   def name=(value)
