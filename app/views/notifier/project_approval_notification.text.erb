@@ -1,0 +1,6 @@
+Hello <%= @project.created_by.first_name %>,
+
+The project, <%= @project.name -%>, that you recently created on FUSE Forge has been approved and is available for use.  You can find
+the project home page here: <%= url_for(:host => FUSEFORGE_URL, :controller => 'projects', :action => 'show', :id => @project) -%>.
+
+The FUSE Forge Team

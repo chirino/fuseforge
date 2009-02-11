@@ -149,6 +149,7 @@ class Project < ActiveRecord::Base
     init_components
     self.status = ProjectStatus.active
     save
+    Notifier.deliver_project_approval_notification(self)
   end  
 
   def administrators
