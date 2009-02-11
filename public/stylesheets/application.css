@@ -190,3 +190,11 @@
   clear: both;
   padding-top: 10px;
 }
+
+th {
+  text-align: left;
+}
+
+td { 
+  padding: 10px;
+}
