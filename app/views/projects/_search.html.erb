@@ -7,6 +7,7 @@
           Advanced Search
           <%= check_box_tag :advanced_search, "1", @advanced_search, 
                :onchange => "Element.toggle('basic_search_fields');Element.toggle('advanced_search_fields')" %>
+          <br />     
         <div id="basic_search_fields" style="display:<%= @advanced_search ? 'none' : 'block' -%>;">
           <label>Keywords:</label>
           <%= text_field_tag :keywords, @keywords %>
