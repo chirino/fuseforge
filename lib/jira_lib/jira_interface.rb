@@ -218,7 +218,7 @@ class JiraInterface
     forge_users_grp = @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_jira_group)
     
     #check if the proj_short_name exists
-    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{proj_short_name}-scheme","Created through webservice")
+    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{proj_short_name}-scheme1","Created through webservice")
 
     @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
       if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
