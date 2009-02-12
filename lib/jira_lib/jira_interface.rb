@@ -16,7 +16,7 @@ class JiraInterface
   LOGIN = 'forgeadmin'
   PASSWORD = 'forgeadmin'
   #LOGIN = 'jira'
-  #PASSWORD = '1jira1'
+  #PASSWORD = 'jira'
 
   ADMIN_GROUP_PERMISSIONS = {
    23 => :administer_projects,
@@ -61,7 +61,7 @@ class JiraInterface
   def initialize
     @jira_soap_service = JiraSoapService.new(ENDPOINT_URL)
 
-    if ENDPOINT_URL =~ /forge\.fusesource\./
+      if ENDPOINT_URL =~ /forge\.fusesource\./
       relm = "http://forge.fusesource.com/" 
       username = "fuseforge" 
       password = "gong6.afield" 
@@ -79,6 +79,81 @@ class JiraInterface
   def login
     @jira_soap_service.login(LOGIN, PASSWORD)
   end  
+  
+  #if private_project is true then make it a private project from non-private project
+  #if private_project is false then make it a non-private project from private project  
+  def update_project(project_key , private_project)
+    
+    proj_id = @jira_soap_service.getProjectByKey(@ctx,project_key).id
+    project = @jira_soap_service.getProjectWithSchemesById(@ctx,proj_id)
+    old_perm_scheme_name = project.permissionScheme.name
+    len = old_perm_scheme_name.length
+    iter = old_perm_scheme_name.slice(len-1,len)
+    iter = iter.to_i + 1
+    
+    #check if the proj_short_name exists
+    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{project_key}-scheme"+iter.to_s,"Created through webservice")
+
+    remuser = @jira_soap_service.getUser(@ctx,"forgeadmin")
+    
+    admin_grp = @jira_soap_service.getGroup(@ctx,"forge-#{project_key}-admins".downcase)
+    user_grp =  @jira_soap_service.getGroup(@ctx,"forge-#{project_key}-members".downcase)
+    forge_admin =  @jira_soap_service.getUser(@ctx,ApplicationHelper.get_forge_administrator.downcase)
+    forge_users_grp = @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_jira_group)
+    
+        
+    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
+      if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
+        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
+        @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
+      elsif USER_GROUP_PERMISSIONS.include?(perm.permission)
+        if private_project == true
+          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,user_grp)
+          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
+        else 
+          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)                      
+        end
+      end
+    end
+
+    
+    project.permissionScheme = new_perm_scheme
+    @jira_soap_service.updateProject(@ctx,project)
+    @jira_soap_service.deletePermissionScheme(@ctx,old_perm_scheme_name)
+    
+  end
+  
+  def update_project1(project_key , private_project)
+    proj_id = @jira_soap_service.getProjectByKey(@ctx,project_key).id
+    project = @jira_soap_service.getProjectWithSchemesById(@ctx,proj_id)
+    permission_sch = project.permissionScheme
+
+
+    user_grp =  @jira_soap_service.getGroup(@ctx,"forge-#{project_key}-members".downcase)
+    forge_admin =  @jira_soap_service.getUser(@ctx,ApplicationHelper.get_forge_administrator.downcase)
+    forge_users_grp = @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_jira_group)
+
+    perm_schemes = @jira_soap_service.getPermissionSchemes(@ctx)
+    
+    perm_schemes[1].permissionMappings.each do |perm|
+    begin
+    if USER_GROUP_PERMISSIONS.include?(perm.permission.permission)
+      if private_project == true
+        @jira_soap_service.addPermissionTo(@ctx,perm_schemes[1],perm,user_grp)
+        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
+        @jira_soap_service.addPermissionTo(@ctx,perm_schemes[1],perm,forge_admin)
+        @jira_soap_service.deletePermissionFrom(@ctx,perm_schemes[1],perm,forge_users_grp)
+      else 
+       @jira_soap_service.deletePermissionFrom(@ctx,permission_sch,perm,user_grp)
+       @jira_soap_service.deletePermissionFrom(@ctx,permission_sch,perm,forge_admin)
+       @jira_soap_service.addPermissionTo(@ctx,permission_sch,perm,forge_users_grp)                      
+      end
+    end
+    rescue SOAP::FaultError => e
+       e.to_s
+    end
+  end
+  end
   
   def project_name_exists?(project_name)
     @jira_soap_service.getProjectsNoSchemes(@ctx).any? { |remote_project| remote_project.name == project_name }
@@ -168,9 +243,9 @@ class JiraInterface
     admin_grp = @jira_soap_service.getGroup(@ctx,"forge-#{proj_short_name}-admins".downcase)
     user_grp =  @jira_soap_service.getGroup(@ctx,"forge-#{proj_short_name}-members".downcase)
     forge_admin =  @jira_soap_service.getUser(@ctx,ApplicationHelper.get_forge_administrator.downcase)
-    #TODO: if you change the below group make sure you add the changed group to 
+    #If you change the below group make sure you add the changed group to 
     #crowd application that connects to jira(currently called forgejira on crowd in source)
-    #STEP 1.3 in integration guide for more information
+    #SEE STEP 1.3 in integration guide for more information
     #
     forge_users_grp = @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_jira_group)
     
