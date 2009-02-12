@@ -123,38 +123,6 @@ class JiraInterface
     
   end
   
-  def update_project1(project_key , private_project)
-    proj_id = @jira_soap_service.getProjectByKey(@ctx,project_key).id
-    project = @jira_soap_service.getProjectWithSchemesById(@ctx,proj_id)
-    permission_sch = project.permissionScheme
-
-
-    user_grp =  @jira_soap_service.getGroup(@ctx,"forge-#{project_key}-members".downcase)
-    forge_admin =  @jira_soap_service.getUser(@ctx,ApplicationHelper.get_forge_administrator.downcase)
-    forge_users_grp = @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_jira_group)
-
-    perm_schemes = @jira_soap_service.getPermissionSchemes(@ctx)
-    
-    perm_schemes[1].permissionMappings.each do |perm|
-    begin
-    if USER_GROUP_PERMISSIONS.include?(perm.permission.permission)
-      if private_project == true
-        @jira_soap_service.addPermissionTo(@ctx,perm_schemes[1],perm,user_grp)
-        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
-        @jira_soap_service.addPermissionTo(@ctx,perm_schemes[1],perm,forge_admin)
-        @jira_soap_service.deletePermissionFrom(@ctx,perm_schemes[1],perm,forge_users_grp)
-      else 
-       @jira_soap_service.deletePermissionFrom(@ctx,permission_sch,perm,user_grp)
-       @jira_soap_service.deletePermissionFrom(@ctx,permission_sch,perm,forge_admin)
-       @jira_soap_service.addPermissionTo(@ctx,permission_sch,perm,forge_users_grp)                      
-      end
-    end
-    rescue SOAP::FaultError => e
-       e.to_s
-    end
-  end
-  end
-  
   def project_name_exists?(project_name)
     @jira_soap_service.getProjectsNoSchemes(@ctx).any? { |remote_project| remote_project.name == project_name }
   end
