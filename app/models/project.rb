@@ -111,17 +111,27 @@ class Project < ActiveRecord::Base
   
   def is_private=(value)
     bool_value = value == "1" ? true : false
-    confluence_interface = ConfluenceInterface.new
     
     if (bool_value != read_attribute(:is_private)) and not new_record?
+      
+      confluence_interface = ConfluenceInterface.new
+      jira_interface = JiraInterface.new
+      
       repository.reset_perm_file(bool_value)  
       forum.reset_permissions(bool_value)
-      # TODO:  Need same thing for issue tracker.
-      # TODO:  Need same thing for wiki.
 
-        arr_groups = Array.new
-        arr_groups << "forge-#{self.shortname}-admins"
-        arr_groups << "forge-#{self.shortname}-members"
+      arr_groups = Array.new
+      arr_groups << "forge-#{self.shortname}-admins"
+      arr_groups << "forge-#{self.shortname}-members"
+      
+      if bool_value == true
+        #make it a private project from non-private project
+        jira_interface.update_project(self.shortname, bool_value) 
+      else
+        #make it a non-private project from private project
+        jira_interface.update_project(self.shortname, bool_value) 
+      end
+
       
       confluence_interface.login
       if bool_value == true
