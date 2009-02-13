@@ -4,6 +4,6 @@ port: "3000"
 environment: production
 address: 127.0.0.1
 pid_file: /data/fuseforge/shared/pids/mongrel.pid
-servers: 1
+servers: 2
 user: rails
 group: fuseforge
