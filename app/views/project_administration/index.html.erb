@@ -5,7 +5,7 @@
       <ul>
       	<li><%= link_to 'Edit', edit_project_path(@project) -%></li>
       	<li><%= link_to 'Maintain News Items', project_project_news_items_path(:project_id => @project, :from_project_admin => true) -%></li>
-        <% allow :exec => proc { @current_user.is_company_employee?(@project) } do %>
+        <% allow :exec => proc { @current_user.is_company_employee? } do %>
       	<li><%= link_to 'Maintain Admin Groups', project_project_admin_groups_path(:project_id => @project) -%></li>
       	<li><%= link_to 'Maintain Member Groups', project_project_member_groups_path(:project_id => @project) -%></li>
       	<% end %>
