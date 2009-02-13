@@ -5,6 +5,8 @@ class Project < ActiveRecord::Base
   
   acts_as_taggable_on :tags
   
+  has_friendly_id :friendly_shortname
+  
   has_one :featured_project, :dependent => :destroy
   has_one :issue_tracker, :dependent => :destroy
   has_one :repository, :dependent => :destroy
@@ -155,6 +157,11 @@ class Project < ActiveRecord::Base
   def shortname=(value)
     write_attribute(:shortname, value) if read_attribute(:shortname).blank?
   end  
+  
+  # This is used by the friendly_id gem
+  def friendly_shortname
+    shortname.downcase
+  end
   
   def approve
     init_components
