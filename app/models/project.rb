@@ -221,8 +221,8 @@ class Project < ActiveRecord::Base
     end.flatten
   end
   
-  def self.find_unapproved_by_id(project_id)
-    self.find(:first, :conditions => ['id = ? AND project_status_id = ?', project_id, ProjectStatus.unapproved.id])
+  def self.find_unapproved_by_id(project_shortname)
+    self.find(:first, :conditions => ['shortname = ? AND project_status_id = ?', project_shortname.upcase, ProjectStatus.unapproved.id])
   end 
   
   def self.unfeatured
