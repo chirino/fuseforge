@@ -117,8 +117,8 @@ class Project < ActiveRecord::Base
       confluence_interface = ConfluenceInterface.new
       jira_interface = JiraInterface.new
       
-      repository.reset_perm_file(bool_value)  
-      forum.reset_permissions(bool_value)
+      #repository.reset_perm_file(bool_value)  
+      #forum.reset_permissions(bool_value)
 
       arr_groups = Array.new
       arr_groups << "forge-#{self.shortname}-admins"
