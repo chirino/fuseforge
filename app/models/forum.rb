@@ -72,6 +72,8 @@ class Forum < ActiveRecord::Base
   end
   
   def reset_permissions(make_private)
+    return true if phpbb_forum.blank?
+    
     phpbb_forum.recreate_group_rights(make_private)
     purge_cache
   end

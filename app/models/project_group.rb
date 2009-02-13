@@ -52,7 +52,7 @@ class ProjectGroup < ActiveRecord::Base
   def add_forum_user(user)
     if user.phpbb_user.blank?
       if phpbb_user = PhpbbUser.find_by_username(user.login)
-        user.phpbb_user = phpbb_user
+        user.phpbb_user = phpbb_user  
       else
         user.phpbb_user = PhpbbUser.create(:group_id => 2, :username => user.login, :username_clean => user.login,
          :user_password => '$H$9/zSBnbst5iCLLKJBWgp7pfxQMfTnB/', :user_email => user.email, :user_lang => 'en', :user_style => 1,
@@ -64,8 +64,10 @@ class ProjectGroup < ActiveRecord::Base
   end  
   
   def remove_forum_user(user)
-    phpbb_group.phpbb_user_groups.find_by_user_id(user.phpbb_user.user_id).destroy
-    project.forum.phpbb_forum.purge_cache unless project.forum.blank?
+    unless user.phpbb_user.user_id.blank?
+      phpbb_group.phpbb_user_groups.find_by_user_id(user.phpbb_user.user_id).destroy
+      project.forum.phpbb_forum.purge_cache unless project.forum.blank?
+    end
   end  
   
   def default?
