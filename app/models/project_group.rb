@@ -32,7 +32,7 @@ class ProjectGroup < ActiveRecord::Base
     Crowd.new.delete_group!(name) if exists_in_crowd?
 
   # TODO:  Take this out after we figure out problem with removing groups.
-  rescue SOAP::FaultError
+#  rescue SOAP::FaultError
   end
 
   def remove_from_phpbb
