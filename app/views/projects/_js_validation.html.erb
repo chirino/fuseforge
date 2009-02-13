@@ -1,6 +1,6 @@
 <% content_for :script do %>
   <script type="text/javascript">
-    <% if ['new', 'create'].include?(controller.controller_action) and \
+    <% if ['new', 'create'].include?(controller.action_name) and \
         (@project.terms_and_conditions.blank? or @project.terms_and_conditions == '0') %>
     Event.observe(window, 'load',
       function() { $('project_terms_and_conditions').disabled = true }
