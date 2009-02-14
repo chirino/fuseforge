@@ -122,29 +122,36 @@ class Project < ActiveRecord::Base
       repository.reset_perm_file(bool_value)  
       forum.reset_permissions(bool_value)
 
-      arr_groups = Array.new
-      arr_groups << "forge-#{self.shortname}-admins"
-      arr_groups << "forge-#{self.shortname}-members"
+      confluence_interface.login
+      confluence_interface.reset_space_perm(self.shortname,bool_value)
+      confluence_interface.logout
       
-      if bool_value == true
-        #make it a private project from non-private project
-        jira_interface.update_project(self.shortname, bool_value) 
-      else
-        #make it a non-private project from private project
-        jira_interface.update_project(self.shortname, bool_value) 
-      end
+      jira_interface.update_project(self.shortname, bool_value) 
 
       
-      confluence_interface.login
-      if bool_value == true
-        confluence_interface.add_remove_groups_to_space(self.shortname, 
-                arr_groups,ApplicationHelper.get_default_confluence_group)
-      else
-        confluence_interface.add_remove_groups_to_space(self.shortname, ApplicationHelper.get_default_confluence_group, 
-                                          arr_groups)
-      end
-        confluence_interface.logout
-    end  
+#      arr_groups = Array.new
+#      arr_groups << "forge-#{self.shortname}-admins"
+#      arr_groups << "forge-#{self.shortname}-members"
+      
+#      if bool_value == true
+#        #make it a private project from non-private project
+#        jira_interface.update_project(self.shortname, bool_value) 
+#      else
+#        #make it a non-private project from private project
+#        jira_interface.update_project(self.shortname, bool_value) 
+#      end
+
+      
+#      confluence_interface.login
+#      if bool_value == true
+#        confluence_interface.add_remove_groups_to_space(self.shortname, 
+#                arr_groups,ApplicationHelper.get_default_confluence_group)
+#      else
+#        confluence_interface.add_remove_groups_to_space(self.shortname, ApplicationHelper.get_default_confluence_group, 
+#                                          arr_groups)
+#      end
+#        confluence_interface.logout
+#    end  
     
     write_attribute(:is_private, value)
   end  
