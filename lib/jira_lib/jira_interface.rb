@@ -5,12 +5,8 @@ require 'jira_lib/defaultDriver.rb'
 
 class JiraInterface
 
-  #TODO: read all these constants from a yml file
   ENDPOINT_URL = FUSEFORGE_URL + "/issues/rpc/soap/jirasoapservice-v2"
   #ENDPOINT_URL = "http://localhost:8080/rpc/soap/jirasoapservice-v2"
-  PROJECT_ADMIN_GROUP_PERM = "admin"
-  PROJECT_USER_GROUP_PERM = "members"
-  PROJECT_ALL_PERM = "all"  
   
   MEMBERS = "all"
   LOGIN = 'forgeadmin'
@@ -87,12 +83,13 @@ class JiraInterface
     proj_id = @jira_soap_service.getProjectByKey(@ctx,project_key).id
     project = @jira_soap_service.getProjectWithSchemesById(@ctx,proj_id)
     old_perm_scheme_name = project.permissionScheme.name
-    len = old_perm_scheme_name.length
-    iter = old_perm_scheme_name.slice(len-1,len)
-    iter = iter.to_i + 1
+    @jira_soap_service.deletePermissionScheme(@ctx,old_perm_scheme_name)
+#    len = old_perm_scheme_name.length
+#    iter = old_perm_scheme_name.slice(len-1,len)
+#    iter = iter.to_i + 1
     
     #check if the proj_short_name exists
-    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{project_key}-scheme"+iter.to_s,"Created through webservice")
+    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{project_key}-scheme","Created through webservice")
 
     remuser = @jira_soap_service.getUser(@ctx,"forgeadmin")
     
@@ -119,7 +116,7 @@ class JiraInterface
     
     project.permissionScheme = new_perm_scheme
     @jira_soap_service.updateProject(@ctx,project)
-    @jira_soap_service.deletePermissionScheme(@ctx,old_perm_scheme_name)
+    
     
   end
   
@@ -204,13 +201,15 @@ class JiraInterface
   
   #TODO: assign project category
   
-  def create_proj_default_perm(project_name, proj_short_name,project_owner_id,issue_url,private_project=false)
+  def create_proj_default_perm(project_name, proj_short_name,project_desc,project_owner_id,issue_url,private_project=false)
 
     remuser = @jira_soap_service.getUser(@ctx,project_owner_id)
     
     admin_grp = @jira_soap_service.getGroup(@ctx,"forge-#{proj_short_name}-admins".downcase)
     user_grp =  @jira_soap_service.getGroup(@ctx,"forge-#{proj_short_name}-members".downcase)
+    #anony_grp =  @jira_soap_service.getGroup(@ctx,"Anyone")
     forge_admin =  @jira_soap_service.getUser(@ctx,ApplicationHelper.get_forge_administrator.downcase)
+    
     #If you change the below group make sure you add the changed group to 
     #crowd application that connects to jira(currently called forgejira on crowd in source)
     #SEE STEP 1.3 in integration guide for more information
@@ -218,7 +217,7 @@ class JiraInterface
     forge_users_grp = @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_jira_group)
     
     #check if the proj_short_name exists
-    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{proj_short_name}-scheme1","Created through webservice")
+    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{proj_short_name}-scheme",project_desc)
 
     @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
       if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
@@ -229,7 +228,7 @@ class JiraInterface
           @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,user_grp)
           @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
         else 
-          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)                      
+          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)
         end
       end
     end
