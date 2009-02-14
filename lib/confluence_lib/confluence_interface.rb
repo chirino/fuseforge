@@ -46,6 +46,22 @@ class ConfluenceInterface
     @confluence_soap_service.removeSpace(@ctx,project_sname)
   end
 
+  def reset_space_perm(project_sname,private_val)
+  
+   space_perms = @confluence_soap_service.getSpaceLevelPermissions(@ctx) 
+   proj_grps = ApplicationHelper.get_project_groups(project_sname)
+    
+   if private_val == true
+     add_remove_groups_to_space(project_sname,proj_grps.values,ApplicationHelper.get_default_confluence_group)
+     #remove anonymous access
+     @confluence_soap_service.removeAnonymousPermissionFromSpace(@ctx,"VIEWSPACE",project_sname)
+   else   
+     add_remove_groups_to_space(project_sname,ApplicationHelper.get_default_confluence_group,proj_grps.values)
+     @confluence_soap_service.addAnonymousPermissionToSpace(@ctx,"VIEWSPACE",project_sname)
+   end
+    
+  end
+  
   def get_latest_for_space(project_sname, max_results=10)
 
     search_results = @confluence_soap_service.getPages(@ctx,project_sname)
