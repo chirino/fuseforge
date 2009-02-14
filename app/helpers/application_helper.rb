@@ -32,6 +32,13 @@ module ApplicationHelper
   def ApplicationHelper.get_forge_jira_group
     FORGE_JIRA_GROUP
   end
+  
+  def ApplicationHelper.get_project_groups(project_sname)
+      hsh_groups = Hash.new
+      hsh_groups[:admins_grp] = "forge-#{project_sname}-admins".downcase
+      hsh_groups[:membrs_grp] = "forge-#{project_sname}-members".downcase
+      hsh_groups
+  end
 
   
 end
