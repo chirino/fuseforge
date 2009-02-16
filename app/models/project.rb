@@ -151,7 +151,7 @@ class Project < ActiveRecord::Base
 #                                          arr_groups)
 #      end
 #        confluence_interface.logout
-#    end  
+    end  
     
     write_attribute(:is_private, value)
   end  
