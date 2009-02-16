@@ -72,19 +72,16 @@ class WebDavLocation < ActiveRecord::Base
   end  
   
   def apache_site_file
-#<VirtualHost *:80>
-#  DocumentRoot #{webdav_collection_path}/
-#  <Directory #{webdav_collection_path}/>
-#    Options Indexes MultiViews
-#    AllowOverride None
-#    Order allow,deny
-#    allow from all 
-#  </Directory>
-
-#  Alias /#{webdav_alias} #{webdav_collection_path}
-#  <Location /#{webdav_alias}>
 <<eos
-  <Location /#{webdav_collection_path}>
+  <Directory #{webdav_collection_path}/>
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all 
+  </Directory>
+
+  Alias /#{webdav_alias} #{webdav_collection_path}
+  <Location /#{webdav_alias}>
     Dav On
     AuthType Basic
     AuthName "FUSE Forge Webdav"
@@ -97,7 +94,6 @@ class WebDavLocation < ActiveRecord::Base
     require valid-user
   </Location>
 eos
-#</VirtualHost>
   end
 
   def apache_site_file_name
