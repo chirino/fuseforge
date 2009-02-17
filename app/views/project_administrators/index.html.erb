@@ -13,7 +13,7 @@
         <% @project_administrators.each do |user| %>
         <tr>
           <td><%=h user.full_name -%></td>
-          <td><%=h user.email -%></td>
+          <td><%= js_antispam_email_link(h(user.email)) -%></td>
           <% if show_maintenance_links and user.crowd_group_names.include?(@project.default_admin_group_name) %>
           <td><%= link_to 'Remove from project', project_project_administrator_path(@project, user), :confirm => 'Are you sure?', 
                    :method => :delete -%></td>

@@ -228,6 +228,14 @@ class Project < ActiveRecord::Base
     end.flatten
   end
   
+  def internal_url
+    "#{FUSEFORGE_URL}/projects/#{shortname}"
+  end
+  
+  def external_url
+    "#{FUSEFORGE_URL}/sites/#{shortname}/"
+  end    
+  
   def self.find_unapproved_by_id(project_shortname)
     self.find(:first, :conditions => ['shortname = ? AND project_status_id = ?', project_shortname.upcase, ProjectStatus.unapproved.id])
   end 

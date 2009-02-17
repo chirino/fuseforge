@@ -50,6 +50,9 @@ class WebDavLocation < ActiveRecord::Base
     # Create the webdav directory, create the apache site file, enable the apache site file, and reload the apache config
     conn = open_conn
     create_directory(webdav_collection_path, conn)
+    create_directory("#{webdav_collection_path/site}", conn)
+    create_file(external_site_index_file, "#{webdav_collection_path/site/index.html}", conn)
+    chown_dir("#{webdav_collection_path}/")
     create_apache_site_file(apache_site_file, apache_site_file_name, conn)
     enable_apache_site_file(apache_site_file_name, conn)
     reload_apache_config(conn)
@@ -98,5 +101,12 @@ eos
 
   def apache_site_file_name
     "#{APACHE_SITE_PREFIX}#{key}"
+  end
+  
+  def external_site_index_file
+<<eos
+  <h1>#{project.name}</h1>
+  <a href='#{project.internal_url}'>Project Page</a>
+eos
   end
 end

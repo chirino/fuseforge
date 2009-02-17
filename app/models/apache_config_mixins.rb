@@ -40,8 +40,7 @@ module ApacheConfigMixins
   end  
   
   def create_apache_site_file(site_file_contents, site_file_name, conn=nil)
-    run_cmd_str("echo '#{site_file_contents}' > /etc/apache2/sites-available/#{site_file_name}", 
-     'Error creating apache site file!', conn)
+    run_cmd_str("echo '#{site_file_contents}' > /etc/apache2/sites-available/#{site_file_name}", 'Error creating apache site file!', conn)
   end  
   
   def remove_apache_site_file(site_file_name, conn=nil)
@@ -64,6 +63,10 @@ module ApacheConfigMixins
     run_cmd_str("rm #{path_str}", 'Error removing file!', conn)
   end  
 
+  def chown_dir(path_str, conn=nil)
+    run_cmd_str("sudo chown -R www-data:www-data #{path_str}", 'Error chowning directory!', conn)
+  end
+    
   def run_cmd_str(cmd_str, err_msg, conn)
     if conn
       conn.exec!(cmd_str)
