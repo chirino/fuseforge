@@ -79,7 +79,8 @@ class JiraInterface
   #if private_project is true then make it a private project from non-private project
   #if private_project is false then make it a non-private project from private project  
   def update_project(project_key , private_project)
-    
+
+  
     proj_id = @jira_soap_service.getProjectByKey(@ctx,project_key).id
     project = @jira_soap_service.getProjectWithSchemesById(@ctx,proj_id)
     old_perm_scheme_name = project.permissionScheme.name
@@ -216,6 +217,9 @@ class JiraInterface
     #
     forge_users_grp = @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_jira_group)
     
+    not_schemes = @jira_soap_service.getNotificationSchemes(@ctx)
+    def_scheme = not_schemes.detect {|scheme| scheme.name=='Default Notification Scheme'}
+    
     #check if the proj_short_name exists
     new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{proj_short_name}-scheme",project_desc)
 
@@ -234,7 +238,7 @@ class JiraInterface
     end
     @jira_soap_service.createProject(@ctx,proj_short_name, 
             project_name, "Created through JIRARPC",issue_url+proj_short_name , "forgeadmin",
-     new_perm_scheme, nil, nil)
+     new_perm_scheme, def_scheme, nil)
     logout(@ctx)    
  end
 
