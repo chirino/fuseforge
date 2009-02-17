@@ -229,11 +229,11 @@ class Project < ActiveRecord::Base
   end
   
   def internal_url
-    "#{FUSEFORGE_URL}/projects/#{shortname}"
+    "#{FUSEFORGE_URL}/projects/#{shortname.downcase}"
   end
   
   def external_url
-    "#{FUSEFORGE_URL}/sites/#{shortname}/"
+    "#{FUSEFORGE_URL}/sites/#{shortname.downcase}/"
   end    
   
   def self.find_unapproved_by_id(project_shortname)
