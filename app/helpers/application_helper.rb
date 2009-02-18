@@ -10,8 +10,9 @@ module ApplicationHelper
   #STEP 1.3 in the confluence-crowd integration
   #
   DEFAULT_CONFLUENCE_GROUP = "forge-confluence-users"
-  FORGE_ADMINISTRATOR = "forgeadmin"
-  FORGE_JIRA_GROUP    = "jira-fuseforge-developers"
+  FORGE_ADMINISTRATOR      = "forgeadmin"
+  FORGE_ADMINS_GROUP        = "forge-admins"
+  FORGE_JIRA_GROUP         = "jira-fuseforge-developers"
     
   def ApplicationHelper.get_internal_host
     FUSEFORGE_URL + "/"
@@ -29,6 +30,10 @@ module ApplicationHelper
     FORGE_ADMINISTRATOR
   end
 
+  def ApplicationHelper.get_forge_admins_group
+    FORGE_ADMINS_GROUP
+  end
+
   def ApplicationHelper.get_forge_jira_group
     FORGE_JIRA_GROUP
   end
@@ -39,7 +44,7 @@ module ApplicationHelper
       hsh_groups[:membrs_grp] = "forge-#{project_sname}-members".downcase
       hsh_groups
   end
-
+  
   # Following methods are from http://unixmonkey.net/?p=20
   
   # Rot13 encodes a string
