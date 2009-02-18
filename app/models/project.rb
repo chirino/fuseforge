@@ -16,6 +16,8 @@ class Project < ActiveRecord::Base
   
   has_many :news_items, :class_name => "ProjectNewsItem", :dependent => :destroy
   has_many :prospective_members, :class_name => "ProspectiveProjectMember", :dependent => :destroy
+  has_many :downloads, :dependent => :destroy
+  has_many :download_requests, :dependent => :destroy
   
   has_many :groups, :class_name => "ProjectGroup", :dependent => :destroy do
     def users
@@ -221,12 +223,6 @@ class Project < ActiveRecord::Base
   def default_member_group_name
     @default_member_group_name ||= "#{ProjectGroup::DEFAULT_PREFIX}-#{shortname.downcase}-#{ProjectGroup::DEFAULT_MEMBER_SUFFIX}"
   end  
-  
-  def downloads
-    self.wiki.wiki_pages.collect do |wiki_page| 
-      wiki_page.attachments.include_in_project_homepage_download_stats.collect { |attachment| attachment.downloads }
-    end.flatten
-  end
   
   def internal_url
     "#{FUSEFORGE_URL}/projects/#{shortname.downcase}"

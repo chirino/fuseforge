@@ -4,9 +4,11 @@ gem 'soap4r'
 require 'confluence_lib/confluence_defaultDriver.rb'
 
 class ConfluenceInterface
+  CONFLUENCE_URL = (RAILS_ENV == 'development' or Socket.gethostname == 'forgedev') ? \
+   "http://forge.fusesourcedev.com" : "http://forge.fusesource.com"
 
   #TODO: read all these constants from a yml file
-  ENDPOINT_URL = FUSEFORGE_URL + "/wiki/rpc/soap-axis/confluenceservice-v1" #"http://www.ionadev.com/issues/rpc/soap/jirasoapservice-v2"
+  ENDPOINT_URL = CONFLUENCE_URL + "/wiki/rpc/soap-axis/confluenceservice-v1" #"http://www.ionadev.com/issues/rpc/soap/jirasoapservice-v2"
   #ENDPOINT_URL = "http://localhost:8080/rpc/soap-axis/confluenceservice-v1"
   
   MEMBERS = "all"

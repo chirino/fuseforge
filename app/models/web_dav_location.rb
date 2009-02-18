@@ -42,7 +42,7 @@ class WebDavLocation < ActiveRecord::Base
   def url
     use_internal? ? internal_url : external_url
   end
-
+  
   def create_internal
     return true if not use_internal? or exists_internally?
     

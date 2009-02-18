@@ -4,8 +4,10 @@ gem 'soap4r'
 require 'jira_lib/defaultDriver.rb'
 
 class JiraInterface
+  JIRA_URL = (RAILS_ENV == 'development' or Socket.gethostname == 'forgedev') ? \
+   "http://forge.fusesourcedev.com" : "http://forge.fusesource.com"
 
-  ENDPOINT_URL = FUSEFORGE_URL + "/issues/rpc/soap/jirasoapservice-v2"
+  ENDPOINT_URL = JIRA_URL + "/issues/rpc/soap/jirasoapservice-v2"
   #ENDPOINT_URL = "http://localhost:8080/rpc/soap/jirasoapservice-v2"
   
   MEMBERS = "all"

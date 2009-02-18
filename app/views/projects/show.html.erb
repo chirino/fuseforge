@@ -58,8 +58,8 @@
 	  <div class="interior">
       <h2>Latest Version</h2>
       <ul>
-	    <% @project.repository.items.each do |i| %>
-        <li><%= link_to h(i.name), i.latest_version_url -%></li>
+	    <% @project.downloads.each do |download| %>
+        <li><%= link_to h(download.description), project_download_path(@project, download) -%></li>
       <% end %>
       </ul>
     </div>    
@@ -67,7 +67,7 @@
 	<div class="two_column section">
 	  <div class="interior">
       <h2>Activity</h2>
-      <p>Downloads: <%= @project.downloads.size %></p>
+      <p>Downloads: <%= @project.download_requests.size %></p>
       <p>Commits: <%= @project.repository.commits %></p>
 	  </div>
 	</div>  

@@ -16,7 +16,8 @@ ActionController::Routing::Routes.draw do |map|
   end  
   
   map.resources :projects do |project|
-    project.resources :project_downloads, :only => [:index]
+    project.resources :downloads
+    project.resources :download_requests, :only => [:create]
     project.resources :images, :only => [:show]
     project.resources :project_news_items
     project.resources :project_administrators, :except => [:edit, :update]

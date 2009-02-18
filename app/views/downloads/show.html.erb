@@ -1,0 +1,21 @@
+<div class="wrapper">
+  <h1>Download for <%= h @project.name -%></h1>
+  <div class="one_column section">
+    <div class="interior">
+      <p>
+        <%=h @download.description -%>
+      </p>
+      <p>
+        <%= h @download.url %>
+      </p>
+    </div>  
+  </div>
+  <div class="bottom_links">
+    <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+    <%= link_to 'Edit', edit_project_download_path(@project, @download) %> |
+    <%= link_to 'Back to Project Administration', project_administration_path(@project) %> |
+    <% end %>
+
+    <%= link_to 'Back to Project Home', project_path(@project) %>
+  </div>
+</div>
