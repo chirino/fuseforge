@@ -4,11 +4,13 @@ gem 'soap4r'
 require 'confluence_lib/confluence_defaultDriver.rb'
 
 class ConfluenceInterface
-  #TODO: read all these constants from a yml file
+  
   ENDPOINT_URL = CONFLUENCE_URL + "/wiki/rpc/soap-axis/confluenceservice-v1" #"http://www.ionadev.com/issues/rpc/soap/jirasoapservice-v2"
   #ENDPOINT_URL = "http://localhost:8080/rpc/soap-axis/confluenceservice-v1"
+
+  #ENDPOINT_URL = CONFLUENCE_URL_PREFIX + "/wiki/rpc/soap-axis/confluenceservice-v1" #"http://www.ionadev.com/issues/rpc/soap/jirasoapservice-v2"
+  ENDPOINT_URL = "http://localhost:8081/rpc/soap-axis/confluenceservice-v1"
   
-  MEMBERS = "all"
   #LOGIN = 'confluence'
   #PASSWORD = 'confluence'
   #LOGIN = 'sanjaymk'
@@ -47,8 +49,8 @@ class ConfluenceInterface
 
   def reset_space_perm(project_sname,private_val)
   
-   space_perms = @confluence_soap_service.getSpaceLevelPermissions(@ctx) 
    proj_grps = ApplicationHelper.get_project_groups(project_sname)
+   proj_grps[:forge_admin_group] = ApplicationHelper.get_forge_admins_group   
     
    if private_val == true
      add_remove_groups_to_space(project_sname,proj_grps.values,ApplicationHelper.get_default_confluence_group)
@@ -136,6 +138,7 @@ class ConfluenceInterface
       if is_private==true
         @confluence_soap_service.addPermissionToSpace(@ctx,perm,"forge-#{project_sname}-admins".downcase,project_sname)
         @confluence_soap_service.addPermissionToSpace(@ctx,perm,"forge-#{project_sname}-members".downcase,project_sname)
+        @confluence_soap_service.addPermissionToSpace(@ctx,perm,ApplicationHelper.get_forge_admins_group.downcase,project_sname)
       else
         @confluence_soap_service.addPermissionToSpace(@ctx,perm,ApplicationHelper.get_default_confluence_group,project_sname)
         if perm=="VIEWSPACE"
@@ -149,34 +152,6 @@ class ConfluenceInterface
 
   def logout
     @confluence_soap_service.logout(@ctx)
-  end
-
-  
-  def create_space1(project_id, project_name,is_private)
-    
-  remote_space = @confluence_soap_service.getSpace(@ctx, "SPONE ")
-  remote_space_groups = @confluence_soap_service.getSpaceGroups(@ctx)
-  user_perm = @confluence_soap_service.getPermissionsForUser(@ctx,project_id,"sanjaymk")
-  groups = @confluence_soap_service.getGroups(@ctx)
-  user_groups = @confluence_soap_service.getUserGroups(@ctx,"sanjaymk")
-  space_perms = @confluence_soap_service.getSpaceLevelPermissions(@ctx)
-  
-  #get Permissions that can be assigned
-  #permissions = @confluence_soap_service.getPermissions(@ctx,project_id)
-  space_perms.each do |perm|
-    #TODO: remove the hard coding of forge-confluence-users
-    @confluence_soap_service.addPermissionToSpace(@ctx,perm,"forge-confluence-users",project_id)
-  end
-  #remote_space_group = @confluence_soap_service.getSpaceGroup(@ctx,"forge-confluence-users")
-#   space = RemoteSpace.new
-#   space.name = project_name
-#   space.key = project_id
-#   space.spaceGroup = remote_space_group
-#   space.description = "Confluence workspace"
-#   #space.homePage = ""
-#   space.url = ""
-#   
-#   @confluence_soap_service.addSpace(@ctx,space)             
   end
 
 end
