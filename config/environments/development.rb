@@ -23,3 +23,7 @@ CROWD_COOKIE_DOMAIN_NAME = '.localfusesource.com'
 
 BROWSE_ISSUES_URL = 'http://forge.fusesourcedev.com/issues/browse'
 REPO_BASE_PATH = '/Users/jamey/work/chariot/iona/fuseforge/repos'
+CONFLUENCE_URL = "http://forge.fusesourcedev.com"
+JIRA_URL = "http://forge.fusesourcedev.com"
+
+

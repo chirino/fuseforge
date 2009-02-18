@@ -8,7 +8,7 @@ class IssueTracker < ActiveRecord::Base
 #  INTERNAL_PATH = '/issues/browse'
 #  INTERNAL_URL = 'http://' + INTERNAL_HOST + INTERNAL_PATH
   JIRA_INTERNAL_PATH = 'issues/browse/'
-  JIRA_INTERNAL_URL = ApplicationHelper.get_internal_host + JIRA_INTERNAL_PATH
+  JIRA_INTERNAL_URL = JIRA_URL + '/' + JIRA_INTERNAL_PATH
 
   belongs_to :project
   

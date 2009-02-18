@@ -25,3 +25,7 @@ FUSESOURCE_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com/" 
 FUSEFORGE_URL = Socket.gethostname == 'forgedev' ? "http://forge.fusesourcedev.com" : "http://forge.fusesource.com"
 REDIRECT_BACK_COOKIE_DOMAIN_NAME = Socket.gethostname == 'forgedev' ? ".fusesourcedev.com" : ".fusesource.com" 
 CROWD_COOKIE_DOMAIN_NAME = Socket.gethostname == 'forgedev' ? ".fusesourcdev.com" : ".fusesource.com" 
+CONFLUENCE_URL = Socket.gethostname == 'forgedev' ? "http://forge.fusesourcedev.com" : "http://forge.fusesource.com"
+JIRA_URL = Socket.gethostname == 'forgedev' ? "http://forge.fusesourcedev.com" : "http://forge.fusesource.com"
+
+

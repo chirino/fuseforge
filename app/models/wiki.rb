@@ -6,7 +6,7 @@ class Wiki < ActiveRecord::Base
   has_many :wiki_pages, :dependent => :destroy
   
   CONFLUENCE_INTERNAL_PATH = 'wiki/display/'
-  CONFLUENCE_INTERNAL_URL = ApplicationHelper.get_internal_host + CONFLUENCE_INTERNAL_PATH
+  CONFLUENCE_INTERNAL_URL = CONFLUENCE_URL + '/' + CONFLUENCE_INTERNAL_PATH
   
   def before_save
     self.external_url = '' if use_internal?
