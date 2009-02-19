@@ -60,6 +60,12 @@ class Repository < ActiveRecord::Base
     total_commits
   end
   
+  def last_commit_at
+    last_commit_at_time = ''
+    IO.popen("svnlook date #{repo_path}") { |x| last_commit_at_time = x.gets } if exists_internally?
+    last_commit_at_time
+  end
+  
   def downloads
     4571
   end

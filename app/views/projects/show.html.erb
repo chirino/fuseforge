@@ -70,8 +70,9 @@
 	<div class="two_column section">
 	  <div class="interior">
       <h2>Activity</h2>
-      <p>Downloads: <%= @project.download_requests.size %></p>
-      <p>Commits: <%= @project.repository.commits %></p>
+      <p>Downloads: <%= @project.download_requests.size -%></p>
+      <p>Commits: <%= @project.repository.commits -%></p>
+      <p>Last Commit At: <%= @project.repository.last_commit_at -%></p>
 	  </div>
 	</div>  
   <div class="two_column section">
