@@ -14,7 +14,7 @@ ActiveRecord::Schema.define(:version => 20090218142316) do
   create_table "download_requests", :force => true do |t|
     t.string   "url"
     t.string   "description"
-    t.integer  "user_id"
+    t.integer  "created_by_id"
     t.integer  "project_id"
     t.datetime "created_at"
     t.datetime "updated_at"

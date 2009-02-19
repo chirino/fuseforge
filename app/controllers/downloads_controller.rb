@@ -39,7 +39,7 @@ class DownloadsController < ApplicationController
     respond_to do |format|
       if @download.save
         flash[:notice] = 'Download was successfully created.'
-        format.html { redirect_to(project_downloads_path(:project_id => @project.id) }
+        format.html { redirect_to project_downloads_path(@project.id) }
         format.xml  { render :xml => @download, :status => :created, :location => @download }
       else
         format.html { render :action => "new" }

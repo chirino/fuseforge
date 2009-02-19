@@ -12,7 +12,7 @@
 
         <% @downloads.each do |download| %>
         <tr>
-          <td><%=h download.description -%></td>
+          <td><%= link_to h(download.description), project_download_path(@project, download) -%></td>
           <td><%= h download.url -%></td>
           <% if show_maintenance_links %>
           <td><%= link_to 'Edit', edit_project_download_path(@project, download) %></td>
@@ -26,7 +26,7 @@
   <div class="bottom_links">
     <% if show_maintenance_links %>
     <%= link_to 'Add download', new_project_download_path(@project) -%> |
-    <%= link_to 'Back to Project Administration', project_administration_path(@project) -%>
+    <%= link_to 'Back to Project Administration', project_administration_path(@project) -%> |
     <% end %>
     <%= link_to 'Back to project', project_path(@project) %>
   </div>

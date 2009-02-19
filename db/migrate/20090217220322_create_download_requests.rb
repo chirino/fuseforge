@@ -3,7 +3,7 @@ class CreateDownloadRequests < ActiveRecord::Migration
     create_table :download_requests do |t|
       t.string :url
       t.string :description
-      t.integer :user_id
+      t.integer :created_by_id
       t.integer :project_id
 
       t.timestamps

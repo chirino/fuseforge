@@ -1,5 +1,5 @@
 class UserActionObserver < ActiveRecord::Observer
-  observe ProjectNewsItem, NewsItem, FeaturedProject, WikiPage, WikiPageAttachment, ProjectGroup, DownloadRequest
+  observe ProjectNewsItem, NewsItem, FeaturedProject, WikiPage, WikiPageAttachment, ProjectGroup
 
   cattr_accessor :current_user
 
