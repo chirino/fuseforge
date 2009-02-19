@@ -55,7 +55,7 @@ class Repository < ActiveRecord::Base
   end
   
   def commits
-    323
+    exists_internally? ? system("svnlook youngest #{repo_path}") : ''
   end
   
   def downloads
