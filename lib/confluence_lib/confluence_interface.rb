@@ -9,7 +9,7 @@ class ConfluenceInterface
   #ENDPOINT_URL = "http://localhost:8080/rpc/soap-axis/confluenceservice-v1"
 
   #ENDPOINT_URL = CONFLUENCE_URL_PREFIX + "/wiki/rpc/soap-axis/confluenceservice-v1" #"http://www.ionadev.com/issues/rpc/soap/jirasoapservice-v2"
-  ENDPOINT_URL = "http://localhost:8081/rpc/soap-axis/confluenceservice-v1"
+  #ENDPOINT_URL = "http://localhost:8081/rpc/soap-axis/confluenceservice-v1"
   
   #LOGIN = 'confluence'
   #PASSWORD = 'confluence'
