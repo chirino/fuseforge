@@ -6,7 +6,7 @@
   	    <%= image_tag @project.image.url(:medium) if @project.image_file_name %>
       </div>
     	<div id="project_menu">
-        <%= link_to "Web Site", @project.external_url, :popup => true -%>
+        <%= link_to("Web Site", @project.external_website, :popup => true) unless @project.external_website.blank? -%>
         <% if logged_in? %>
         | <%= image_tag "admin1.png" %> <%= link_to "Admins", project_project_administrators_path(@project) -%>
         | <%= image_tag "members1.png" %> <%= link_to "Members", project_project_members_path(@project) -%>

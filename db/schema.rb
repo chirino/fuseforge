@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090218142316) do
+ActiveRecord::Schema.define(:version => 20090219215648) do
 
   create_table "download_requests", :force => true do |t|
     t.string   "url"
@@ -124,6 +124,7 @@ ActiveRecord::Schema.define(:version => 20090218142316) do
     t.integer  "project_category_id"
     t.boolean  "is_private"
     t.datetime "accepted_terms_at"
+    t.string   "external_url"
   end
 
   create_table "prospective_project_members", :force => true do |t|

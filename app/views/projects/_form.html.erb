@@ -38,6 +38,10 @@
       <%= form.label :project_category_id %>*<br />
       <%= form.select :project_category_id, ProjectCategory.options_for_select, { :prompt => true } %>
     </p>
+    <p>
+      <%= form.label :external_url %>*<br />
+      <%= form.text_field :external_url, :size => 50 %>
+    </p>
   </div>
 </div>
 <div class="two_column section">
