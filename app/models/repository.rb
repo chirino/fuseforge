@@ -55,11 +55,9 @@ class Repository < ActiveRecord::Base
   end
   
   def commits
-    if exists_internally?
-      IO.popen("svnlook youngest #{repo_path}") { |x| puts x.gets }
-    else
-      ''
-    end    
+    total_commits = ''
+    IO.popen("svnlook youngest #{repo_path}") { |x| total_commits = x.gets } if exists_internally?
+    total_commits
   end
   
   def downloads
