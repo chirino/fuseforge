@@ -62,7 +62,7 @@ class Repository < ActiveRecord::Base
   
   def last_commit_at
     last_commit_at_time = ''
-    IO.popen("svnlook date #{repo_path}") { |x| last_commit_at_time = x.gets } if exists_internally?
+    IO.popen("svnlook date #{repo_path}") { |x| last_commit_at_time = x.gets.gsub(/\(.*\)/, '') } if exists_internally?
     last_commit_at_time
   end
   
