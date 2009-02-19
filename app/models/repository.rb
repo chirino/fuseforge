@@ -56,13 +56,19 @@ class Repository < ActiveRecord::Base
   
   def commits
     total_commits = ''
-    IO.popen("svnlook youngest #{repo_path}") { |x| total_commits = x.gets } if exists_internally?
+    begin
+      IO.popen("svnlook youngest #{repo_path}") { |x| total_commits = x.gets } if exists_internally?
+    rescue
+    end
     total_commits
   end
   
   def last_commit_at
     last_commit_at_time = ''
-    IO.popen("svnlook date #{repo_path}") { |x| last_commit_at_time = x.gets.gsub(/\+.*/, '') + ' UTC' } if exists_internally?
+    begin
+      IO.popen("svnlook date #{repo_path}") { |x| last_commit_at_time = x.gets.gsub(/\+.*/, '') + ' UTC' } if exists_internally?
+    rescue
+    end
     last_commit_at_time
   end
   
