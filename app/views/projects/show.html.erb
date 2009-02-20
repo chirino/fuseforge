@@ -3,7 +3,7 @@
   <div class="one_column section">
     <div class="interior" style="min-height: 100px;">
       <div id="project_picture">
-  	    <%= image_tag @project.image.url(:medium) if @project.image_file_name %>
+  	    <%= image_tag @project.image.url(:medium) %>
       </div>
     	<div id="project_menu">
         <%= link_to("Web Site", @project.external_website, :popup => true) unless @project.external_website.blank? -%>
