@@ -80,7 +80,7 @@
       <h2>Recent News</h2>
       <ul>
 	    <% @project.news_items.recent.each do |i| %>
-        <li><%= link_to h(i.title), project_project_news_item_path(:project_id => @project, :id => i) -%></li>
+        <li><%= link_to truncate(h(i.title), 55), project_project_news_item_path(:project_id => @project, :id => i) -%></li>
       <% end %>
       </ul>
     </div>
