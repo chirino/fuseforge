@@ -59,9 +59,8 @@
 }
 
 #project_menu {
-  float: left;
+  float: center;
   font-size: 0.85em;
-  margin-left: 160px;
 }
 
 #project_attributes {
