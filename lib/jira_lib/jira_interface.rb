@@ -89,33 +89,43 @@ class JiraInterface
     #
     @jira_soap_service.deletePermissionScheme(@ctx,old_perm_scheme_name) unless old_perm_scheme_name == 'Default Permission Scheme'
     
-    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{project_key}-scheme","Created through webservice")
+    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{project_key}-scheme","Permission scheme for #{project_key}")
 
-    admin_grp = @jira_soap_service.getGroup(@ctx,"forge-#{project_key}-admins".downcase)
-    user_grp =  @jira_soap_service.getGroup(@ctx,"forge-#{project_key}-members".downcase)
+    proj_groups = ApplicationHelper.get_project_groups(project_key)
     forge_admin =  @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_admins_group)
     forge_users_grp = @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_jira_group)
-    
-        
-    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
-      if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
-        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
-        @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
-      elsif USER_GROUP_PERMISSIONS.include?(perm.permission)
-        if private_project == true
-          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,user_grp)
-          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
-        else 
-          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)                      
-        end
-      end
-    end
 
+
+    assign_permissions_to_perm_scheme(new_perm_scheme,forge_admin,proj_groups,forge_users_grp,private_project)
     
     project.permissionScheme = new_perm_scheme
     @jira_soap_service.updateProject(@ctx,project)
     @jira_soap_service.logout(@ctx)
   end
+  
+  def assign_permissions_to_perm_scheme(new_perm_scheme,forge_admin,proj_groups,forge_users_grp,private_project)
+
+    admin_grp = @jira_soap_service.getGroup(@ctx,proj_groups[:admins_grp].downcase)
+    user_grp =  @jira_soap_service.getGroup(@ctx,proj_groups[:membrs_grp].downcase)
+
+    
+    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
+      @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
+      
+      if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
+        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
+      elsif USER_GROUP_PERMISSIONS.include?(perm.permission)
+        if private_project == true
+          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,user_grp)
+        else 
+          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)                      
+        end
+      end
+
+    
+  end
+  end
+  
   
   def project_name_exists?(project_name)
     @jira_soap_service.getProjectsNoSchemes(@ctx).any? { |remote_project| remote_project.name == project_name }
@@ -173,11 +183,6 @@ class JiraInterface
     end  
   end
 
-  def remove_group_from_project(project_id, group_name,type='all')
-    true
-  end
-
-  
   def associate_groups(source_group,merge_group)
     
     src_group = @jira_soap_service.getGroup(@ctx,source_group)
@@ -200,10 +205,9 @@ class JiraInterface
   
   def create_proj_default_perm(project_name, proj_short_name,project_desc,project_owner_id,issue_url,private_project=false)
 
-    admin_grp = @jira_soap_service.getGroup(@ctx,"forge-#{proj_short_name}-admins".downcase)
-    user_grp =  @jira_soap_service.getGroup(@ctx,"forge-#{proj_short_name}-members".downcase)
-    #anony_grp =  @jira_soap_service.getGroup(@ctx,"Anyone")
     forge_admin =  @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_admins_group)
+    proj_groups = ApplicationHelper.get_project_groups(proj_short_name)
+    
     
     #If you change the below group make sure you add the changed group to 
     #crowd application that connects to jira(currently called forgejira on crowd in source)
@@ -217,21 +221,25 @@ class JiraInterface
     #check if the proj_short_name exists
     new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{proj_short_name}-scheme",project_desc)
 
-    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
-      if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
-        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
-        @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
-      elsif USER_GROUP_PERMISSIONS.include?(perm.permission)
-        if private_project == true
-          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,user_grp)
-          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
-        else 
-          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)
-        end
-      end
-    end
+    assign_permissions_to_perm_scheme(new_perm_scheme,forge_admin,proj_groups,forge_users_grp,private_project)
+    
+#    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
+#
+#      #add forge-admins group to the permission
+#      @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
+#
+#      if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
+#        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
+#      elsif USER_GROUP_PERMISSIONS.include?(perm.permission)
+#        if private_project == true
+#          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,user_grp)
+#        else 
+#          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)
+#        end
+#      end
+#    end
     @jira_soap_service.createProject(@ctx,proj_short_name, 
-            project_name, "Created through JIRARPC",issue_url+proj_short_name , "forgeadmin",
+            project_name, project_desc,issue_url+proj_short_name , project_owner_id,
      new_perm_scheme, def_scheme, nil)
     logout(@ctx)    
  end
