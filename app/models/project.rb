@@ -62,7 +62,7 @@ class Project < ActiveRecord::Base
   has_attached_file :image, 
     :url => "/:class/:id/:attachment/:style.:extension",
     :path => ":rails_root/assets/:class/:attachment/:id/:style_:basename.:extension",      
-    :default_url => "/:class/:attachment/missing_:style.png",
+    :default_url => "/images/missing_project_:style.gif",
     :styles => { :medium => "160x160", :thumb => "70x70" }
   
   named_scope :public, :conditions => { :is_private => false }
