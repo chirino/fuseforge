@@ -59,14 +59,12 @@
 }
 
 #project_menu {
-  float:center;
+  float: center;
   font-size: 0.85em;
 }
 
 #project_attributes {
-  clear:both;
-  width: 100%;
-  text-align: center;
+  float: center;
   margin-top: 50px;	
 }
 
