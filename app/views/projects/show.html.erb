@@ -103,7 +103,7 @@
       <h2>Latest Forum Posts</h2>
       <ul>
 	    <% @project.forum.recent_posts.each do |i| %>
-        <li><%= link_to h(i.post_subject), i.url, :popup => true -%></li>
+        <li><%= link_to truncate(h(i.post_subject), 55), i.url, :popup => true -%></li>
       <% end %>
       </ul>
     </div>
@@ -116,7 +116,7 @@
       <h2>Recent Wiki Updates</h2>
       <ul>
 	    <% @project.wiki.get_latest_activity.each do |i| %>
-        <li><%= link_to h(i[:title]), i[:url], :popup => true -%></li>
+        <li><%= link_to truncate(h(i[:title]), 55), i[:url], :popup => true -%></li>
       <% end %>
       </ul>
     </div>
