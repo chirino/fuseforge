@@ -91,7 +91,7 @@
       <h2>Recent Issues</h2>
       <ul>
 	    <% @project.issue_tracker.recent_issues.each do |i| %>
-        <li><%= link_to truncate(h(i[:title]), 60), i[:url], :popup => true -%></li>
+        <li><%= link_to truncate(h(i[:title]), 50), i[:url], :popup => true -%></li>
       <% end %>
       </ul>
     </div>
