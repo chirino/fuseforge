@@ -61,6 +61,7 @@
 #project_menu {
   float: center;
   font-size: 0.85em;
+  margin-left: 5px;
 }
 
 #project_attributes {
