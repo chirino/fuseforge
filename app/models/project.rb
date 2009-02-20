@@ -63,7 +63,7 @@ class Project < ActiveRecord::Base
     :url => "/:class/:id/:attachment/:style.:extension",
     :path => ":rails_root/assets/:class/:attachment/:id/:style_:basename.:extension",      
     :default_url => "/images/missing_project_:style.gif",
-    :styles => { :medium => "160x160", :thumb => "70x70" }
+    :styles => { :medium => "160x160#", :thumb => "70x70#" }
   
   named_scope :public, :conditions => { :is_private => false }
   named_scope :active, lambda { { :conditions => ['project_status_id = ?', ProjectStatus.active.id] } }
