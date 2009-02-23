@@ -111,7 +111,7 @@ eos
   def external_site_index_file
 <<eos
   <h1>#{project.name}</h1>
-  <a href='#{project.internal_url}'>Project Page</a>
+  <a href=\"#{project.internal_url}\">Project Page</a>
 eos
   end
 end
