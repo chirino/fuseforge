@@ -51,6 +51,7 @@ class WebDavLocation < ActiveRecord::Base
     conn = open_conn
     create_directory(webdav_collection_path, conn)
     create_directory(webdav_collection_site_path, conn)
+    run_cmd_str("sudo chmod -R g+w #{webdav_collection_site_path}", 'Error chmoding webdav website dir!', conn)
     create_file(external_site_index_file, "#{webdav_collection_site_path}/index.html}", conn)
     chown_dir("#{webdav_collection_path}/")
     create_apache_site_file(apache_site_file, apache_site_file_name, conn)
