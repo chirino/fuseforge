@@ -4,8 +4,9 @@ class DownloadsController < ApplicationController
   before_filter :get_project
   before_filter :get_download, :only => [:show, :edit, :update, :destroy]
 
-  deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => root_path
-  allow :new, :create, :edit, :update, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => root_path
+  deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => { :controller => 'homepage' }
+  allow :new, :create, :edit, :update, :destroy, :user => :is_project_administrator_for?, 
+   :object => :project, :redirect_to => { :controller => 'homepage' }
 
   def index
     @downloads = @project.downloads.sort { |a,b| b.created_at <=> a.created_at }
