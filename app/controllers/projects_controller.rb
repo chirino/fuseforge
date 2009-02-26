@@ -115,7 +115,7 @@ class ProjectsController < ApplicationController
       if @project.issue_tracker.valid? and @project.repository.valid? and @project.web_dav_location.valid? and @project.forum.valid? and \
        @project.wiki.valid? and @project.save
         flash[:notice] = 'Your request to create a new project was sent to the site administrator.'
-        format.html { redirect_to('/') }
+        format.html { redirect_to('/forge') }
         format.xml  { render :xml => @project, :status => :created, :location => @project }
       else
         format.html { render :action => "new" }
