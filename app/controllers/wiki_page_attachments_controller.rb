@@ -3,7 +3,7 @@ class WikiPageAttachmentsController < ApplicationController
   before_filter :get_wiki_page
   before_filter :get_wiki_page_attachment, :only => [:show, :edit, :update, :destroy]
 
-  allow :new, :create, :edit, :update, :destroy, :show, :user => :is_project_member_for?, :object => :project, :redirect_to => '/'
+  allow :new, :create, :edit, :update, :destroy, :show, :user => :is_project_member_for?, :object => :project, :redirect_to => root_path
 
   def index
     @wiki_page_attachments = @wiki_page.attachments

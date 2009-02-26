@@ -1,5 +1,5 @@
 class FeaturedProjectsController < ApplicationController
-  allow :user => :is_site_admin?, :redirect_to => '/'
+  allow :user => :is_site_admin?, :redirect_to => root_path
   
   before_filter :get_featured_projects, :only => [:index]
 

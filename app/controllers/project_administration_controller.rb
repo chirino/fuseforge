@@ -1,7 +1,7 @@
 class ProjectAdministrationController < ApplicationController
   before_filter :get_project
 
-  allow :user => :is_project_administrator_for?, :object => :project, :redirect_to => '/'
+  allow :user => :is_project_administrator_for?, :object => :project, :redirect_to => root_path
 
   def index
     respond_to do |format|

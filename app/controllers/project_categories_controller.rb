@@ -1,7 +1,7 @@
 class ProjectCategoriesController < ApplicationController
   before_filter :get_project_category, :only => [:show, :edit, :update, :destroy]
 
-  allow :index, :show, :new, :create, :edit, :update, :destroy, :user => :is_site_admin?, :redirect_to => '/'
+  allow :index, :show, :new, :create, :edit, :update, :destroy, :user => :is_site_admin?, :redirect_to => root_path
 
   def index
     @project_categories = ProjectCategory.find(:all, :order => :position)

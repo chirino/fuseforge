@@ -3,7 +3,7 @@ class NewsItemsController < ApplicationController
 
   before_filter :get_news_item, :only => [:show, :edit, :update, :destroy]
 
-  allow :new, :create, :edit, :update, :destroy, :user => :is_site_admin?, :redirect_to => '/'
+  allow :new, :create, :edit, :update, :destroy, :user => :is_site_admin?, :redirect_to => root_path
 
   def index
     @news_items = NewsItem.all

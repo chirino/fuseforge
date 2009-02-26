@@ -4,9 +4,9 @@ class WikiPagesController < ApplicationController
   before_filter :get_project
   before_filter :get_wiki_page, :only => [:show, :edit, :update, :destroy]
   
-  deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => '/'
+  deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => root_path
 
-  allow :new, :create, :edit, :update, :destroy, :user => :is_project_member_for?, :object => :project, :redirect_to => '/'
+  allow :new, :create, :edit, :update, :destroy, :user => :is_project_member_for?, :object => :project, :redirect_to => root_path
 
   def index
     @tags = @project.wiki.wiki_pages.tag_counts
