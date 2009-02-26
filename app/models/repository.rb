@@ -46,18 +46,10 @@ class Repository < ActiveRecord::Base
     use_internal? ? internal_url : external_url
   end
 
-  def items
-    []
-  end
-  
-  def activity_this_week
-    0.99
-  end
-  
   def commits
-    total_commits = ''
+    total_commits = 0
     begin
-      IO.popen("svnlook youngest #{repo_path}") { |x| total_commits = x.gets } if exists_internally?
+      IO.popen("svnlook youngest #{repo_path}") { |x| total_commits = x.gets.chomp.to_i } if exists_internally?
     rescue
     end
     total_commits
@@ -70,10 +62,6 @@ class Repository < ActiveRecord::Base
     rescue
     end
     last_commit_at_time
-  end
-  
-  def downloads
-    4571
   end
   
   def create_internal

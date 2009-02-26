@@ -6,7 +6,7 @@ class HomepageController < ApplicationController
     @my_projects = logged_in? ? current_user.projects : []
     @fuseforge_news_items = FuseforgeNewsItem.recent
     @fusesource_news_items = FusesourceNewsItem.recent
-    @most_active_projects_this_week = Project.most_active_this_week
+    @most_active_projects = Project.most_active
     @top_project_downloads = Project.most_downloaded
 
     respond_to do |format|

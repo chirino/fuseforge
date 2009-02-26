@@ -1,6 +1,6 @@
 --- 
 cwd: /data/fuseforge/current
-port: "3000"
+port: "4500"
 environment: production
 address: 127.0.0.1
 pid_file: /data/fuseforge/shared/pids/mongrel.pid

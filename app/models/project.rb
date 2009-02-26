@@ -225,12 +225,12 @@ class Project < ActiveRecord::Base
     self.unfeatured.collect { |x| [x.name, x.id] }
   end
   
-  def self.most_active_this_week
-    self.public.approved.sort { |a, b| b.repository.activity_this_week <=> a.repository.activity_this_week }[0...MOST_ACTIVE_PROJECTS_LIMIT]
+  def self.most_active
+    self.public.approved.sort { |a, b| b.repository.commits.size <=> a.repository.commits.size }[0...MOST_ACTIVE_PROJECTS_LIMIT]
   end
     
   def self.most_downloaded
-    self.public.approved.sort { |a, b| b.repository.downloads <=> a.repository.downloads }[0...PROJECTS_MOST_DOWNLOADED_LIMIT]
+    self.public.approved.sort { |a, b| b.downloads.count <=> a.downloads.count }[0...PROJECTS_MOST_DOWNLOADED_LIMIT]
   end
     
   private

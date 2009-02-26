@@ -78,9 +78,9 @@
           </tr>
         </thead>
         <tbody>
-          <% @most_active_projects_this_week.each do |i| %>
+          <% @most_active_projects.each do |i| %>
           <tr>
-            <td><%= i.repository.activity_this_week -%></td>
+            <td><%= i.repository.commits.size -%></td>
             <td><%= i.name -%></td>
           </tr>
           <% end %>
@@ -101,7 +101,7 @@
     	  <tbody>
     	    <% @top_project_downloads.each do |i| %>
     	    <tr>
-    	      <td><%= i.repository.downloads -%></td>
+    	      <td><%= i.downloads.count -%></td>
     	      <td><%= i.name -%></td>
     	    </tr>
           <% end %>
