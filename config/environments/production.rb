@@ -22,10 +22,8 @@ config.action_controller.perform_caching             = true
 # config.action_mailer.raise_delivery_errors = false
 
 FUSESOURCE_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com/" : "http://fusesource.com/" 
-FUSEFORGE_URL = Socket.gethostname == 'forgedev' ? "http://forge.fusesourcedev.com" : "http://forge.fusesource.com"
+FUSEFORGE_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com/forge" : "http://fusesource.com/forge"
 REDIRECT_BACK_COOKIE_DOMAIN_NAME = Socket.gethostname == 'forgedev' ? ".fusesourcedev.com" : ".fusesource.com" 
 CROWD_COOKIE_DOMAIN_NAME = Socket.gethostname == 'forgedev' ? ".fusesourcdev.com" : ".fusesource.com" 
-CONFLUENCE_URL = Socket.gethostname == 'forgedev' ? "http://forge.fusesourcedev.com" : "http://forge.fusesource.com"
+CONFLUENCE_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com/forge" : "http://fusesource.com/forge"
 JIRA_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com" : "http://fusesource.com"
-
-
