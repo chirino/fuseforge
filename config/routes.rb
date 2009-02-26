@@ -1,6 +1,4 @@
 ActionController::Routing::Routes.draw do |map|
-  map.resources :homepage, :only => [:index]
-  
   map.resources :project_categories
 
   map.resources :project_maturities
