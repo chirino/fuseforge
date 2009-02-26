@@ -2,7 +2,8 @@ class ProjectAdminGroupsController < BaseProjectsController
   before_filter :get_project
   before_filter :get_project_admin_group, :only => [:show, :destroy]
 
-  allow :index, :show, :new, :create, :destroy, :exec => :user_is_administrator_for_project_and_company_employee?, :redirect_to => root_path
+  allow :index, :show, :new, :create, :destroy, :exec => :user_is_administrator_for_project_and_company_employee?, 
+   :redirect_to => :homepage
 
   def index
     @project_admin_groups = @project.admin_groups

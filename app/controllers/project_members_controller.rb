@@ -2,7 +2,7 @@ class ProjectMembersController < ApplicationController
   before_filter :get_project
   before_filter :get_project_member, :only => [:show, :destroy]
   
-  allow :create, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => root_path
+  allow :create, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
   
   def index
     @project_members = @project.members

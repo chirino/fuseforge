@@ -3,7 +3,7 @@ class WikiPageVersionsController < ApplicationController
   before_filter :get_wiki_page
   before_filter :get_wiki_page_version, :only => [:show, :update]
   
-  allow :user => :is_project_member_for?, :object => :project, :redirect_to => root_path
+  allow :user => :is_project_member_for?, :object => :project, :redirect_to => :homepage
 
   def index
     @wiki_page_versions = @wiki_page.versions

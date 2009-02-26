@@ -3,7 +3,7 @@ class AttachedFilesController < ApplicationController
 
   before_filter :get_wiki_page_attachment
 
-  deny :show, :exec => :project_private_and_user_not_member?, :redirect_to => root_path
+  deny :show, :exec => :project_private_and_user_not_member?, :redirect_to => :homepage
 
   def show
     @wiki_page_attachment.downloads << WikiPageAttachmentDownload.create

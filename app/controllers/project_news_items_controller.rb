@@ -4,9 +4,9 @@ class ProjectNewsItemsController < ApplicationController
   before_filter :get_project
   before_filter :get_project_news_item, :only => [:show, :edit, :update, :destroy]
 
-  deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => root_path
+  deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => :homepage
 
-  allow :new, :create, :edit, :update, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => root_path
+  allow :new, :create, :edit, :update, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
 
   def index
     @project_news_items = @project.news_items

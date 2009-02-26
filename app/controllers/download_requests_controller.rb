@@ -4,7 +4,7 @@ require 'uri'
 class DownloadRequestsController < ApplicationController
   before_filter :get_project
 
-  allow :user => :is_registered_user?, :redirect_to => { :controller => 'homepage' }
+  allow :user => :is_registered_user?, :redirect_to => :homepage
 
   def create
 #    begin

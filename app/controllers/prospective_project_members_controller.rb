@@ -7,7 +7,7 @@ class ProspectiveProjectMembersController < ApplicationController
   before_filter :get_prospective_project_member, :only => [:show, :update, :destroy]
   
   allow :create, :user => :is_registered_user?
-  allow :index, :show, :update, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => root_path
+  allow :index, :show, :update, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
   
 
   def index
