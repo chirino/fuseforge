@@ -24,7 +24,6 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :project_members, :except => [:edit, :update]
     project.resources :project_admin_groups, :except => [:edit, :update]
     project.resources :project_member_groups, :except => [:edit, :update]
-#    project.resources :prospective_project_members
     project.resources :project_tags, :only => [:index, :create, :destroy]
     project.resource  :issue_tracker
     project.resources :wiki_pages do |wiki_page|
