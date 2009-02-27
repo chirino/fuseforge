@@ -21,9 +21,16 @@ config.action_controller.perform_caching             = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
-FUSESOURCE_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com/" : "http://fusesource.com/" 
-FUSEFORGE_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com/forge" : "http://fusesource.com/forge"
-REDIRECT_BACK_COOKIE_DOMAIN_NAME = Socket.gethostname == 'forgedev' ? ".fusesourcedev.com" : ".fusesource.com" 
-CROWD_COOKIE_DOMAIN_NAME = Socket.gethostname == 'forgedev' ? ".fusesourcdev.com" : ".fusesource.com" 
-CONFLUENCE_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com/forge" : "http://fusesource.com/forge"
-JIRA_URL = Socket.gethostname == 'forgedev' ? "http://fusesourcedev.com" : "http://fusesource.com"
+if ['sourcedev', 'forgedev'].include?(Socket.gethostname)
+  FUSESOURCE_URL = "http://fusesourcedev.com/" 
+  CONFLUENCE_URL = FUSEFORGE_URL = "http://fusesourcedev.com/forge"
+  REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
+  JIRA_URL = "http://fusesourcedev.com"
+  config.action_mailer.default_url_options = { :host => "fusesourcedev.com" }
+else
+  FUSESOURCE_URL = "http://fusesource.com/" 
+  CONLUENCE_URL = FUSEFORGE_URL = "http://fusesource.com/forge"
+  REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
+  JIRA_URL = "http://fusesource.com"
+  config.action_mailer.default_url_options = { :host => "fusesource.com" }  
+end
