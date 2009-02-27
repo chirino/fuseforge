@@ -1,5 +1,6 @@
 class Forum < ActiveRecord::Base
-  INTERNAL_HOST = ((RAILS_ENV == 'development') or (Socket.gethostname == 'forgedev')) ? 'forge.fusesourcedev.com' : 'forge.fusesource.com'
+  INTERNAL_HOST = ((RAILS_ENV == 'development') or 
+   (['forgedev', 'sourcedev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge'    : 'fusesource.com/forge'
   INTERNAL_PATH = '/phpBB3'
   INTERNAL_URL = 'http://' + INTERNAL_HOST + INTERNAL_PATH
 
