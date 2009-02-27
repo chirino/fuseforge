@@ -2,7 +2,7 @@ require 'net/ssh'
 
 module ApacheConfigMixins
   APACHE_USER = 'www-data'
-  HOST = Socket.gethostname == 'forge' ? "forge.fusesource.com" : "forge.fusesourcedev.com"
+  HOST = ['forge', 'source'].include?(Socket.gethostname) ? "fusesource.com/forge" : "fusesourcedev.com/forge"
   LOGIN_USER = 'root'
  
   
