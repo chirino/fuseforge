@@ -16,7 +16,7 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
-FUSESOURCE_URL = "http://localfusesource.com:4000/"
+FUSESOURCE_URL = "http://localfusesource.com:4000"
 FUSEFORGE_URL = "http://fuseforge.localfusesource.com:3000"
 REDIRECT_BACK_COOKIE_DOMAIN_NAME = 'localfusesource.com'
 CROWD_COOKIE_DOMAIN_NAME = 'localfusesource.com'

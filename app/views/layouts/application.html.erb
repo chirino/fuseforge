@@ -15,7 +15,7 @@
       <div class="wrapper">
         <%= link_to(image_tag('fuseforge-logo.png'), root_path, :alt => 'FUSE Forge Community') -%>
         <ul>
-          <li> <b><%= link_to 'Register!', "#{FUSESOURCE_URL}register" -%></b></li>
+          <li> <b><%= link_to 'Register!', "#{FUSESOURCE_URL}/register" -%></b></li>
           <% if logged_in? %>
           <li id="loggedIn">
             <span id="greeting">Welcome <%= current_user.full_name -%></span>, 

@@ -21,4 +21,4 @@ config.action_controller.allow_forgery_protection    = false
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
 
-FUSESOURCE_URL = "http://www.ionadev.com/"
+FUSESOURCE_URL = "http://www.ionadev.com"
