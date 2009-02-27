@@ -20,16 +20,16 @@ class ConfluenceInterface
   def initialize
     @confluence_soap_service = ConfluenceSoapService.new(ENDPOINT_URL)
 
-    if ENDPOINT_URL =~ /forge\.fusesource\./
-      relm = "http://forge.fusesource.com/" 
+    if ENDPOINT_URL =~ /fusesource\./
+      relm = "http://fusesource.com/" 
       username = "fuseforge" 
       password = "gong6.afield" 
       @confluence_soap_service.options["protocol.http.basic_auth"] << [relm, username, password]    
-    elsif ENDPOINT_URL =~ /forge\.fusesourcedev\./
-      relm = "http://forge.fusesourcedev.com/" 
+    elsif ENDPOINT_URL =~ /fusesourcedev\./
+      relm = "http://fusesourcedev.com/" 
       username = "fuseforge" 
       password = "gong6.afield" 
-      @confluence_soap_service.options["protocol.http.basic_auth"] << [relm, username, password]    
+#      @confluence_soap_service.options["protocol.http.basic_auth"] << [relm, username, password]    
     end
   end
   
