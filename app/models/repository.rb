@@ -110,7 +110,7 @@ class Repository < ActiveRecord::Base
 
   def apache_site_file
 <<eos
-<Location /svn-#{key}>
+<Location /forge/svn-#{key}>
 
   DAV svn
 
