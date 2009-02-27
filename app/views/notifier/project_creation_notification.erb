@@ -5,4 +5,4 @@ Shortname:    <%= @project.shortname %>
 Created By:   <%= @project.created_by.full_name %>
 Description:  <%= @project.description %>
 
-To approve or reject the project, go here:  <%= url_for(:controller => 'unapproved_projects', :action => 'show', :id => @project) %>
+To approve or reject the project, go here:  <%= url_for(:controller => 'unapproved_projects', :action => 'show', :id => @project, :only_path => false) %>

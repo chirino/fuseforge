@@ -1,5 +1,5 @@
 Hello <%= @project.created_by.first_name %>,
 
-The project, <%= @project.name -%>, that you recently created on FUSE Forge has been approved and is available for use.  You can find the project home page here: <%= url_for(:controller => 'projects', :action => 'show', :id => @project) -%>.
+The project, <%= @project.name -%>, that you recently created on FUSE Forge has been approved and is available for use.  You can find the project home page here: <%= url_for(:controller => 'projects', :action => 'show', :id => @project, :only_path => false) -%>.
 
 The FUSE Forge Team
