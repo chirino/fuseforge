@@ -3,6 +3,11 @@ class Project < ActiveRecord::Base
   MOST_ACTIVE_PROJECTS_LIMIT = 5
   PROJECTS_MOST_DOWNLOADED_LIMIT = 5
   
+  #Caching stuff
+  FOUR_HOURS = 14400
+  @@most_active = @@most_active_time = @@most_downloaded = @@most_downloaded_time = nil
+  
+  
   acts_as_taggable_on :tags
   
   has_friendly_id :shortname
@@ -226,11 +231,21 @@ class Project < ActiveRecord::Base
   end
   
   def self.most_active
-    self.public.approved.sort { |a, b| b.repository.commits.size <=> a.repository.commits.size }[0...MOST_ACTIVE_PROJECTS_LIMIT]
+    if @@most_active.blank? or @@most_active_time.blank? or (@@most_active_time < Time.now.ago(FOUR_HOURS))
+      @@most_active = self.public.approved.sort { |a, b| 
+       b.repository.commits.size <=> a.repository.commits.size }[0...MOST_ACTIVE_PROJECTS_LIMIT]
+      @@most_active_time = Time.now
+    end
+    @@most_active   
   end
     
   def self.most_downloaded
-    self.public.approved.sort { |a, b| b.downloads.count <=> a.downloads.count }[0...PROJECTS_MOST_DOWNLOADED_LIMIT]
+    if @@most_downloaded.blank? or @@most_downloaded_time.blank? or (@@most_downloaded_time < Time.now.ago(FOUR_HOURS))
+      @@most_downloaded = self.public.approved.sort { |a, b| 
+       b.downloads.count <=> a.downloads.count }[0...PROJECTS_MOST_DOWNLOADED_LIMIT]
+      @@most_active_time = Time.now
+    end
+    @@most_downloaded 
   end
     
   private

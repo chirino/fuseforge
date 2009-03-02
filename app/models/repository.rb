@@ -39,7 +39,7 @@ class Repository < ActiveRecord::Base
   end  
   
   def internal_url
-    "http://#{INTERNAL_HOST}/svn-#{key}"
+    "http://#{INTERNAL_HOST}/svn/#{key}"
   end  
   
   def url
@@ -110,7 +110,7 @@ class Repository < ActiveRecord::Base
 
   def apache_site_file
 <<eos
-<Location /forge/svn-#{key}>
+<Location /forge/svn/#{key}>
 
   DAV svn
 
