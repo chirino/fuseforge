@@ -1,3 +1,5 @@
+
+
 class ProjectAdminGroupsController < BaseProjectsController
   before_filter :get_project
   before_filter :get_project_admin_group, :only => [:show, :destroy]
@@ -36,6 +38,7 @@ class ProjectAdminGroupsController < BaseProjectsController
 
     respond_to do |format|
       if @project_admin_group.save
+        JiraInterface.new.add_groups_to_project(@project.shortname, params[:project_admin_group][:name], "ADMIN")
         flash[:notice] = 'Project Admin Group was successfully added.'
         format.html { redirect_to(project_project_admin_group_path(:project_id => @project.id, :id => @project_admin_group.id)) }
         format.xml  { render :xml => @project_admin_group, :status => :created, :location => @project_admin_group }
