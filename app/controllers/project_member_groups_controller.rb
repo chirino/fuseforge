@@ -1,3 +1,5 @@
+require 'jira_lib/jira_interface.rb'
+
 class ProjectMemberGroupsController < BaseProjectsController
   before_filter :get_project
   before_filter :get_project_member_group, :only => [:show, :destroy]
@@ -37,6 +39,13 @@ class ProjectMemberGroupsController < BaseProjectsController
 
     respond_to do |format|
       if @project_member_group.save
+        
+        JiraInterface.new.add_groups_to_project(@project.shortname, params[:project_member_group][:name], "USER")
+        confl_interface = ConfluenceInterface.new
+        confl_interface.login
+        confl_interface.add_remove_groups_to_space(@project.shortname,[params[:project_member_group][:name]],nil)
+        confl_interface.logout
+        
         flash[:notice] = 'Project Member Group was successfully added.'
         format.html { redirect_to(project_project_member_group_path(:project_id => @project.id, :id => @project_member_group.id)) }
         format.xml  { render :xml => @project_member_group, :status => :created, :location => @project_member_group }
