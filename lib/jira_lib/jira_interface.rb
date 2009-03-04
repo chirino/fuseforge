@@ -121,8 +121,6 @@ class JiraInterface
           @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)                      
         end
       end
-
-    
   end
   end
   
@@ -160,27 +158,47 @@ class JiraInterface
     arr_issues
   end
   
-  def add_group_to_project(project_id, group_name,type='all')
-     project = @jira_soap_service.getProjectByKey(@ctx,project_id)
-#    #project_role = @jira_soap_service.getProjectWithSchemesById(@ctx,Integer("10183"))
-#    project = @jira_soap_service.getProjectById(@ctx,project_id)
-     group = @jira_soap_service.getGroup(@ctx,group_name)
+  def add_groups_to_project(project_id, group_name,type='all')
+
+    project = @jira_soap_service.getProjectByKey(@ctx,project_id)
+    project = @jira_soap_service.getProjectWithSchemesById(@ctx,project.id)
     
-     perm_schemes = @jira_soap_service.getPermissionSchemes(@ctx)
+    new_group = @jira_soap_service.getGroup(@ctx,group_name)
     
-    perm_schemes.each do |perm_scheme|
-                             
-      if perm_scheme.name == "TestScheme"
-      project.permissionScheme = perm_scheme  
-        @jira_soap_service.updateProject(@ctx,project)
-#        perm_scheme.permissionMappings.each do |perm| 
-#          if ADMIN_GROUP_PERMISSIONS.include?(perm.permission.permission)
-#            perm.remoteEntities << group
-#          end
-#      end
-#      project.permissionScheme = perm_scheme
+    perm_scheme = project.permissionScheme
+    old_perm_scheme_name = perm_scheme.name
+    admin_hash =  Hash.new
+    user_hash =  Hash.new
+    
+    perm_scheme.permissionMappings.each do |perm|
+    if ADMIN_GROUP_PERMISSIONS.include?(perm.permission.permission)
+      entities = perm.remoteEntities
+      if type == "ADMIN"  or type == "ALL"
+        entities << new_group
+      end
+      admin_hash[perm.permission.permission] = entities
+    elsif USER_GROUP_PERMISSIONS.include?(perm.permission.permission)
+      entities = perm.remoteEntities
+       if type == "USER" or type == "ALL"
+        entities << new_group
+      end
+      user_hash[perm.permission.permission] = entities
     end
-    end  
+    end
+
+    @jira_soap_service.deletePermissionScheme(@ctx,old_perm_scheme_name) unless old_perm_scheme_name == 'Default Permission Scheme'    
+    new_perm_scheme = @jira_soap_service.createPermissionScheme(@ctx, "#{project_id}-scheme","Permission scheme for #{project_id}")
+
+    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
+      if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
+        admin_hash[perm.permission].each do |group| @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,group) end
+      elsif USER_GROUP_PERMISSIONS.include?(perm.permission)
+        user_hash[perm.permission].each do |group| @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,group) end
+      end
+    end
+    
+    project.permissionScheme = new_perm_scheme                          
+    @jira_soap_service.updateProject(@ctx,project)
   end
 
   def associate_groups(source_group,merge_group)
@@ -223,21 +241,6 @@ class JiraInterface
 
     assign_permissions_to_perm_scheme(new_perm_scheme,forge_admin,proj_groups,forge_users_grp,private_project)
     
-#    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
-#
-#      #add forge-admins group to the permission
-#      @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
-#
-#      if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
-#        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
-#      elsif USER_GROUP_PERMISSIONS.include?(perm.permission)
-#        if private_project == true
-#          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,user_grp)
-#        else 
-#          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)
-#        end
-#      end
-#    end
     @jira_soap_service.createProject(@ctx,proj_short_name, 
             project_name, project_desc,issue_url+proj_short_name , project_owner_id,
      new_perm_scheme, def_scheme, nil)
