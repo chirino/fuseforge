@@ -6,7 +6,7 @@ class Repository < ActiveRecord::Base
 #  INTERNAL_HOST = ((RAILS_ENV == 'development') or 
 #   (['forgedev', 'sourcedev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge' : 'fusesource.com/forge'
   INTERNAL_HOST = ((RAILS_ENV == 'development') or 
-   (['dudedev', 'sourcedev'].include?(Socket.gethostname))) ? 'forge.fusesourcedev.com' : 'forge.fusesource.com'
+   (['dudedev', 'sourcedev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge' : 'forge.fusesource.com'
 
   REPO_PATH = '/var/svn/repos'
   APACHE_REPO_PERMS_PATH = '/etc/apache2/fuseforge'

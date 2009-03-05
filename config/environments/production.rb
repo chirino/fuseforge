@@ -21,10 +21,10 @@ config.action_controller.perform_caching             = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
-if ['sourcedev', 'forgedev', 'walterdev', 'dudedev'].include?(Socket.gethostname)
+if ['forgedev', 'walterdev', 'dudedev'].include?(Socket.gethostname)
   FUSESOURCE_URL = "http://fusesourcedev.com" 
   CONFLUENCE_URL = FUSEFORGE_URL = "http://fusesourcedev.com/forge"
-  REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = "fusesourcedev.com" 
+  REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
   JIRA_URL = "http://fusesourcedev.com"
   config.action_mailer.default_url_options = { :host => "fusesourcedev.com" }
 else

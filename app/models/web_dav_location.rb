@@ -6,7 +6,7 @@ class WebDavLocation < ActiveRecord::Base
 #  INTERNAL_HOST = ((RAILS_ENV == 'development') or 
 #   (['forgedev', 'sourcedev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge' : 'fusesource.com/forge'
   INTERNAL_HOST = ((RAILS_ENV == 'development') or 
-   (['dudedev', 'sourcedev'].include?(Socket.gethostname))) ? 'forge.fusesourcedev.com' : 'forge.fusesource.com'
+   (['dudedev', 'walterdev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge' : 'forge.fusesource.com'
 
   WEBDAV_PATH = '/var/dav'
 
