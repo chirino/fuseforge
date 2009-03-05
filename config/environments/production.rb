@@ -29,8 +29,8 @@ if ['forgedev', 'walterdev', 'dudedev'].include?(Socket.gethostname)
   config.action_mailer.default_url_options = { :host => "fusesourcedev.com" }
 else
   FUSESOURCE_URL = "http://fusesource.com" 
-  CONFLUENCE_URL = FUSEFORGE_URL = "http://forge.fusesource.com"
+  FUSEFORGE_URL = "http://forge.fusesource.com"
   REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
-  JIRA_URL = "http://fusesource.com"
+  CONFLUENCE_URL = JIRA_URL = "http://fusesource.com"
   config.action_mailer.default_url_options = { :host => "fusesource.com" }  
 end
