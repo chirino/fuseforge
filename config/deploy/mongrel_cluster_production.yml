@@ -1,10 +1,9 @@
 --- 
-prefix: /forge    
 cwd: /data/fuseforge/current
 port: "4500"
 environment: production
 address: 127.0.0.1
 pid_file: /data/fuseforge/shared/pids/mongrel.pid
-servers: 3
+servers: 4
 user: rails
 group: fuseforge

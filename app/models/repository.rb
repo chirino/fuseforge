@@ -3,13 +3,16 @@ class Repository < ActiveRecord::Base
     
   belongs_to :project
   
+#  INTERNAL_HOST = ((RAILS_ENV == 'development') or 
+#   (['forgedev', 'sourcedev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge' : 'fusesource.com/forge'
   INTERNAL_HOST = ((RAILS_ENV == 'development') or 
-   (['forgedev', 'sourcedev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge' : 'fusesource.com/forge'
+   (['dudedev', 'sourcedev'].include?(Socket.gethostname))) ? 'forge.fusesourcedev.com' : 'forge.fusesource.com'
+
   REPO_PATH = '/var/svn/repos'
   APACHE_REPO_PERMS_PATH = '/etc/apache2/fuseforge'
   APACHE_REPO_PERMS_EXT = 'authz'
   APACHE_SITE_PREFIX = 'svn_'
-  CROWD_HOST = Socket.gethostname == 'forge' ? '172.21.0.185' : '172.21.0.186'
+  CROWD_HOST = Socket.gethostname == 'dude' ? '172.21.0.185' : '172.21.0.186'
 
   def before_save
     self.external_url = '' if use_internal?
@@ -108,9 +111,12 @@ class Repository < ActiveRecord::Base
     "#{APACHE_REPO_PERMS_PATH}/#{key}.#{APACHE_REPO_PERMS_EXT}"
   end
 
+# Change line below to
+#  <Location /forge/svn/#{key}>
+
   def apache_site_file
 <<eos
-<Location /forge/svn/#{key}>
+<Location /svn/#{key}>
 
   DAV svn
 
