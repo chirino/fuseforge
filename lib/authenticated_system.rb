@@ -95,6 +95,9 @@ module AuthenticatedSystem
 
     # Called from #current_user.  First attempt to login by the user id stored in the session.
     def login_from_session
+      logger.info '-----------------------------------'
+      logger.info session
+      logger.info '-----------------------------------'
       self.current_user = User.find_by_id(session[:user_id]) if session[:user_id]
     end
 

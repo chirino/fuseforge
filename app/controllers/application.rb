@@ -40,14 +40,8 @@ class ApplicationController < ActionController::Base
   # overriding default implementation
   def login_from_cookie
     session[:last_crowd_check] = Time.now
-    
     token = cookies[CROWD_COOKIE_NAME]
-
-puts '---------------------------------------------'
-p token
     user = User.authenticate_with_crowd_token(token, request)
-p user
-puts '---------------------------------------------'
     self.current_user = user    
   end
   
