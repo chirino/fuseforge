@@ -41,7 +41,11 @@ class ApplicationController < ActionController::Base
   def login_from_cookie
     session[:last_crowd_check] = Time.now
     token = cookies[CROWD_COOKIE_NAME]
+    logger.info '----------------inside login from cookie---------------------------'
+    logger.info p token
     user = User.authenticate_with_crowd_token(token, request)
+    logger.info user
+    logger.info '--------------------------------------------------------------------'
     self.current_user = user    
   end
   
