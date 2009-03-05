@@ -3,7 +3,7 @@ prefix: /forge
 cwd: /data/fuseforge/current
 port: "4500"
 environment: production
-address: 172.21.0.186
+address: 172.21.0.246
 pid_file: /data/fuseforge/shared/pids/mongrel.pid
 servers: 2
 user: rails
