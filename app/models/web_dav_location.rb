@@ -3,17 +3,12 @@ class WebDavLocation < ActiveRecord::Base
   
   belongs_to :project
   
-#  INTERNAL_HOST = ((RAILS_ENV == 'development') or 
-#   (['forgedev', 'sourcedev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge' : 'fusesource.com/forge'
-  INTERNAL_HOST = ((RAILS_ENV == 'development') or 
-   (['dudedev', 'walterdev'].include?(Socket.gethostname))) ? 'fusesourcedev.com/forge' : 'forge.fusesource.com'
-
+  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'forge.fusesource.com' : 'fusesourcedev.com/forge'
   WEBDAV_PATH = '/var/dav'
 
-#  APACHE_ALIAS_PREFIX = 'forge/dav/'
-  APACHE_ALIAS_PREFIX = 'dav/'
+  APACHE_ALIAS_PREFIX = 'forge/dav/'
+#  APACHE_ALIAS_PREFIX = 'dav/'
   APACHE_SITE_PREFIX = 'dav_'
-  CROWD_HOST = Socket.gethostname == 'dude' ? '172.21.0.185' : '172.21.0.186'
 
   def before_save
     self.external_url = '' if use_internal?

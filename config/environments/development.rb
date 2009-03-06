@@ -25,5 +25,6 @@ BROWSE_ISSUES_URL = 'http://fusesourcedev.com/issues/browse'
 REPO_BASE_PATH = '/Users/jamey/work/chariot/iona/fuseforge/repos'
 CONFLUENCE_URL = "http://fusesourcedev.com/forge"
 JIRA_URL = "http://fusesourcedev.com"
+CROWD_HOST = '172.21.0.186'
 
 
