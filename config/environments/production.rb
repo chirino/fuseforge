@@ -21,7 +21,7 @@ config.action_controller.perform_caching             = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
-if ['forgedev', 'walterdev', 'dudedev'].include?(Socket.gethostname)
+if ['dudedev'].include?(Socket.gethostname)
   FUSESOURCE_URL = "http://fusesourcedev.com" 
   FUSEFORGE_URL = "http://fusesourcedev.com/forge"
   REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
