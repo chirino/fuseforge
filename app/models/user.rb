@@ -16,14 +16,18 @@ class User < ActiveRecord::Base
     return false if crowd_token.nil?
     return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
 
-#    begin
+    begin
       crowd_user = Crowd.new.find_by_token(crowd_token) # throws SOAP::FaultError
-#    rescue SOAP::FaultError
-#      return false
-#    end
+    rescue SOAP::FaultError
+      return false
+    end
 
+logger.info '---------- after find by token -------------------'
+logger.info crowd_user.inspect
+logger.info '--------------------------------------------------'
     return false unless RegisteredUserGroup.new.user_names.include?(crowd_user.name)
-  
+
+logger.info '---------------- after registered user check -------------------------'  
     self.find_or_create_by_login(crowd_user.name)
   end
   
