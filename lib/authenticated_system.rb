@@ -81,7 +81,7 @@ logger.info '------------ store location --------------'
 logger.info request.request_uri.inspect
 logger.info request.request_uri.gsub(/forge\//, '')
       session[:return_to] = request.request_uri.gsub(/forge\//, '')
-logger.info session.inspect
+#logger.info session.inspect
 logger.info ActionController::Base.session_options.inspect
 logger.info '------------------------------------------'      
     end

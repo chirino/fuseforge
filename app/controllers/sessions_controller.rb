@@ -3,7 +3,8 @@ class SessionsController < ApplicationController
 
   def new
 logger.info '----------------- inside session new -------------------'
-logger.info session.inspect
+#logger.info session.inspect
+logger.info ActionController::Base.session_options.inspect
 logger.info '--------------------------------------------------------'    
     # send user to FUSESource login
     cookies[REDIRECT_BACK_COOKIE_NAME] = { :value => FUSEFORGE_URL + (session[:return_to].nil? ? '' : session[:return_to]), 
