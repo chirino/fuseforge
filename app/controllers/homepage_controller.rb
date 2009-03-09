@@ -2,10 +2,6 @@ class HomepageController < ApplicationController
 	skip_before_filter :login_required
 
   def index
-    logger.info '-----------------------------------'
-    logger.info cookies['crowd.token_key'].inspect
-    logger.info '-----------------------------------'
-
     @featured_projects = FeaturedProject.projects
 #    @my_projects = logged_in? ? current_user.projects : []
     @my_projects = []

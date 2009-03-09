@@ -13,31 +13,21 @@ class User < ActiveRecord::Base
   attr_accessor :password, :first_name, :last_name, :email, :company, :title, :phone, :country
   
   def self.authenticate_with_crowd_token(crowd_token, request)
-logger.info '--------------- inside crowd authenticate ------------------'
     return false if crowd_token.nil?
-logger.info '------------- after crowd token nil ----------------------'
-logger.info crowd_token.inspect
-logger.info request.user_agent.inspect
-logger.info request.remote_ip.inspect
-logger.info request.env['HTTP_X_FORWARDED_FOR'] 
-    
+
+  # Changed the call to use HTTP_X_FORWARDED_FOR because we are behind a proxy server.    
 #    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
     return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, 
      request.env['HTTP_X_FORWARDED_FOR'].split(',').first)      
 
-logger.info '------------ after valid crowd token -------------------'
     begin
       crowd_user = Crowd.new.find_by_token(crowd_token) # throws SOAP::FaultError
     rescue SOAP::FaultError
       return false
     end
 
-logger.info '---------- after find by token -------------------'
-logger.info crowd_user.inspect
-logger.info '--------------------------------------------------'
     return false unless RegisteredUserGroup.new.user_names.include?(crowd_user.name)
 
-logger.info '---------------- after registered user check -------------------------'  
     self.find_or_create_by_login(crowd_user.name)
   end
   
