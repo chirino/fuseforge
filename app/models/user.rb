@@ -16,11 +16,11 @@ class User < ActiveRecord::Base
     return false if crowd_token.nil?
     return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
 
-    begin
+#    begin
       crowd_user = Crowd.new.find_by_token(crowd_token) # throws SOAP::FaultError
-    rescue SOAP::FaultError
-      return false
-    end
+#    rescue SOAP::FaultError
+#      return false
+#    end
 
     return false unless RegisteredUserGroup.new.user_names.include?(crowd_user.name)
   
