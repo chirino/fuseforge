@@ -16,9 +16,9 @@ class User < ActiveRecord::Base
     return false if crowd_token.nil?
 
   # Changed the call to use HTTP_X_FORWARDED_FOR because we are behind a proxy server.    
-#    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
-    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, 
-     request.env['HTTP_X_FORWARDED_FOR'].split(',').first)      
+    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
+#    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, 
+#     request.env['HTTP_X_FORWARDED_FOR'].split(',').first)      
 
     begin
       crowd_user = Crowd.new.find_by_token(crowd_token) # throws SOAP::FaultError
