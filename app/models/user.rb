@@ -13,9 +13,15 @@ class User < ActiveRecord::Base
   attr_accessor :password, :first_name, :last_name, :email, :company, :title, :phone, :country
   
   def self.authenticate_with_crowd_token(crowd_token, request)
+logger.info '--------------- inside crowd authenticate ------------------'
     return false if crowd_token.nil?
+logger.info '------------- after crowd token nil ----------------------'
+logger.info crowd_token.inspect
+logger.info request.user_agent.inspect
+logger.info request.remote_ip.inspect
+    
     return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
-
+logger.info '------------ after valid crowd token -------------------'
     begin
       crowd_user = Crowd.new.find_by_token(crowd_token) # throws SOAP::FaultError
     rescue SOAP::FaultError
