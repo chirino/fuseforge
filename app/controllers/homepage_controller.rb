@@ -2,10 +2,8 @@ class HomepageController < ApplicationController
 	skip_before_filter :login_required
 
   def index
-    cookies['testcookie'] = { :value => 'this is a test cookie', :domain => '.fusesourcedev.com' }
-    
     logger.info '-----------------------------------'
-    logger.info cookies.inspect
+    logger.info cookies['crowd.token_key'].inspect
     logger.info '-----------------------------------'
 
     @featured_projects = FeaturedProject.projects

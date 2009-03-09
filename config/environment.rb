@@ -77,6 +77,6 @@ Rails::Initializer.run do |config|
 end
 
 REDIRECT_BACK_COOKIE_NAME = 'fusesource.redirect_back'
-CROWD_COOKIE_NAME="crowd.token_key"
+#CROWD_COOKIE_NAME="crowd.token_key"
 FUSEFORGE_EMAIL_ADDRESS = 'open-source-team@progress.com'
 
