@@ -1,4 +1,4 @@
-9require 'jira_lib/jira_interface.rb'
+require 'jira_lib/jira_interface.rb'
 
 class ProjectsController < ApplicationController
 	skip_before_filter :login_required, :only => [:index, :show]
