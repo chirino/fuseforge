@@ -3,7 +3,7 @@ class SessionsController < ApplicationController
 
   def new
 logger.info '----------------- inside session new -------------------'
-#logger.info session.inspect
+logger.info session[:return_to].inspect
 logger.info ActionController::Base.session_options.inspect
 logger.info '--------------------------------------------------------'    
     # send user to FUSESource login
