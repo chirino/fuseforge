@@ -72,9 +72,6 @@ class ProjectsController < ApplicationController
   end
 
   def new
-    logger.info '-----------------------------------'
-    logger.info p cookies
-    logger.info '-----------------------------------'
     @project = Project.new
     @project.issue_tracker = IssueTracker.new(:use_internal => true)
     @project.repository = Repository.new(:use_internal => true)
