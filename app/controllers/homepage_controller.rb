@@ -5,7 +5,7 @@ class HomepageController < ApplicationController
     cookies['testcookie'] = { :value => 'this is a test cookie', :domain => '.fusesourcedev.com' }
     
     logger.info '-----------------------------------'
-    logger.info cookies
+    logger.info cookies.inspect
     logger.info '-----------------------------------'
 
     @featured_projects = FeaturedProject.projects
