@@ -1,4 +1,4 @@
-require 'jira_lib/jira_interface.rb'
+9require 'jira_lib/jira_interface.rb'
 
 class ProjectsController < ApplicationController
 	skip_before_filter :login_required, :only => [:index, :show]
@@ -72,6 +72,9 @@ class ProjectsController < ApplicationController
   end
 
   def new
+    logger.info '-----------------------------------'
+    logger.info p cookies
+    logger.info '-----------------------------------'
     @project = Project.new
     @project.issue_tracker = IssueTracker.new(:use_internal => true)
     @project.repository = Repository.new(:use_internal => true)
