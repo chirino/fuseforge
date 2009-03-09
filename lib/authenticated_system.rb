@@ -77,6 +77,10 @@ module AuthenticatedSystem
     #
     # We can return to this location by calling #redirect_back_or_default.
     def store_location
+logger.info '------------ store location --------------'
+logger.info request.request_url.inspect
+logger.info request.request_uri.gsub(/forge\//, '')
+logger.info '------------------------------------------'      
       session[:return_to] = request.request_uri.gsub(/forge\//, '')
     end
 
