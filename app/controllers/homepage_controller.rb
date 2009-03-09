@@ -2,6 +2,8 @@ class HomepageController < ApplicationController
 	skip_before_filter :login_required
 
   def index
+    cookies['testcookie'] = { :value => 'this is a test cookie' }
+    
     logger.info '-----------------------------------'
     logger.info p cookies
     logger.info '-----------------------------------'
