@@ -21,7 +21,10 @@ logger.info request.user_agent.inspect
 logger.info request.remote_ip.inspect
 logger.info request.env['HTTP_X_FORWARDED_FOR'] 
     
-    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
+#    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
+    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, 
+     request.env['HTTP_X_FORWARDED_FOR'].split(',').first)      
+
 logger.info '------------ after valid crowd token -------------------'
     begin
       crowd_user = Crowd.new.find_by_token(crowd_token) # throws SOAP::FaultError
