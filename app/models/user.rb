@@ -19,6 +19,7 @@ logger.info '------------- after crowd token nil ----------------------'
 logger.info crowd_token.inspect
 logger.info request.user_agent.inspect
 logger.info request.remote_ip.inspect
+logger.info request.env['HTTP_X_FORWARDED_FOR'] 
     
     return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
 logger.info '------------ after valid crowd token -------------------'
