@@ -80,8 +80,9 @@ module AuthenticatedSystem
 logger.info '------------ store location --------------'
 logger.info request.request_uri.inspect
 logger.info request.request_uri.gsub(/forge\//, '')
-logger.info '------------------------------------------'      
       session[:return_to] = request.request_uri.gsub(/forge\//, '')
+logger.info session.inspect
+logger.info '------------------------------------------'      
     end
 
     # Redirect to the URI stored by the most recent store_location call or
