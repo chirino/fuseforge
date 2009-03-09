@@ -22,7 +22,7 @@ class WebDavLocation < ActiveRecord::Base
     disable_apache_site_file(apache_site_file_name, conn)     
     reload_apache_config(conn)
     remove_apache_site_file(apache_site_file_name, conn)
-    remove_directory(conn)
+    remove_directory(webdav_collection_path, conn)
     close_conn(conn)
     true
   end
