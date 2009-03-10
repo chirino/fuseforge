@@ -6,8 +6,8 @@ class WebDavLocation < ActiveRecord::Base
   INTERNAL_HOST = Socket.gethostname == 'dude' ? 'forge.fusesource.com' : 'fusesourcedev.com/forge'
   WEBDAV_PATH = '/var/dav'
 
-#  APACHE_ALIAS_PREFIX = 'forge/dav/'
-  APACHE_ALIAS_PREFIX = 'dav/'
+  APACHE_ALIAS_PREFIX = 'forge/dav/'
+#  APACHE_ALIAS_PREFIX = 'dav/'
   APACHE_SITE_PREFIX = 'dav_'
 
   def before_save
