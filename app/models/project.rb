@@ -210,6 +210,10 @@ class Project < ActiveRecord::Base
     "#{FUSEFORGE_URL}/projects/#{shortname.downcase}"
   end
   
+  def unapproved_url
+    "#{FUSEFORGE_URL}/unapproved_projects/#{shortname.downcase}"
+  end  
+  
   def external_website
     if external_url.blank?
       (web_dav_location.is_active? and web_dav_location.exists_internally?) ? "#{FUSEFORGE_URL}/sites/#{shortname.downcase}/" : ''
