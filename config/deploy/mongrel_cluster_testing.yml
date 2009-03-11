@@ -1,5 +1,5 @@
 --- 
-#prefix: /forge    
+prefix: /forge    
 cwd: /data/fuseforge/current
 port: "4500"
 environment: production
