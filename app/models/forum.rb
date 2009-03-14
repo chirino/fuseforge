@@ -1,5 +1,6 @@
 class Forum < ActiveRecord::Base
-  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'forge.fusesource.com' : 'fusesourcedev.com/forge'
+#  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'forge.fusesource.com' : 'fusesourcedev.com/forge'
+  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com/forge' : 'fusesourcedev.com/forge'
   INTERNAL_PATH = '/forum'
   INTERNAL_URL = 'http://' + INTERNAL_HOST + INTERNAL_PATH
 

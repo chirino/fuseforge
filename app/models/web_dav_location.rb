@@ -3,7 +3,8 @@ class WebDavLocation < ActiveRecord::Base
   
   belongs_to :project
   
-  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'forge.fusesource.com' : 'fusesourcedev.com'
+#  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'forge.fusesource.com' : 'fusesourcedev.com'
+  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com' : 'fusesourcedev.com'
   WEBDAV_PATH = '/var/dav'
 
   APACHE_ALIAS_PREFIX = 'forge/dav/'

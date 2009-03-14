@@ -32,9 +32,9 @@ if Socket.gethostname == 'dudedev'
 else
   CROWD_HOST = '172.21.0.185'
   FUSESOURCE_URL = "http://fusesource.com" 
-  FUSEFORGE_URL = "http://forge.fusesource.com"
+  FUSEFORGE_URL = "http://fusesource.com/forge"
   REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
   JIRA_URL = "http://fusesource.com"
-  CONFLUENCE_URL = 'http://forge.fusesource.com'
+  CONFLUENCE_URL = 'http://fusesource.com/forge'
   config.action_mailer.default_url_options = { :host => "fusesource.com" }  
 end
