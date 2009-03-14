@@ -121,7 +121,7 @@ class JiraInterface
           @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)                      
         end
       end
-  end
+    end
   end
   
   
