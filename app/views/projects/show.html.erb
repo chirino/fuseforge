@@ -38,7 +38,6 @@
       	<strong>Status:</strong> <%= h @project.status.name -%>
       	<strong>Maturity:</strong> <%= h @project.maturity.name -%>
       	<strong>Category:</strong> <%= h @project.category.name -%>
-      	<br />
       	<% unless @project.license.blank? %>
       	<strong>License:</strong>  
       	<% if @project.license == ProjectLicense.other %>
