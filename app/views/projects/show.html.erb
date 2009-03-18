@@ -41,7 +41,7 @@
       	<% unless @project.license.blank? %>
       	<strong>License:</strong>  
       	<% if @project.license == ProjectLicense.other %>
-      	<%= link_to(h(@project.license_name), @project.other_license_url, :popup => true) -%>
+      	<%= link_to(h(@project.license.name), @project.other_license_url, :popup => true) -%>
       	<% else %>    
       	<%= link_to(h(@project.license.name), @project.license.url, :popup => true) -%>
       	<% end %>
