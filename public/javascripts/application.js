@@ -6,3 +6,11 @@ function check_accept_text_scroll_pos(text_element_id, check_element_id) {
     $(check_element_id).disabled = false;
   }
 }
+
+function toggle_other_license_url(select_id, other_value) {
+  if ($(select_id).value == other_value) {
+	Element.show('other-license-url');
+  } else {
+	Element.hide('other-license-url');
+  }	
+}

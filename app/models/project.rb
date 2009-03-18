@@ -58,6 +58,7 @@ class Project < ActiveRecord::Base
     end  
   end
   
+  belongs_to :license, :class_name => "ProjectLicense", :foreign_key => "license_id"
   belongs_to :status, :class_name => "ProjectStatus", :foreign_key => "project_status_id"
   belongs_to :maturity, :class_name => "ProjectMaturity", :foreign_key => "project_maturity_id"
   belongs_to :category, :class_name => "ProjectCategory", :foreign_key => "project_category_id"
@@ -77,12 +78,13 @@ class Project < ActiveRecord::Base
   named_scope :approved, lambda { { :conditions => ['project_status_id != ?', ProjectStatus.unapproved.id] } }  
   named_scope :recent, :limit => RECENT_PROJECTS_LIMIT, :order => 'created_at desc'
 
-  validates_presence_of :name, :shortname, :description, :status, :maturity, :category
+  validates_presence_of :name, :shortname, :description, :status, :maturity, :category, :license
+  validates_presence_of :other_license_url, :if => Proc.new { |x| x.license_id == ProjectLicense.other.id }
   
   validates_uniqueness_of :name, :shortname
   validates_format_of :shortname, :with => /\A([A-Z0-9]+)\Z/, :allow_blank => true
   
-  validates_associated :status, :maturity, :updated_by
+  validates_associated :status, :maturity, :updated_by, :license
   validates_associated :created_by, :on => :create
   
   validates_length_of :name, :minimum => 3

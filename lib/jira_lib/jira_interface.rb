@@ -5,13 +5,10 @@ require 'jira_lib/defaultDriver.rb'
 
 class JiraInterface
   ENDPOINT_URL = JIRA_URL + "/issues/rpc/soap/jirasoapservice-v2"
-  #ENDPOINT_URL = "http://localhost:8080/rpc/soap/jirasoapservice-v2"
 
   MEMBERS = "all"
   LOGIN = 'forgeadmin'
   PASSWORD = 'forgeadmin'
-  #LOGIN = 'jira'
-  #PASSWORD = 'jira'
 
   ADMIN_GROUP_PERMISSIONS = {
    23 => :administer_projects,

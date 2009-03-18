@@ -3,6 +3,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :project_maturities
   
+  map.resources :project_licenses
+  
   map.resources :project_statuses
 
   map.resource :session, :only => [:new, :destroy]

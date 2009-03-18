@@ -80,6 +80,7 @@ class ProjectsController < ApplicationController
     @project.wiki = Wiki.new(:use_internal => true)
 
     set_display_external_urls
+    set_display_other_license_url
 
     respond_to do |format|
       format.html
@@ -110,6 +111,7 @@ class ProjectsController < ApplicationController
     @project.wiki = Wiki.new(params[:wiki])
 
     set_display_external_urls
+    set_display_other_license_url
     
     respond_to do |format|
       if @project.issue_tracker.valid? and @project.repository.valid? and @project.web_dav_location.valid? and @project.forum.valid? and \
@@ -126,6 +128,7 @@ class ProjectsController < ApplicationController
   
   def edit
     set_display_external_urls
+    set_display_other_license_url
   end
   
   def update
@@ -136,6 +139,7 @@ class ProjectsController < ApplicationController
     @project.wiki.update_attributes(params[:wiki])
 
     set_display_external_urls
+    set_display_other_license_url
     
     respond_to do |format|
       if @project.update_attributes(params[:project]) and @project.issue_tracker.valid? and @project.repository.valid? and \
@@ -179,6 +183,10 @@ class ProjectsController < ApplicationController
     @display_web_dav_location_external_url = @project.web_dav_location.use_internal? ? 'none' : 'block'
     @display_forum_external_url = @project.forum.use_internal? ? 'none' : 'block'
     @display_wiki_external_url = @project.wiki.use_internal? ? 'none' : 'block'
+  end
+  
+  def set_display_other_license_url
+    @display_other_license_url = (not @project.license.blank?) && (@project.license.name == 'Other') ? 'block' : 'none'
   end
 
   def get_terms_and_conditions_text

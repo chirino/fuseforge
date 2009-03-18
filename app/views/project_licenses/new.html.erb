@@ -1,0 +1,10 @@
+<h1>New Project License</h1>
+
+<% form_for(@project_license) do |f| %>
+  <%= render :partial => 'form', :object => f %>
+  <p>
+    <%= f.submit "Create" %>
+  </p>
+<% end %>
+
+<%= link_to 'Back', project_licenses_path %>

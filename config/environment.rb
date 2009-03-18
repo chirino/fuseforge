@@ -57,7 +57,6 @@ Rails::Initializer.run do |config|
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
     :session_key => '_fuseforge_session',
-#    :session_domain => '.fusesourcedev.com',
     :secret      => '1dc282af8b4f69fa721068b7442e452a1a5aca456b3d854969daf585725b4282c6e15e01d39122abbf1b7d81ff0d025eb1ec71de4e4312ec479af94b85f947cb'
   }
 

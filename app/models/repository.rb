@@ -3,7 +3,6 @@ class Repository < ActiveRecord::Base
     
   belongs_to :project
   
-#  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'forge.fusesource.com' : 'fusesourcedev.com/forge'
   INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com/forge' : 'fusesourcedev.com/forge'
   REPO_PATH = '/var/svn/repos'
   APACHE_REPO_PERMS_PATH = '/etc/apache2/fuseforge'

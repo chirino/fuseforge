@@ -35,6 +35,16 @@
         error_count = error_count + 1;
         error_msgs = error_msgs + "<li>Project category can't be blank</li>\n";
       }
+      if ($('project_license_id').getValue() == '') {
+        error_count = error_count + 1;
+        error_msgs = error_msgs + "<li>License can't be blank</li>\n";
+      }
+      if ($('project_license_id').getValue() == '<%= ProjectLicense.other.id -%>') {
+        if ($('project_other_license_url').getValue() == '') {
+          error_count = error_count + 1;
+          error_msgs = error_msgs + "<li>Other license URL can't be blank</li>\n";
+        }
+      }
       <% if ['new', 'create'].include?(controller.action_name) %>
       if ($('project_terms_and_conditions').getValue() == null) {
         error_count = error_count + 1;

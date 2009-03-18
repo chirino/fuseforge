@@ -5,24 +5,13 @@ require 'confluence_lib/confluence_defaultDriver.rb'
 
 class ConfluenceInterface
   
-  ENDPOINT_URL = CONFLUENCE_URL + "/wiki/rpc/soap-axis/confluenceservice-v1" #"http://www.ionadev.com/issues/rpc/soap/jirasoapservice-v2"
-  #ENDPOINT_URL = "http://localhost:8080/rpc/soap-axis/confluenceservice-v1"
-
-  #ENDPOINT_URL = CONFLUENCE_URL_PREFIX + "/wiki/rpc/soap-axis/confluenceservice-v1" #"http://www.ionadev.com/issues/rpc/soap/jirasoapservice-v2"
-  #ENDPOINT_URL = "http://localhost:8081/rpc/soap-axis/confluenceservice-v1"
-  
-  #LOGIN = 'confluence'
-  #PASSWORD = 'confluence'
-  #LOGIN = 'sanjaymk'
-  #PASSWORD = '1yajnas1'
+  ENDPOINT_URL = CONFLUENCE_URL + "/wiki/rpc/soap-axis/confluenceservice-v1"
   LOGIN = 'forgeadmin'
   PASSWORD = 'forgeadmin'
   def initialize
     @confluence_soap_service = ConfluenceSoapService.new(ENDPOINT_URL)
 
-#    if ENDPOINT_URL =~ /forge\.fusesource\./
     if ENDPOINT_URL =~ /fusesource\.com/
-#      relm = "http://forge.fusesource.com/" 
       relm = "http://fusesource.com/forge/"
       username = "fuseforge" 
       password = "gong6.afield" 

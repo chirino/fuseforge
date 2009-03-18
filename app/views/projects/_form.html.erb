@@ -12,12 +12,18 @@
     <p>
       <%= form.label :shortname %>*<br />
       <%= form.text_field :shortname, :size => 20 %>
+      <span class='field_help'>
+        Must be between 3-16 uppercase, alphabetic characters.  No numbers, spaces, hyphens, or underscores.
+      </span>
       <%= observe_field  "project_shortname", :frequency => 0.10, :url => { :action=>'validate_proj_sname' }, 
           :with => "'proj_sname='+escape(value)", :update => "status" %>
       <div id="status"></div>
-      Shortname must be between 3-16 uppercase, alphabetic characters.  No numbers, spaces, hyphens, or underscores.
     </p>
     <% end %>
+    <p>
+      <%= form.label :is_private, 'Make project private?' %><br />
+      <%= form.check_box :is_private %>
+    </p>
   </div>  
 </div>
 <div class="two_column section">
@@ -54,8 +60,13 @@
       <%= form.file_field :image %>
     </p>
     <p>
-      <%= form.label :is_private, 'Make project private?' %><br />
-      <%= form.check_box :is_private %>
+      <%= form.label :license_id %>*<br />
+      <%= form.select :license_id, ProjectLicense.options_for_select, 
+           { :prompt => true }, { :onchange => "toggle_other_license_url('project_license_id','#{ProjectLicense.other.id}')" } %>
+    </p>
+    <p id="other-license-url" style="display:<%= @display_other_license_url -%>;">
+      <%= form.label :other_license_url %>*<br />
+      <%= form.text_field :other_license_url, :size => 50 %>
     </p>
   </div>
 </div>

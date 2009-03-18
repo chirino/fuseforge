@@ -15,10 +15,11 @@ class User < ActiveRecord::Base
   def self.authenticate_with_crowd_token(crowd_token, request)
     return false if crowd_token.nil?
 
-  # Changed the call to use HTTP_X_FORWARDED_FOR because we are behind a proxy server.    
-#    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, request.remote_ip)      
-    return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, 
-     request.env['HTTP_X_FORWARDED_FOR'].split(',').first)      
+    # Changed the call to use HTTP_X_FORWARDED_FOR because we are behind a proxy server.  
+    unless RAILS_ENV == 'development'  
+      return false unless Crowd.new.valid_user_token?(crowd_token, request.user_agent, 
+       request.env['HTTP_X_FORWARDED_FOR'].split(',').first)      
+    end
 
     begin
       crowd_user = Crowd.new.find_by_token(crowd_token) # throws SOAP::FaultError

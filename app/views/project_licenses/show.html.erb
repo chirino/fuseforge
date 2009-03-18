@@ -1,0 +1,28 @@
+<p>
+  <b>Name:</b>
+  <%=h @project_license.name %>
+</p>
+
+<p>
+  <b>Description:</b>
+  <%=h @project_license.description %>
+</p>
+
+<p>
+  <b>URL:</b>
+  <%=h @project_license.url %>
+</p>
+
+<p>
+  <b>Active?:</b>
+  <%=h @project_license.is_active? %>
+</p>
+
+<p>
+  <b>Position:</b>
+  <%=h @project_license.position %>
+</p>
+
+
+<%= link_to 'Edit', edit_project_license_path(@project_license) %> |
+<%= link_to 'Back', project_licenses_path %>

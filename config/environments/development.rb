@@ -16,10 +16,12 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
-FUSESOURCE_URL = "http://localfusesource.com:4000"
-FUSEFORGE_URL = "http://fuseforge.localfusesource.com:3000"
-REDIRECT_BACK_COOKIE_DOMAIN_NAME = 'localfusesource.com'
-CROWD_COOKIE_DOMAIN_NAME = 'localfusesource.com'
+#FUSESOURCE_URL = "http://localfusesource.com:4000"
+FUSESOURCE_URL = "http://fusesourcedev.com"
+#FUSEFORGE_URL = "http://fuseforge.localfusesource.com:3000"
+FUSEFORGE_URL = "http://localfuseforge.fusesourcedev.com:3000"
+#REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = '.localfusesource.com'
+REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = '.fusesourcedev.com'
 
 BROWSE_ISSUES_URL = 'http://fusesourcedev.com/issues/browse'
 REPO_BASE_PATH = '/Users/jamey/work/chariot/iona/fuseforge/repos'
@@ -27,4 +29,5 @@ CONFLUENCE_URL = "http://fusesourcedev.com/forge"
 JIRA_URL = "http://fusesourcedev.com"
 CROWD_HOST = '172.21.0.186'
 
+config.action_mailer.default_url_options = { :host => "fusesourcedev.com" }
 

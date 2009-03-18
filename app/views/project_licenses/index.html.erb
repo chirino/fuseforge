@@ -1,0 +1,17 @@
+<h1>Listing Project Licenses</h1>
+
+<div id="project_license">
+  <ul id="sortable_list">
+    <% @project_licenses.each do |project_license| %>	
+    <li id="project_license_<%= project_license.id %>">
+      <%= project_license.name -%>
+      <%= link_to 'Edit', edit_project_license_path(project_license) %>
+      <%= link_to 'Destroy', project_license_path(project_license), :confirm => 'Are you sure?', :method => :delete -%>
+    </li>  
+    <% end %>
+  </ul>
+</div>
+
+<%= sortable_element('sortable_list', :url => {:action => :update_positions}) %>
+<br />
+<%= link_to 'New project license', new_project_license_path %>

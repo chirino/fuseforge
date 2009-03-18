@@ -155,6 +155,12 @@
   min-height: 300px;
 }
 
+.field_help {
+  font-size: .75em;
+  margin: 0;
+  padding: 0;
+}
+
 #content {
   line-height:1.5em;
   background-color:white;

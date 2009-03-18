@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090219215648) do
+ActiveRecord::Schema.define(:version => 20090317182832) do
 
   create_table "download_requests", :force => true do |t|
     t.string   "url"
@@ -82,6 +82,16 @@ ActiveRecord::Schema.define(:version => 20090219215648) do
     t.integer  "phpbb_group_id"
   end
 
+  create_table "project_licenses", :force => true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "url"
+    t.boolean  "is_active"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "position"
+  end
+
   create_table "project_maturities", :force => true do |t|
     t.string   "name"
     t.string   "description"
@@ -125,6 +135,8 @@ ActiveRecord::Schema.define(:version => 20090219215648) do
     t.boolean  "is_private"
     t.datetime "accepted_terms_at"
     t.string   "external_url"
+    t.integer  "license_id"
+    t.string   "other_license_url"
   end
 
   create_table "prospective_project_members", :force => true do |t|
