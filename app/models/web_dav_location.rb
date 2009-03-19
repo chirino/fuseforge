@@ -7,13 +7,15 @@ class WebDavLocation < ActiveRecord::Base
   WEBDAV_PATH = '/var/dav'
   
   SITE_DIR_NAME = 'site'
+  SITES_DIR_NAME = 'sites'
   FILES_DIR_NAME = 'files'
   DOWNLOAD_DIR_NAME = 'download'
 
   APACHE_ALIAS_PREFIX = 'forge/dav/'
   APACHE_FILES_ALIAS_PREFIX = "forge/#{FILES_DIR_NAME}/"
+  APACHE_SITES_ALIAS_PREFIX = "forge/#{SITES_DIR_NAME}/"
   APACHE_SITE_PREFIX = 'dav_'
-  WEBSITE_URL_PREFIX = "http://#{INTERNAL_HOST}/forge/sites"
+  WEBSITE_URL_PREFIX = "http://#{INTERNAL_HOST}/forge/#{SITES_DIR_NAME}"
 
   def before_save
     self.external_url = '' if use_internal?
@@ -113,6 +115,10 @@ class WebDavLocation < ActiveRecord::Base
     "#{APACHE_FILES_ALIAS_PREFIX}#{key}"
   end  
   
+  def sites_alias
+    "#{APACHE_SITES_ALIAS_PREFIX}#{key}"
+  end  
+  
   def apache_site_file
 <<eos
   <Directory #{webdav_collection_path}/>
@@ -123,6 +129,7 @@ class WebDavLocation < ActiveRecord::Base
   </Directory>
   
   Alias /#{files_alias} #{webdav_collection_path}
+  Alias /#{sites_alias} #{webdav_collection_path}/#{SITE_DIR_NAME}
 
   Alias /#{webdav_alias} #{webdav_collection_path}
   <Location /#{webdav_alias}>
