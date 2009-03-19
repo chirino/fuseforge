@@ -5,9 +5,15 @@ class WebDavLocation < ActiveRecord::Base
   
   INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com' : 'fusesourcedev.com'
   WEBDAV_PATH = '/var/dav'
+  
+  SITE_DIR_NAME = 'site'
+  FILES_DIR_NAME = 'files'
+  DOWNLOAD_DIR_NAME = 'download'
 
   APACHE_ALIAS_PREFIX = 'forge/dav/'
+  APACHE_FILES_ALIAS_PREFIX = "forge/#{FILES_DIR_NAME}/"
   APACHE_SITE_PREFIX = 'dav_'
+  WEBSITE_URL_PREFIX = "http://#{INTERNAL_HOST}/forge/#{SITE_DIR_NAME}"
 
   def before_save
     self.external_url = '' if use_internal?
@@ -42,10 +48,26 @@ class WebDavLocation < ActiveRecord::Base
     "http://#{INTERNAL_HOST}/#{webdav_alias}"
   end  
   
+  def internal_files_url
+    "http://#{INTERNAL_HOST}/#{files_alias}"
+  end  
+  
+  def website_url
+    if use_internal?
+       "#{WEBSITE_URL_PREFIX}/#{project.shortname.downcase}/"
+    else
+      nil
+    end  
+  end    
+  
   def url
     use_internal? ? internal_url : external_url
   end
-  
+
+  def files_url
+    use_internal? ? internal_files_url : external_url
+  end
+    
   def create_internal
     return true if not use_internal? or exists_internally?
     
@@ -54,6 +76,7 @@ class WebDavLocation < ActiveRecord::Base
     conn = open_conn
     create_directory(webdav_collection_path, conn)
     create_directory(webdav_collection_site_path, conn)
+    create_directory(webdav_collection_download_path, conn)
     run_cmd_str("sudo chmod -R g+w #{webdav_collection_site_path}", 'Error chmoding webdav website dir!', conn)
     create_file(external_site_index_file, "#{webdav_collection_site_path}/index.html", conn)
     chown_dir("#{webdav_collection_path}/")
@@ -75,11 +98,19 @@ class WebDavLocation < ActiveRecord::Base
   end
   
   def webdav_collection_site_path
-    "#{webdav_collection_path}/site"
+    "#{webdav_collection_path}/#{SITE_DIR_NAME}"
+  end
+  
+  def webdav_collection_download_path
+    "#{webdav_collection_path}/#{DOWNLOAD_DIR_NAME}"
   end
   
   def webdav_alias
     "#{APACHE_ALIAS_PREFIX}#{key}"
+  end  
+  
+  def files_alias
+    "#{APACHE_FILES_ALIAS_PREFIX}#{key}"
   end  
   
   def apache_site_file
@@ -90,6 +121,8 @@ class WebDavLocation < ActiveRecord::Base
     Order allow,deny
     allow from all 
   </Directory>
+  
+  Alias /#{files_alias} #{webdav_collection_path}
 
   Alias /#{webdav_alias} #{webdav_collection_path}
   <Location /#{webdav_alias}>
@@ -102,6 +135,27 @@ class WebDavLocation < ActiveRecord::Base
     PerlSetVar CrowdSOAPURL http://#{CROWD_HOST}:8095/crowd/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{SiteAdminGroup.new.name},#{project.default_admin_group_name},#{project.default_member_group_name}
+    require valid-user
+  </Location>
+
+  <Directory #{webdav_collection_path}/#{DOWNLOAD_DIR_NAME}>
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all 
+  </Directory>
+  
+  Alias /#{webdav_alias}/download #{webdav_collection_path}/#{DOWNLOAD_DIR_NAME}
+  <Location /#{webdav_alias}/#{DOWNLOAD_DIR_NAME}>
+    Dav On
+    AuthType Basic
+    AuthName "FUSE Forge Webdav"
+    PerlAuthenHandler Apache::CrowdAuth
+    PerlSetVar CrowdAppName ruby
+    PerlSetVar CrowdAppPassword password
+    PerlSetVar CrowdSOAPURL http://#{CROWD_HOST}:8095/crowd/services/SecurityServer
+    PerlAuthzHandler Apache::CrowdAuthz
+    PerlSetVar CrowdAllowedGroups #{SiteAdminGroup.new.name},#{project.default_admin_group_name}
     require valid-user
   </Location>
 eos

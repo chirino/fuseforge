@@ -217,11 +217,7 @@ class Project < ActiveRecord::Base
   end  
   
   def external_website
-    if external_url.blank?
-      (web_dav_location.is_active? and web_dav_location.exists_internally?) ? "#{FUSEFORGE_URL}/sites/#{shortname.downcase}/" : ''
-    else
-      external_url
-    end  
+    external_url.blank? ? web_dav_location.website_url : external_url
   end    
   
   def self.find_unapproved_by_id(project_shortname)
