@@ -15,7 +15,7 @@
         | <%= image_tag "subver1.png" %> <%= link_to("Repository", @project.repository.url, :popup => true) -%>
         <% end %>
         <% if @project.web_dav_location.is_active? %>
-        | <%= link_to("Files", @project.web_dav_location.url, :popup => true)  -%>
+        | <%= link_to("Files", @project.web_dav_location.files_url, :popup => true)  -%>
         <% end %>
         <%if @project.issue_tracker.is_active?%>
         | <%= image_tag "jira.jpeg" %> <%= link_to("Issue Tracker", @project.issue_tracker.url, :popup => true) -%>
