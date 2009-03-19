@@ -6,14 +6,14 @@ class WebDavLocation < ActiveRecord::Base
   INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com' : 'fusesourcedev.com'
   WEBDAV_PATH = '/var/dav'
   
-  SITES_DIR_NAME = 'sites'
+  SITE_DIR_NAME = 'site'
   FILES_DIR_NAME = 'files'
   DOWNLOAD_DIR_NAME = 'download'
 
   APACHE_ALIAS_PREFIX = 'forge/dav/'
   APACHE_FILES_ALIAS_PREFIX = "forge/#{FILES_DIR_NAME}/"
   APACHE_SITE_PREFIX = 'dav_'
-  WEBSITE_URL_PREFIX = "http://#{INTERNAL_HOST}/forge/#{SITES_DIR_NAME}"
+  WEBSITE_URL_PREFIX = "http://#{INTERNAL_HOST}/forge/sites"
 
   def before_save
     self.external_url = '' if use_internal?
@@ -98,7 +98,7 @@ class WebDavLocation < ActiveRecord::Base
   end
   
   def webdav_collection_site_path
-    "#{webdav_collection_path}/#{SITES_DIR_NAME}"
+    "#{webdav_collection_path}/#{SITE_DIR_NAME}"
   end
   
   def webdav_collection_download_path
