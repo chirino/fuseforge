@@ -26,6 +26,10 @@ class WebDavLocation < ActiveRecord::Base
     true
   end
   
+  def after_update
+    create_internal
+  end
+  
   def is_active?
     use_internal? or not external_url.blank?
   end
