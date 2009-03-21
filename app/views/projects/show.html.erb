@@ -11,25 +11,25 @@
   	    <%= image_tag @project.image.url(:medium) %>
       </div>
     	<div id="project_menu">
-        <%= link_to("Web Site", @project.external_website, :popup => true) unless @project.external_website.blank? -%>
+        <%= link_to("Web Site", @project.external_website) unless @project.external_website.blank? -%>
         <% if logged_in? %>
         | <%= image_tag "admin1.png" %> <%= link_to "Admins", project_project_administrators_path(@project) -%>
         | <%= image_tag "members1.png" %> <%= link_to "Members", project_project_members_path(@project) -%>
         <% end %>
         <% if @project.repository.is_active? %>
-        | <%= image_tag "subver1.png" %> <%= link_to("Repository", @project.repository.url, :popup => true) -%>
+        | <%= image_tag "subver1.png" %> <%= link_to("Repository", @project.repository.url) -%>
         <% end %>
         <% if @project.web_dav_location.is_active? %>
-        | <%= link_to("Files", @project.web_dav_location.files_url, :popup => true)  -%>
+        | <%= link_to("Files", @project.web_dav_location.files_url)  -%>
         <% end %>
         <%if @project.issue_tracker.is_active?%>
-        | <%= image_tag "jira.jpeg" %> <%= link_to("Issue Tracker", @project.issue_tracker.url, :popup => true) -%>
+        | <%= image_tag "jira.jpeg" %> <%= link_to("Issue Tracker", @project.issue_tracker.url) -%>
         <% end %>
         <%if @project.forum.is_active?%>
-        | <%= image_tag "phpBB.jpg" %> <%= link_to("Forum", @project.forum.url, :popup => true) -%>
+        | <%= image_tag "phpBB.jpg" %> <%= link_to("Forum", @project.forum.url) -%>
         <% end %>
         <%if @project.wiki.is_active? %>
-        | <%= image_tag "confluence.jpeg" %> <%= link_to("Wiki", @project.wiki.url, :popup => true) -%>
+        | <%= image_tag "confluence.jpeg" %> <%= link_to("Wiki", @project.wiki.url) -%>
         <% end %>
         <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
    	    | <%= image_tag "administration.jpeg" %>
@@ -55,14 +55,13 @@
 </div>	
 <div style="clear:both;"></div>
 <div class="wrapper">
+
 	<div class="two_column section">
 	  <div class="interior">
       <h2>Description</h2>
       <p><%= sanitize @project.description %></p>
 	  </div>
   </div>
-
-  <%= render :partial => 'tags' %>
 
 	<div class="two_column section">
 	  <div class="interior">
@@ -77,6 +76,9 @@
       <% end %>
     </div>    
 	</div>
+
+  <%= render :partial => 'tags' %>
+
 	<div class="two_column section">
 	  <div class="interior">
       <h2>Activity</h2>
@@ -85,6 +87,7 @@
       <p><strong>Last Commit At:</strong> <%= @project.repository.last_commit_at -%></p>
 	  </div>
 	</div>  
+
   <div class="two_column section">
     <div class="interior">
       <h2>Recent News</h2>
@@ -95,6 +98,7 @@
       </ul>
     </div>
   </div>  
+
   <% if @project.issue_tracker.use_internal? %>
   <div class="two_column section">
     <div class="interior">
@@ -107,6 +111,7 @@
     </div>
   </div>  
   <% end %>
+
   <% if @project.forum.use_internal? %>
   <div class="two_column section">
     <div class="interior">
