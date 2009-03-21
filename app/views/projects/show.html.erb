@@ -1,5 +1,10 @@
 <div class="wrapper">
-  <h1><%= @project.name -%></h1>
+  <h1>
+    <%= @project.name -%>
+	  <% if @project.is_private? %>
+	  <small>*** Private ***</small>
+	  <% end %>
+  </h1>
   <div class="one_column section">
     <div class="interior" style="min-height: 100px;">
       <div id="project_picture">
@@ -32,9 +37,6 @@
    	    <% end %>
       </div>
       <div id="project_attributes">
-    	  <% if @project.is_private? %>
-    	  <strong>*** Private ***</strong>
-    	  <% end %>
       	<strong>Status:</strong> <%= h @project.status.name -%>
       	<strong>Maturity:</strong> <%= h @project.maturity.name -%>
       	<strong>Category:</strong> <%= h @project.category.name -%>
