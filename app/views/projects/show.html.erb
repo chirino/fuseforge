@@ -66,13 +66,21 @@
 	<div class="two_column section">
 	  <div class="interior">
       <h2>Downloads</h2>
-      <% if logged_in? %>
 	    <% @project.downloads.each do |download| %>
-      <p><%= link_to h(download.description), project_download_requests_path(:project_id => @project, 
-              :desc => download.description, :url => download.url), :method => :post -%></p>
-      <% end %>
-      <% else %>
-      <strong>Login to access downloads</strong>
+  	    <% if download.track? %>  
+          <p>
+            <% if logged_in? %>
+              <%= link_to h(download.description), project_download_requests_path(:project_id => @project, 
+                   :desc => download.description, :url => download.url), :method => :post -%>
+            <% else %>
+              <%= h(download.description) -%> <strong>(Login to access this download)</strong>       
+            <% end %>       
+          </p>
+        <% else %>
+          <p>
+          <%= link_to h(download.description), download.url -%>
+          </p>
+        <% end %>  
       <% end %>
     </div>    
 	</div>

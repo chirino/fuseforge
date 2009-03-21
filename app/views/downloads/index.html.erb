@@ -6,6 +6,7 @@
         <tr>
           <th>Description</th>
           <th>URL</th>
+          <th>Track?</th>
         </tr>
   
         <% show_maintenance_links = @current_user.is_project_administrator_for?(@project) %>
@@ -14,6 +15,7 @@
         <tr>
           <td><%= link_to h(download.description), project_download_path(@project, download) -%></td>
           <td><%= h download.url -%></td>
+          <td><%= download.track? -%></td>
           <% if show_maintenance_links %>
           <td><%= link_to 'Edit', edit_project_download_path(@project, download) %></td>
           <td><%= link_to 'Destroy', project_download_path(@project, download), :confirm => 'Are you sure?', :method => :delete -%></td>

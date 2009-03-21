@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090317182832) do
+ActiveRecord::Schema.define(:version => 20090321193418) do
 
   create_table "download_requests", :force => true do |t|
     t.string   "url"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(:version => 20090317182832) do
     t.integer  "project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "track",       :default => false
   end
 
   create_table "featured_projects", :force => true do |t|
