@@ -4,7 +4,7 @@
   <ul id="sortable_list">
     <% @project_licenses.each do |project_license| %>	
     <li id="project_license_<%= project_license.id %>">
-      <%= project_license.name -%>
+      <%= link_to h(project_license.name), project_license -%>
       <%= link_to 'Edit', edit_project_license_path(project_license) %>
       <%= link_to 'Destroy', project_license_path(project_license), :confirm => 'Are you sure?', :method => :delete -%>
     </li>  

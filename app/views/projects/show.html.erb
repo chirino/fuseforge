@@ -112,7 +112,7 @@
       <h2>Recent Issues</h2>
       <ul>
 	    <% @project.issue_tracker.recent_issues.each do |i| %>
-        <li><%= link_to truncate(h(i[:title]), 55), i[:url], :popup => true -%></li>
+        <li><%= link_to truncate(h(i[:title]), 55), i[:url] -%></li>
       <% end %>
       </ul>
     </div>
@@ -125,7 +125,7 @@
       <h2>Latest Forum Posts</h2>
       <ul>
 	    <% @project.forum.recent_posts.each do |i| %>
-        <li><%= link_to truncate(h(i.post_subject), 55), i.url, :popup => true -%></li>
+        <li><%= link_to truncate(h(i.post_subject), 55), i.url -%></li>
       <% end %>
       </ul>
     </div>
@@ -138,7 +138,7 @@
       <h2>Recent Wiki Updates</h2>
       <ul>
 	    <% @project.wiki.get_latest_activity.each do |i| %>
-        <li><%= link_to truncate(h(i[:title]), 55), i[:url], :popup => true -%></li>
+        <li><%= link_to truncate(h(i[:title]), 55), i[:url] -%></li>
       <% end %>
       </ul>
     </div>

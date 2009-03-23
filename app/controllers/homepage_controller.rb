@@ -3,8 +3,7 @@ class HomepageController < ApplicationController
 
   def index
     @featured_projects = FeaturedProject.projects
-#    @my_projects = logged_in? ? current_user.projects : []
-    @my_projects = []
+    @my_projects = logged_in? ? current_user.projects : []
 
     @fuseforge_news_items = FuseforgeNewsItem.recent
     @fusesource_news_items = FusesourceNewsItem.recent
