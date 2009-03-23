@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   CROWD_COOKIE_NAME="crowd.token_key"
   CROWD_CHECK_INTERVAL_SECONDS = 60
 
+  before_filter :login_from_cookie
   before_filter :login_required
   before_filter :set_observers_current_user
 
@@ -30,26 +31,31 @@ class ApplicationController < ActionController::Base
 
   # overriding default implementation
   def authorized?       
-    if need_to_check_with_crowd?
+#    if need_to_check_with_crowd?
       # resetting the user_id will cause rails to login_from_cookie which checks with Crowd
-      session[:user_id] = nil
-    end      
+#      session[:user_id] = nil
+#    end      
     super
   end
       
   # overriding default implementation
-  def login_from_cookie
-    session[:last_crowd_check] = Time.now
-    token = cookies[CROWD_COOKIE_NAME]
-    user = User.authenticate_with_crowd_token(token, request)
-    self.current_user = user    
+#  def login_from_cookie
+#    session[:last_crowd_check] = Time.now
+#    token = cookies[CROWD_COOKIE_NAME]
+#    user = User.authenticate_with_crowd_token(token, request)
+#    self.current_user = user    
+#  end
+  def login_from_cookie   
+     return if cookies[CROWD_COOKIE_NAME] && logged_in?
+     user = User.authenticate_with_crowd_token(cookies[CROWD_COOKIE_NAME], request)
+     self.current_site_user = user if user
   end
   
-  def need_to_check_with_crowd?
-    begin
-      session[:last_crowd_check] < Time.now.ago(CROWD_CHECK_INTERVAL_SECONDS)
-    rescue
-      true
-    end
-  end
+#  def need_to_check_with_crowd?
+#    begin
+#      session[:last_crowd_check] < Time.now.ago(CROWD_CHECK_INTERVAL_SECONDS)
+#    rescue
+#      true
+#    end
+#  end
 end
