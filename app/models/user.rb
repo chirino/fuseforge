@@ -122,7 +122,15 @@ class User < ActiveRecord::Base
   end
   
   def projects
-    Project.approved.select { |project| project.users.include?(self) }
+    proj_arr = []
+    crowd_group_names.each do |group_name|
+      if group_name =~ /forge-(.*)-[admins|members]/
+        if proj = Project.find_by_shortname($1)
+          proj_arr << proj unless proj_arr.include?(proj)
+        end
+      end
+    end    
+#    Project.approved.select { |project| project.users.include?(self) }
   end
   
   def full_name
