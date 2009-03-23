@@ -13,27 +13,26 @@
     	<div id="project_menu">
         <%= link_to("Web Site", @project.external_website) unless @project.external_website.blank? -%>
         <% if logged_in? %>
-        | <%= image_tag "admin1.png" %> <%= link_to "Admins", project_project_administrators_path(@project) -%>
-        | <%= image_tag "members1.png" %> <%= link_to "Members", project_project_members_path(@project) -%>
+        | <%= link_to "Admins", project_project_administrators_path(@project) -%>
+        | <%= link_to "Members", project_project_members_path(@project) -%>
         <% end %>
         <% if @project.repository.is_active? %>
-        | <%= image_tag "subver1.png" %> <%= link_to("Repository", @project.repository.url) -%>
+        | <%= link_to("Repository", @project.repository.url) -%>
         <% end %>
         <% if @project.web_dav_location.is_active? %>
         | <%= link_to("Files", @project.web_dav_location.files_url)  -%>
         <% end %>
         <%if @project.issue_tracker.is_active?%>
-        | <%= image_tag "jira.jpeg" %> <%= link_to("Issue Tracker", @project.issue_tracker.url) -%>
+        | <%= link_to("Issue Tracker", @project.issue_tracker.url) -%>
         <% end %>
         <%if @project.forum.is_active?%>
-        | <%= image_tag "phpBB.jpg" %> <%= link_to("Forum", @project.forum.url) -%>
+        | <%= link_to("Forum", @project.forum.url) -%>
         <% end %>
         <%if @project.wiki.is_active? %>
-        | <%= image_tag "confluence.jpeg" %> <%= link_to("Wiki", @project.wiki.url) -%>
+        | <%= link_to("Wiki", @project.wiki.url) -%>
         <% end %>
         <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
-   	    | <%= image_tag "administration.jpeg" %>
-            <%= link_to 'Administration', project_administration_path(@project) %>
+   	    | <%= link_to 'Administration', project_administration_path(@project) %>
    	    <% end %>
       </div>
       <div id="project_attributes">

@@ -44,7 +44,7 @@
     			<li class="home"><%= link_to 'Home', root_path -%></li>
 	        <li><%= link_to 'Projects', projects_path -%></li>
 	        <li><%= link_to 'Search', projects_path(:show_search_form => true) -%></li>
-	        <li><%= link_to 'Forums', '/phpBB3/index.php', :popup => true -%></li>
+	        <li><%= link_to 'Forums', '/forge/forum/index.php' -%></li>
 	        <li><%= link_to 'Create', new_project_path -%></li>
 		      <% allow :user => :is_site_admin? do %>
 		      <li><%= link_to 'Admin', admin_path -%></li>
