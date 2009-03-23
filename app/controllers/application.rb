@@ -48,7 +48,7 @@ class ApplicationController < ActionController::Base
   def login_from_cookie   
      return if cookies[CROWD_COOKIE_NAME] && logged_in?
      user = User.authenticate_with_crowd_token(cookies[CROWD_COOKIE_NAME], request)
-     self.current_site_user = user if user
+     self.current_user = user if user
   end
   
 #  def need_to_check_with_crowd?
