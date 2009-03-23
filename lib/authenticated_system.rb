@@ -11,7 +11,7 @@ module AuthenticatedSystem
     def current_user
 #      @current_user ||= (login_from_session || login_from_basic_auth || login_from_cookie || false)
 #      @current_user ||= (login_from_session || login_from_cookie || false)
-      @current_user ||= (login_from_session || false)
+      @current_user ||= false
     end
 
     # Store the given user id in the session.
