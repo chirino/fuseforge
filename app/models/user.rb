@@ -129,6 +129,7 @@ class User < ActiveRecord::Base
           proj_arr << proj unless proj_arr.include?(proj)
         end
       end
+      proj_arr
     end    
 #    Project.approved.select { |project| project.users.include?(self) }
   end
