@@ -11,7 +11,7 @@
   	    <%= image_tag @project.image.url(:medium) %>
       </div>
     	<div id="project_menu">
-        <%= link_to("Web Site", @project.external_website) unless @project.external_website.blank? -%>
+        <%= link_to("Website", @project.external_website) unless @project.external_website.blank? -%>
         <% if logged_in? %>
         | <%= link_to "Admins", project_project_administrators_path(@project) -%>
         | <%= link_to "Members", project_project_members_path(@project) -%>
