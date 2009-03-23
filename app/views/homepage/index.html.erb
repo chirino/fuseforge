@@ -80,7 +80,7 @@
         <tbody>
           <% @most_active_projects.each do |i| %>
           <tr>
-            <td><%= i.repository.commits.size -%></td>
+            <td><%= i.repository.commits -%></td>
             <td><%= i.name -%></td>
           </tr>
           <% end %>
