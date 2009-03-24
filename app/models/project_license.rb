@@ -8,6 +8,6 @@ class ProjectLicense < ActiveRecord::Base
   end
 
   def self.options_for_select
-    self.find(:all, :conditions => ['is_active', true]).collect { |x| [x.name, x.id] }
+    self.find(:all, :conditions => ['is_active', true], :order => :position).collect { |x| [x.name, x.id] }
   end  
 end
