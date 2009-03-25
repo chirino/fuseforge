@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'daemons'
-dir = File.expand_path(File.join(File.dirname(__FILE__), '..'))
+dir = "/data/fuseforge/current"
  
 daemon_options = {
   :multiple => false,
