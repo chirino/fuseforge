@@ -61,17 +61,17 @@ end
 namespace :delayed_job do
   desc "Start delayed_job process" 
   task :start, :roles => :app do
-    invoke_command "cd #{current_path}; script/delayed_job start" 
+    invoke_command "cd #{current_path}; script/delayed_job start", :via => run_method 
   end
 
   desc "Stop delayed_job process" 
   task :stop, :roles => :app do
-    invoke_command "cd #{current_path}; script/delayed_job stop" 
+    invoke_command "cd #{current_path}; script/delayed_job stop", :via => run_method 
   end
 
   desc "Restart delayed_job process" 
   task :restart, :roles => :app do
-    invoke_command "cd #{current_path}; script/delayed_job restart" 
+    invoke_command "cd #{current_path}; script/delayed_job restart", :via => run_method 
   end
 end
 
