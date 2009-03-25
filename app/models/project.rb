@@ -235,7 +235,7 @@ class Project < ActiveRecord::Base
   def self.most_active
     if @@most_active.blank? or @@most_active_time.blank? or (@@most_active_time < Time.now.ago(FOUR_HOURS))
       @@most_active = self.public.approved.sort { |a, b| 
-       b.repository.commits.size <=> a.repository.commits.size }[0...MOST_ACTIVE_PROJECTS_LIMIT]
+       b.repository.commits <=> a.repository.commits }[0...MOST_ACTIVE_PROJECTS_LIMIT]
       @@most_active_time = Time.now
     end
     @@most_active   
