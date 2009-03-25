@@ -101,32 +101,10 @@ class JiraInterface
   end
   
   def assign_permissions_to_perm_scheme(new_perm_scheme,forge_admin,proj_groups,forge_users_grp,private_project)
-
     admin_grp = @jira_soap_service.getGroup(@ctx,proj_groups[:admins_grp].downcase)
     user_grp =  @jira_soap_service.getGroup(@ctx,proj_groups[:membrs_grp].downcase)
-
     
-#    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
-#      @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
-      
-#      if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
-#        @jira_soap_service.addPermissionTo(@ctx, new_perm_scheme, perm,admin_grp)
-#      elsif USER_GROUP_PERMISSIONS.include?(perm.permission)
-#        if private_project == true
-#          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,user_grp)
-#        else 
-#          @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_users_grp)                      
-#        end
-#      end
-#    end
-
-    permissions = @jira_soap_service.getAllPermissions(@ctx) 
-
-    permissions.each do |perm|
-      @jira_soap_service = JiraSoapService.new(ENDPOINT_URL)
-      logout(@ctx)    
-      @ctx = login
-      
+    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
       @jira_soap_service.addPermissionTo(@ctx,new_perm_scheme,perm,forge_admin)
       
       if ADMIN_GROUP_PERMISSIONS.include?(perm.permission)
@@ -140,7 +118,6 @@ class JiraInterface
       end
     end
   end
-  
   
   def project_name_exists?(project_name)
     @jira_soap_service.getProjectsNoSchemes(@ctx).any? { |remote_project| remote_project.name == project_name }
