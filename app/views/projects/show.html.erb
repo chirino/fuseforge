@@ -22,7 +22,7 @@
         <% if @project.web_dav_location.is_active? %>
         | <%= link_to("Files", @project.web_dav_location.files_url)  -%>
         <% end %>
-        <%if @project.issue_tracker.is_active?%>
+        <% if @project.issue_tracker.is_active? and @project.issue_tracker.exists_internally? %>
         | <%= link_to("Issue Tracker", @project.issue_tracker.url) -%>
         <% end %>
         <%if @project.forum.is_active?%>
