@@ -5,6 +5,6 @@ port: "4500"
 environment: production
 address: 172.21.0.246
 pid_file: /data/fuseforge/shared/pids/mongrel.pid
-servers: 2
+servers: 1
 user: rails
 group: fuseforge
