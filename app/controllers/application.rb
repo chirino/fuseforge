@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   before_filter :login_from_cookie
   before_filter :login_required
   before_filter :set_observers_current_user
-  before_filter :set_redirect_back_cookie
+  before_filter :set_return_to
 
   helper :all # include all helpers, all the time
 
@@ -25,8 +25,8 @@ class ApplicationController < ActionController::Base
   
   private
   
-  def set_redirect_back_cookie
-    cookies[REDIRECT_BACK_COOKIE_NAME] = { :value => request.env['HTTP_REFERER'], :domain => REDIRECT_BACK_COOKIE_DOMAIN_NAME }
+  def set_return_to
+    session[:return_to] = request.env['HTTP_REFERER']
   end
   
   def set_observers_current_user
