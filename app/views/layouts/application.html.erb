@@ -40,21 +40,7 @@
         <script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&lang=en"></script>
       </div>
     </div>
-    <div id="navigation">
-    	<div class="wrapper">
-    		<ul>
-    			<li class="home"><%= link_to 'Home', root_path -%></li>
-	        <li><%= link_to 'Projects', projects_path -%></li>
-	        <li><%= link_to 'Search', projects_path(:show_search_form => true) -%></li>
-	        <li><%= link_to 'Forums', '/forge/forum/index.php' -%></li>
-	        <li><%= link_to 'Create', new_project_path -%></li>
-		      <% allow :user => :is_site_admin? do %>
-		      <li><%= link_to 'Admin', admin_path -%></li>
-		      <% end %>
-	        <li><a href="#">Help</a></li>
-    		</ul>
-    	</div>
-    </div>    
+    <%= render(:partial => 'shared/nav_bar') if logged_in? and current_user.is_company_employee? %>
     <div id="content">
       <%= render :partial => 'shared/flash_msg' %>
       <%= yield %>
