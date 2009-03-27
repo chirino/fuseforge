@@ -10,7 +10,7 @@ class ProjectsController < ApplicationController
   deny :show, :edit, :update, :destroy, :exec => :project_private_and_user_not_member?, :redirect_to => :projects
   
 #  allow :new, :create, :user => :is_registered_user?
-  allow :index, :new, :create, :user => :is_company_employee?
+  allow :index, :new, :create, :user => :is_company_employee?, :redirect_to => '/'
   
   allow :edit, :update, :user => :is_project_administrator_for?, :redirect_to => :project
   allow :destroy, :user => :is_site_admin?, :redirect_to => :project
