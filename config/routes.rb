@@ -8,8 +8,11 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :project_statuses
 
   map.resource :session, :only => [:new, :destroy]
+  map.connect '/login', :controller => 'sessions', :action => 'new'
+  map.connect '/logout', :controller => 'sessions', :action => 'destroy'
 
   map.resource :registration, :only => [:new]
+  map.connect '/register', :controller => 'registrations', :action => 'new'
   
   map.resources :news_items
 
