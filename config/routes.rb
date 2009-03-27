@@ -9,6 +9,8 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resource :session, :only => [:new, :destroy]
 
+  map.resource :registration, :only => [:new]
+  
   map.resources :news_items
 
   map.resources :featured_projects

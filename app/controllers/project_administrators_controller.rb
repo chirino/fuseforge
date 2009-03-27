@@ -5,7 +5,7 @@ class ProjectAdministratorsController < ApplicationController
   allow :create, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
   
   def index
-    @project_administrators = @project.administrators
+    @project_administrators = @project.default_administrators
     
     respond_to do |format|
       format.html # index.html.erb

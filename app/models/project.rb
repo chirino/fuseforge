@@ -161,7 +161,11 @@ class Project < ActiveRecord::Base
   def administrators
     admin_groups.users
   end
-  
+
+  def default_administrators
+    admin_groups.default.users
+  end
+    
   def find_administrator_by_user_id(user_id)
     user = User.find(user_id)
     administrators.include?(user) ? user : nil
@@ -169,6 +173,10 @@ class Project < ActiveRecord::Base
   
   def members
     member_groups.users
+  end
+  
+  def default_members
+    member_groups.default.users
   end
   
   def find_member_by_user_id(user_id)

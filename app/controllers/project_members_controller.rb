@@ -5,7 +5,7 @@ class ProjectMembersController < ApplicationController
   allow :create, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
   
   def index
-    @project_members = @project.members
+    @project_members = @project.default_members
     
     respond_to do |format|
       format.html # index.html.erb
