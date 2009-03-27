@@ -5,6 +5,7 @@ class SessionsController < ApplicationController
   def new
     logger.info '--------------------------------'
     logger.info request.env['HTTP_REFERRER'].inspect
+    logger.info session[:return_to].inspect
     logger.info '---------------------------------'
     session[:return_to] = request.env['HTTP_REFERER'] if request.env['HTTP_REFERER'] =~ /[\/forum|\/wiki]/
     redirect_to "#{FUSESOURCE_URL}/login?return_to=#{session[:return_to]}"
