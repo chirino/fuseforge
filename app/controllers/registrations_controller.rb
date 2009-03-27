@@ -7,6 +7,6 @@ class RegistrationsController < ApplicationController
   private
   
   def set_return_to
-    session[:return_to] = request.env['HTTP_REFERER'] if request.env['HTTP_REFERER'] =~ /[/forum|/wiki]/
+    session[:return_to] = request.env['HTTP_REFERER'] if request.env['HTTP_REFERER'] =~ /[\/forum|\/wiki]/
   end
 end
