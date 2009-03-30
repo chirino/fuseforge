@@ -122,6 +122,7 @@ class JiraInterface
   def make_existing_project_private(project_key, admin_group_name, user_group_name)
     admin_group = @jira_soap_service.getGroup(@ctx, admin_group_name.downcase)
     user_group =  @jira_soap_service.getGroup(@ctx, user_group_name.downcase)
+    forge_users_group = @jira_soap_service.getGroup(@ctx, ApplicationHelper.get_forge_jira_group)
     project_id = @jira_soap_service.getProjectByKey(@ctx, project_key).id
     project = @jira_soap_service.getProjectWithSchemesById(@ctx, project_id)
     perm_scheme = project.permissionScheme
@@ -134,8 +135,9 @@ puts perm.inspect
       begin
         @jira_soap_service.deletePermissionFrom(@ctx, perm_scheme, perm, admin_group)
         @jira_soap_service.deletePermissionFrom(@ctx, perm_scheme, perm, user_group)
-      rescue => e
-puts e.inspect        
+        @jira_soap_service.deletePermissionFrom(@ctx, perm_scheme, perm, forge_users_group)
+      rescue SOAP::FaultError => e
+        raise unless e.to_s.include?('no permission of this kind exists for this remote entity')
       end
 puts '---------------------------------------------------------'      
     end
