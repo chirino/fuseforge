@@ -157,7 +157,8 @@ class ProjectsController < ApplicationController
   end
 
   def destroy
-    @project.destroy
+    @project.inactivate
+    flash[:notice] = 'Project has been inactivated.'
 
     respond_to do |format|
       format.html { redirect_to(projects_url) }

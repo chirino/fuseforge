@@ -24,14 +24,11 @@ class IssueTracker < ActiveRecord::Base
   
   def exists_internally?
     JiraInterface.new.project_key_exists?(self.project.shortname)
-
   end  
   
   def create_internal
     return true if not use_internal? or exists_internally?
     is_pri = self.project.is_private?
-#    JiraInterface.new.create_proj_default_perm(self.project.name, self.project.shortname, self.project.description,
-#      self.project.created_by.login, JIRA_INTERNAL_URL,is_pri)
     Delayed::Job.enqueue CreateJiraProjectJob.new(self.project.name, self.project.shortname, self.project.description,
      self.project.created_by.login, JIRA_INTERNAL_URL, is_pri)
   end  

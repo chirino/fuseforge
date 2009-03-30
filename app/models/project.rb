@@ -157,6 +157,15 @@ class Project < ActiveRecord::Base
     save
     Notifier.deliver_project_approval_notification(self)
   end  
+  
+  def inactivate
+    groups.reject { |group| not group.default? }.each { |group| group.destroy }
+    default_administrators.each { |user| remove_administrator(user) }
+    default_members.each { |user| remove_member(user) }
+    self.is_private = true
+    self.status = ProjectStatus.inactive
+    save
+  end  
 
   def administrators
     admin_groups.users
