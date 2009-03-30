@@ -119,6 +119,28 @@ class JiraInterface
     end
   end
   
+  def make_existing_project_private(project_key, admin_group_name, user_group_name)
+    admin_group = @jira_soap_service.getGroup(@ctx, admin_group_name.downcase)
+    user_group =  @jira_soap_service.getGroup(@ctx, user_group_name.downcase)
+    project_id = @jira_soap_service.getProjectByKey(@ctx, project_key).id
+    project = @jira_soap_service.getProjectWithSchemesById(@ctx, project_id)
+    perm_scheme = project.permissionScheme
+
+    raise "Cannot make project with Default Permission Scheme private!" if perm_scheme.name == 'Default Permission Scheme'
+    
+    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
+logger.info '--------------------------------------------------------'
+logger.info perm.inspect      
+      begin
+        @jira_soap_service.deletePermissionFrom(@ctx, perm_scheme, perm, admin_group)
+        @jira_soap_service.deletePermissionFrom(@ctx, perm_scheme, perm, user_group)
+      rescue => e
+logger.info e.inspect        
+      end
+logger.info '---------------------------------------------------------'      
+    end
+  end
+  
   def project_name_exists?(project_name)
     @jira_soap_service.getProjectsNoSchemes(@ctx).any? { |remote_project| remote_project.name == project_name }
   end
@@ -241,8 +263,7 @@ class JiraInterface
     logout(@ctx)    
  end
 
- 
-def logout(ctx)
-  @jira_soap_service.logout(ctx)
-end
+  def logout(ctx)
+    @jira_soap_service.logout(ctx)
+  end
 end
