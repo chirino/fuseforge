@@ -75,6 +75,7 @@ class Wiki < ActiveRecord::Base
   end
   
   def reset_permissions(reset_to_private)
+    confluence_interface = ConfluenceInterface.new
     confluence_interface.login
     confluence_interface.reset_space_perm(project.shortname, reset_to__private)
     confluence_interface.logout
