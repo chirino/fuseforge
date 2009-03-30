@@ -10,8 +10,10 @@
       	<li><%= link_to 'Maintain Admin Groups', project_project_admin_groups_path(:project_id => @project) -%></li>
       	<li><%= link_to 'Maintain Member Groups', project_project_member_groups_path(:project_id => @project) -%></li>
       	<% end %>
-        <% allow :user => :is_site_admin? and @project.is_active? do %>
+        <% if @project.is_active? %>
+        <% allow :user => :is_site_admin? do %>
         <li><%= link_to 'Inactivate', @project, :confirm => 'Are you sure?', :method => :delete %></li>
+        <% end %>
         <% end %>
       </ul>	
     </div>
