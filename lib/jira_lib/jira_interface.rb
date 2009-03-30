@@ -119,16 +119,19 @@ class JiraInterface
     end
   end
   
-  def make_existing_project_private(project_key, admin_group_name, user_group_name)
-    admin_group = @jira_soap_service.getGroup(@ctx, admin_group_name.downcase)
-    user_group =  @jira_soap_service.getGroup(@ctx, user_group_name.downcase)
-    forge_users_group = @jira_soap_service.getGroup(@ctx, ApplicationHelper.get_forge_jira_group)
+  def make_existing_project_private(project_key)
+#  def make_existing_project_private(project_key, admin_group_name, user_group_name)
+#    admin_group = @jira_soap_service.getGroup(@ctx, admin_group_name.downcase)
+#    user_group =  @jira_soap_service.getGroup(@ctx, user_group_name.downcase)
+#    forge_users_group = @jira_soap_service.getGroup(@ctx, ApplicationHelper.get_forge_jira_group)
     project_id = @jira_soap_service.getProjectByKey(@ctx, project_key).id
     project = @jira_soap_service.getProjectWithSchemesById(@ctx, project_id)
     perm_scheme = project.permissionScheme
 
     raise "Cannot make project with Default Permission Scheme private!" if perm_scheme.name == 'Default Permission Scheme'
     
+puts perm_scheme.methods.sort
+return
     perm_scheme.permissionMappings.each do |perm_mapping|
       perm_scheme.removePermissionMapping(perm_mapping)
     end
