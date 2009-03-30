@@ -129,16 +129,7 @@ class JiraInterface
 
     raise "Cannot make project with Default Permission Scheme private!" if perm_scheme.name == 'Default Permission Scheme'
     
-    puts '++++++++++++++++++++++++++++++++++++++++++++++'
-    perm_scheme.permissionMappings.each do |perm_mapping|
-      puts perm_mapping.inspect
-    end
-    puts '++++++++++++++++++++++++++++++++++++++++++++++'
-    return
-      
     @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
-puts '--------------------------------------------------------'
-puts perm.inspect      
       begin
         @jira_soap_service.deletePermissionFrom(@ctx, perm_scheme, perm, admin_group)
         @jira_soap_service.deletePermissionFrom(@ctx, perm_scheme, perm, user_group)
@@ -146,7 +137,6 @@ puts perm.inspect
       rescue SOAP::FaultError => e
         raise unless e.to_s.include?('no permission of this kind exists for this remote entity')
       end
-puts '---------------------------------------------------------'      
     end
   end
   
