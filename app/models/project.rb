@@ -159,7 +159,7 @@ class Project < ActiveRecord::Base
   end  
   
   def inactivate
-    groups.reject { |group| not group.default? }.each { |group| group.destroy }
+    groups.reject { |group| group.default? }.each { |group| group.destroy }
     default_administrators.each { |user| remove_administrator(user) }
     default_members.each { |user| remove_member(user) }
     self.is_private = true
