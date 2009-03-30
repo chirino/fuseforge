@@ -130,11 +130,7 @@ class JiraInterface
 
     raise "Cannot make project with Default Permission Scheme private!" if perm_scheme.name == 'Default Permission Scheme'
     
-puts perm_scheme.methods.sort
-return
-    perm_scheme.permissionMappings.each do |perm_mapping|
-      perm_scheme.removePermissionMapping(perm_mapping)
-    end
+    perm_scheme.permissionMappings = []
     
 #    @jira_soap_service.getAllPermissions(@ctx).each do |perm| 
 #      begin
