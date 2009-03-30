@@ -70,6 +70,14 @@ class Forum < ActiveRecord::Base
     end  
   end
   
+  def make_private
+    reset_permissions(true)
+  end
+  
+  def make_public
+    reset_permissions(false)
+  end    
+  
   def reset_permissions(make_private)
     return true if phpbb_forum.blank?
     

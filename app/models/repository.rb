@@ -76,6 +76,14 @@ class Repository < ActiveRecord::Base
     true
   end  
   
+  def make_private
+    reset_perm_file(true)
+  end
+  
+  def make_public
+    reset_perm_file(false)
+  end    
+  
   def reset_perm_file(make_private)
     conn = open_conn
     create_file(make_private ? apache_repo_private_perm_file : apache_repo_public_perm_file, apache_repo_perm_filepath)

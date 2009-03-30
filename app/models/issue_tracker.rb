@@ -33,6 +33,18 @@ class IssueTracker < ActiveRecord::Base
      self.project.created_by.login, JIRA_INTERNAL_URL, is_pri)
   end  
   
+  def make_private
+    reset_permissions(true)
+  end
+  
+  def make_public
+    reset_permissions(false)
+  end
+  
+  def reset_permissions(reset_to_private)
+    JiraInterface.new.update_project(project.shortname, reset_to_private) 
+  end
+  
   def internal_url
     "#{JIRA_INTERNAL_URL}#{project.shortname}"
   end  

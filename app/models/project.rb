@@ -124,22 +124,24 @@ class Project < ActiveRecord::Base
     bool_value = value == "1" ? true : false
     
     if (bool_value != read_attribute(:is_private)) and not new_record?
-      
-      confluence_interface = ConfluenceInterface.new
-      jira_interface = JiraInterface.new
-      
-      repository.reset_perm_file(bool_value)  
-      forum.reset_permissions(bool_value)
-
-      confluence_interface.login
-      confluence_interface.reset_space_perm(self.shortname,bool_value)
-      confluence_interface.logout
-      
-      jira_interface.update_project(self.shortname, bool_value) 
-
+      if bool_value
+        wiki.make_private
+        issue_tracker.make_private
+        repository.make_private
+        forum.make_private
+      else
+        wiki.make_public
+        issue_tracker.make_public
+        repository.make_public
+        forum.make_public
+      end
     end  
     
     write_attribute(:is_private, value)
+  end  
+  
+  def is_active?
+    status == ProjectStatus.active
   end  
   
   def accepted_terms?
@@ -162,7 +164,7 @@ class Project < ActiveRecord::Base
     groups.reject { |group| group.default? }.each { |group| group.destroy }
     default_administrators.each { |user| remove_administrator(user) }
     default_members.each { |user| remove_member(user) }
-    self.is_private = true
+    self.is_private = "1"
     self.status = ProjectStatus.inactive
     save
   end  

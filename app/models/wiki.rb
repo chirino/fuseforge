@@ -65,4 +65,18 @@ class Wiki < ActiveRecord::Base
     conf_inter.logout
     latest_act
   end
+
+  def make_private
+    reset_permissions(true)
+  end
+  
+  def make_public
+    reset_permissions(false)
+  end
+  
+  def reset_permissions(reset_to_private)
+    confluence_interface.login
+    confluence_interface.reset_space_perm(project.shortname, reset_to__private)
+    confluence_interface.logout
+  end  
 end
