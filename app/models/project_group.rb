@@ -29,7 +29,7 @@ class ProjectGroup < ActiveRecord::Base
   
   def remove_from_crowd
     return unless default?
-    Crowd.new.delete_group!(name) if exists_in_crowd?
+#    Crowd.new.delete_group!(name) if exists_in_crowd?
 
   # TODO:  Take this out after we figure out problem with removing groups.
   rescue SOAP::FaultError
