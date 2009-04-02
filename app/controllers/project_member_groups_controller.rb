@@ -40,7 +40,10 @@ class ProjectMemberGroupsController < BaseProjectsController
     respond_to do |format|
       if @project_member_group.save
         
-        JiraInterface.new.add_groups_to_project(@project.shortname, params[:project_member_group][:name], "USER")
+#        JiraInterface.new.add_groups_to_project(@project.shortname, params[:project_member_group][:name], "USER")
+
+        Delayed::Job.enqueue AddGroupToJiraProjectJob.new(@project.shortname, params[:project_member_group][:name], "USER")
+
         confl_interface = ConfluenceInterface.new
         confl_interface.login
         confl_interface.add_remove_groups_to_space(@project.shortname,[params[:project_member_group][:name]],nil)
