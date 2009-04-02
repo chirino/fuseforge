@@ -28,22 +28,28 @@ class IssueTracker < ActiveRecord::Base
   
   def create_internal
     return true if not use_internal? or exists_internally?
-    Delayed::Job.enqueue CreateJiraProjectJob.new(project)
+
+    Delayed::Job.enqueue CreateJiraProjectJob.new(project.name, project.shortname, project.description, project.created_by.login, 
+     JIRA_INTERNAL_URL, project.is_private?)
+
+#    Delayed::Job.enqueue CreateJiraProjectJob.new(project)
   end  
   
   def make_private
-#    reset_permissions(true)
-    JiraInterface.new.make_existing_project_private(project)
+    reset_permissions(true)
+#    JiraInterface.new.make_existing_project_private(project)
   end
   
   def make_public
-#    reset_permissions(false)
-    JiraInterface.new.make_existing_project_public(project)
+    reset_permissions(false)
+#    JiraInterface.new.make_existing_project_public(project)
   end
   
-#  def reset_permissions(reset_to_private)
+  def reset_permissions(reset_to_private)
 #    JiraInterface.new.update_project(project.shortname, reset_to_private) 
-#  end
+
+    Delayed::Job.enqueue UpdateJiraProjectJob.new(project.shortname, reset_to_private)
+  end
   
   def internal_url
     "#{JIRA_INTERNAL_URL}#{project.shortname}"

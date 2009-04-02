@@ -15,10 +15,6 @@ module ApplicationHelper
     DEFAULT_CONFLUENCE_GROUP
   end
 
-  def ApplicationHelper.get_default_confluence_group
-    DEFAULT_CONFLUENCE_GROUP
-  end
-
   def ApplicationHelper.get_forge_administrator
     FORGE_ADMINISTRATOR
   end

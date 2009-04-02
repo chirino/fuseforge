@@ -279,7 +279,7 @@ class JiraInterface
   
   #TODO: assign project category
   
-  def old_create_proj_default_perm(project_name, proj_short_name, project_desc,project_owner_id,
+  def create_proj_default_perm(project_name, proj_short_name, project_desc,project_owner_id,
    issue_url,private_project=false)
 
     forge_admin =  @jira_soap_service.getGroup(@ctx,ApplicationHelper.get_forge_admins_group)
@@ -306,7 +306,7 @@ class JiraInterface
     logout(@ctx)    
   end
 
-  def create_proj_default_perm(project)
+  def new_create_proj_default_perm(project)
     def_scheme = @jira_soap_service.getNotificationSchemes(@ctx).detect do |scheme| 
       scheme.name == 'Default Notification Scheme'
     end
