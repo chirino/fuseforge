@@ -34,18 +34,16 @@ class IssueTracker < ActiveRecord::Base
   end  
   
   def make_private
-    return true unless use_internal?
     reset_permissions(true)
   end
   
   def make_public
-    return true unless use_internal?
     reset_permissions(false)
   end
   
   def reset_permissions(reset_to_private)
-#    JiraInterface.new.update_project(project.shortname, reset_to_private) 
-
+    return true unless use_internal?
+    
     Delayed::Job.enqueue UpdateJiraProjectJob.new(project.shortname, reset_to_private)
   end
   
