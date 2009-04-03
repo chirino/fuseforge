@@ -8,8 +8,7 @@ class RegistrationsController < ApplicationController
     logger.info session[:return_to].inspect
     logger.info '-------------------------------------------'
     session[:return_to] = request.env['HTTP_REFERER'] if request.env['HTTP_REFERER'].include?('/forum') or \
-     request.env['HTTP_REFERER'].include?('/wiki')
-    session[:return_to] = params[:return_to] if params[:return_to] 
+     request.env['HTTP_REFERER'].include?('/wiki') or params[:clicked] == 'yes'
     redirect_to "#{FUSESOURCE_URL}/register?return_to=#{session[:return_to]}"
   end
 end
