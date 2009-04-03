@@ -16,7 +16,7 @@
         <%= link_to(image_tag('fuseforge-logo.png'), root_path, :alt => 'FUSE Forge Community') -%>
         <ul>
           <% unless logged_in? %>
-          <li> <b><%= link_to 'Register!', '/forge/register' -%></b></li>
+          <li> <b><%= link_to 'Register!', "/forge/register?return_to=#{request.env['HTTP_REFERER']}" -%></b></li>
           <% end %>
           <% if logged_in? %>
           <li id="loggedIn">
