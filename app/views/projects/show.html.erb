@@ -22,7 +22,7 @@
         <% if @project.web_dav_location.is_active? %>
         | <%= link_to("Files", @project.web_dav_location.files_url)  -%>
         <% end %>
-        <% if @project.issue_tracker.is_active? and @project.issue_tracker.exists_internally? %>
+        <% if @project.issue_tracker.is_active? %>
         | <%= link_to("Issue Tracker", @project.issue_tracker.url) -%>
         <% end %>
         <%if @project.forum.is_active?%>
@@ -106,42 +106,33 @@
     </div>
   </div>  
 
-  <% if @project.issue_tracker.use_internal? %>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>Recent Issues</h2>
-      <ul>
-	    <% @project.issue_tracker.recent_issues.each do |i| %>
-        <li><%= link_to truncate(h(i[:title]), 55), i[:url] -%></li>
-      <% end %>
-      </ul>
-    </div>
-  </div>  
-  <% end %>
-
-  <% if @project.forum.use_internal? %>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>Latest Forum Posts</h2>
-      <ul>
-	    <% @project.forum.recent_posts.each do |i| %>
-        <li><%= link_to truncate(h(i.post_subject), 55), i.url -%></li>
-      <% end %>
-      </ul>
-    </div>
-  </div>  
-  <% end %>
-
-  <% if @project.wiki.use_internal? %>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>Recent Wiki Updates</h2>
-      <ul>
-	    <% @project.wiki.get_latest_activity.each do |i| %>
-        <li><%= link_to truncate(h(i[:title]), 55), i[:url] -%></li>
-      <% end %>
-      </ul>
-    </div>
-  </div>  
-  <% end %>
+<%
+  # < % if @project.forum.use_internal? % >
+  # <div class="two_column section">
+  #   <div class="interior">
+  #     <h2>Latest Forum Posts</h2>
+  #     <ul>
+  #       < % @project.forum.recent_posts.each do |i| % >
+  #       <li>< %= link_to truncate(h(i.post_subject), 55), i.url -% ></li>
+  #     < % end % >
+  #     </ul>
+  #   </div>
+  # </div>  
+  # < % end % >
+-%>
+<%
+  # < % if @project.wiki.use_internal? % >
+  # <div class="two_column section">
+  #   <div class="interior">
+  #     <h2>Recent Wiki Updates</h2>
+  #     <ul>
+  #       < % @project.wiki.get_latest_activity.each do |i| % >
+  #       <li>< %= link_to truncate(h(i[:title]), 55), i[:url] -% ></li>
+  #     < % end % >
+  #     </ul>
+  #   </div>
+  # </div>  
+  # < % end % >
+-%>
+  
 </div>

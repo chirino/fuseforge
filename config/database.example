@@ -1,31 +1,21 @@
+production:
+  adapter: mysql
+  database: fuseforge
+  username: rails
+  password: password
+  host: 127.0.0.1
+
 development:
   adapter: mysql
-  database: fuseforge_development
-  username: root
-  password: 
-  socket: /var/lib/mysql/mysql.sock
-
-radiant:
-  adapter: mysql
-  database: radiant_development
-  username: root
-  password: 
-  socket: /var/lib/mysql/mysql.sock
-
+  database: fuseforge
+  username: rails
+  password: password
+  host: 127.0.0.1
+  
 phpbb:
   adapter: mysql
   database: phpbb3
-  username: root
-  password:
+  username: phpbb3
+  password: password
   host: 127.0.0.1
-  port: 3307
 
-# Warning: The database defined as "test" will be erased and
-# re-generated from your development database when you run "rake".
-# Do not set this db to the same as development or production.
-test:
-  adapter: mysql
-  database: fuseforge_test
-  username: root
-  password: 
-  socket: /var/lib/mysql/mysql.sock
