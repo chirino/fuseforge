@@ -7,8 +7,7 @@ require 'capistrano/ext/multistage'
 set :application, 'fuseforge'
 set :deploy_via, :copy
 set :copy_strategy, :export
-#set :repository, 'http://fusesource.com/forge/svn/fuseforge/rails/trunk'
-set :repository, 'http://fusesource.com/forge/svn/fuseforge/rails/branches/forge-2.0'
+set :repository, 'http://fusesource.com/forge/svn/fuseforge/rails/trunk'
 
 task :after_update_code, :roles => :app do
   invoke_command "cp -f #{shared_path}/config/crowd.yml #{release_path}/config/crowd.yml" 
