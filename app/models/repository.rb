@@ -4,10 +4,24 @@ class Repository < ActiveRecord::Base
   belongs_to :project
   
   INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com/forge' : 'fusesourcedev.com/forge'
-  REPO_PATH = '/var/svn/repos'
-  APACHE_REPO_PERMS_PATH = '/etc/apache2/fuseforge'
-  APACHE_REPO_PERMS_EXT = 'authz'
-  APACHE_SITE_PREFIX = 'svn_'
+  SVN_ROOT = '/var/forge/svn'
+
+  def repos_filepath
+    "#{SVN_ROOT}/repos"
+  end
+
+  def repo_filepath
+    "#{repos_filepath}/#{key}"
+  end
+
+  def httpd_conf_filepath
+    "#{SVN_ROOT}/httpd.conf/#{key}"
+  end
+  
+  def authz_filepath
+    "#{SVN_ROOT}/authz/#{key}"
+  end
+
 
   def before_save
     self.external_url = '' if use_internal?
@@ -18,13 +32,13 @@ class Repository < ActiveRecord::Base
 
     # Disable the apache site file, reload the apache config, delete the apache site file, delete the repo permissions file,
     # and delete the repository.
-    conn = open_conn
-    disable_apache_site_file(apache_site_file_name, conn)     
-    reload_apache_config(conn)
-    remove_apache_site_file(apache_site_file_name, conn)
-    remove_file(apache_repo_perm_filepath, conn)
-    remove_directory(repo_path, conn)
-    close_conn(conn)
+    # conn = open_conn
+    # disable_apache_site_file(apache_site_file_name, conn)     
+    # reload_apache_config(conn)
+    # remove_apache_site_file(apache_site_file_name, conn)
+    # remove_file(authz_filepath, conn)
+    # remove_directory(repo_filepath, conn)
+    # close_conn(conn)
     true
   end
   
@@ -33,11 +47,11 @@ class Repository < ActiveRecord::Base
   end
   
   def exists_internally?
-    path_exists?(repo_path)
+    path_exists?(repo_filepath)
   end  
   
   def internal_url
-    "http://#{INTERNAL_HOST}/svn/#{key}"
+    "http://#{INTERNAL_HOST}/forge/svn/#{key}"
   end  
   
   def url
@@ -47,7 +61,7 @@ class Repository < ActiveRecord::Base
   def commits
     total_commits = 0
     begin
-      IO.popen("svnlook youngest #{repo_path}") { |x| total_commits = x.gets.chomp.to_i } if exists_internally?
+      IO.popen("svnlook youngest #{repo_filepath}") { |x| total_commits = x.gets.chomp.to_i } if exists_internally?
     rescue
     end
     total_commits
@@ -56,25 +70,39 @@ class Repository < ActiveRecord::Base
   def last_commit_at
     last_commit_at_time = ''
     begin
-      IO.popen("svnlook date #{repo_path}") { |x| last_commit_at_time = x.gets.gsub(/\+.*/, '') + ' UTC' } if exists_internally?
+      IO.popen("svnlook date #{repo_filepath}") { |x| last_commit_at_time = x.gets.gsub(/\+.*/, '') + ' UTC' } if exists_internally?
     rescue
     end
     last_commit_at_time
   end
   
-  def create_internal
-    return true if not use_internal? or exists_internally?
+  def create_internal(reload=true)
+    return true if not use_internal?
 
     # Create the repo, create the permissions file, create the site file, enable the site file, and reload the apache config.
     conn = open_conn
-    run_cmd_str("sudo -u www-data svnadmin create #{REPO_PATH}/#{key}", 'Error creating repository!', conn)
-    create_file(self.project.is_private? ? apache_repo_private_perm_file : apache_repo_public_perm_file, apache_repo_perm_filepath, conn)
-    create_apache_site_file(apache_site_file, apache_site_file_name, conn)
-    enable_apache_site_file(apache_site_file_name, conn)     
-    reload_apache_config(conn)
-    close_conn(conn)
+    
+    # Only create the repo if it does not exist
+    if !remote_dir_exists?(conn, repo_filepath, APACHE_USER)
+      remote_system(conn, "svnadmin create #{repo_filepath}", APACHE_USER)==0 or raise 'Error creating repository!'
+    end
+    
+    # Generate the config files for the repo.
+    remote_write(conn, authz_file_content, authz_filepath) 
+    remote_write(conn, httpd_conf_content, httpd_conf_filepath)==0 or raise 'Error creating apache site file!'
+
+    if reload
+      reload_apache_config(conn)
+    end
     true
-  end  
+    
+  rescue => error
+    puts "Error creating the svn repo: #{error}"
+    print error.backtrace.join("\n")
+    logger.error "Error creating the svn repo: #{error}"    
+  ensure
+    close_conn(conn)
+  end    
   
   def make_private
     reset_perm_file(true)
@@ -86,7 +114,7 @@ class Repository < ActiveRecord::Base
   
   def reset_perm_file(make_private)
     conn = open_conn
-    create_file(make_private ? apache_repo_private_perm_file : apache_repo_public_perm_file, apache_repo_perm_filepath)
+    create_file(make_private ? apache_repo_private_perm_file : apache_repo_public_perm_file, authz_filepath)
     reload_apache_config(conn)
     close_conn(conn)
     true
@@ -97,33 +125,30 @@ class Repository < ActiveRecord::Base
   def key
     self.project.shortname.downcase
   end
-  
-  def repo_path
-    "#{REPO_PATH}/#{key}"
-  end
-  
-  def apache_repo_public_perm_file
-    "[/]\n* =\n@registered-users = r\n@forge-#{key}-admins = rw\n@forge-#{key}-members = rw"
+
+  def authz_file_content
+    rc = <<EOF
+[/]
+* =
+@#{CrowdGroup.forge_admin_group.name} = rw
+EOF
+    self.project.admin_groups.each do |group|
+      rc += "@#{group.name} = rw\n"
+    end
+    self.project.member_groups.each do |group|
+      rc += "@#{group.name} = rw\n"
+    end
+    
+    rc += "@registered-users = r\n" if !self.project.is_private? 
+    return rc;
   end
 
-  def apache_repo_private_perm_file
-    "[/]\n* =\n@forge-#{key}-admins = rw\n@forge-#{key}-members = rw"
-  end
-
-  def apache_repo_perm_filepath
-    "#{APACHE_REPO_PERMS_PATH}/#{key}.#{APACHE_REPO_PERMS_EXT}"
-  end
-
-# Change line below to
-#  <Location /forge/svn/#{key}>
-
-  def apache_site_file
-<<eos
+  def httpd_conf_content
+    rc = <<EOF
 <Location /forge/svn/#{key}>
 
   DAV svn
-
-  SVNPath #{repo_path}
+  SVNPath #{repo_filepath}
 
   AuthType Basic
   AuthName "FUSE Forge Repository"
@@ -131,18 +156,16 @@ class Repository < ActiveRecord::Base
   PerlAuthenHandler Apache::CrowdAuth
   PerlSetVar CrowdAppName ruby
   PerlSetVar CrowdAppPassword password
-  PerlSetVar CrowdSOAPURL http://#{CROWD_HOST}:8095/crowd/services/SecurityServer
+  PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
 
   PerlAuthzHandler Apache::CrowdAuthz
-  PerlSetVar CrowdAuthzSVNAccessFile #{apache_repo_perm_filepath}
+  PerlSetVar CrowdAuthzSVNAccessFile #{authz_filepath}
 
   require valid-user
 
 </Location>
-eos
+EOF
+    return rc;
   end
 
-  def apache_site_file_name
-    "#{APACHE_SITE_PREFIX}#{key}"
-  end
 end

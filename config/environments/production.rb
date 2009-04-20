@@ -21,20 +21,20 @@ config.action_controller.perform_caching             = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
-if Socket.gethostname == 'dudedev'
-  CROWD_HOST = '172.21.0.186'
-  FUSESOURCE_URL = "http://fusesourcedev.com" 
-  FUSEFORGE_URL = "http://fusesourcedev.com/forge"
-  REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
-  JIRA_URL = "http://fusesourcedev.com"
-  CONFLUENCE_URL = 'http://fusesourcedev.com/forge'
-  config.action_mailer.default_url_options = { :host => "fusesourcedev.com" }
-else
-  CROWD_HOST = '172.21.0.185'
-  FUSESOURCE_URL = "http://fusesource.com" 
-  FUSEFORGE_URL = "http://fusesource.com/forge"
-  REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
-  JIRA_URL = "http://fusesource.com"
-  CONFLUENCE_URL = 'http://fusesource.com/forge'
-  config.action_mailer.default_url_options = { :host => "fusesource.com" }  
-end
+CROWD_SOAP_URL = "http://fusesource.com/crowd/services/SecurityServer"
+FUSESOURCE_URL = "http://fusesource.com" 
+FUSEFORGE_URL = "http://fusesource.com/forge"
+REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
+JIRA_URL = "http://fusesource.com/issues"
+CONFLUENCE_URL = 'http://fusesource.com/wiki'
+SVN_DAV_HOST = {
+  :apache_user=> "www-data",
+  :apache_group=> "www-data", 
+  # :ssh=> {
+  #   :host=>"localhost", 
+  #   :user=>ENV["USER"], 
+  #   :options => {}
+  # }
+}
+
+config.action_mailer.default_url_options = { :host => "fusesource.com" }  

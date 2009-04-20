@@ -22,11 +22,7 @@ namespace :deploy do
   end
 
   task :fuseforge_setup do
-	run "mkdir -p #{shared_path}/config"
-	
-	sudo "mkdir -p /etc/mongrel_cluster"
-  	sudo "ln -nfs #{mongrel_conf} /etc/mongrel_cluster/fuseforge.yml"
-
+  	run "mkdir -p #{shared_path}/config"
     run "mkdir -p #{shared_path}/projects"
   end
 

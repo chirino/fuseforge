@@ -7,7 +7,7 @@ class Notifier < ActionMailer::Base
   end
 
   def project_creation_notification(project)
-    recipients SiteAdminGroup.new.users.collect { |u| "#{u.full_name} <#{u.email}>" }
+    recipients CrowdGroup.forge_admin_group.users.collect { |u| "#{u.full_name} <#{u.email}>" }
     from       FUSEFORGE_EMAIL_ADDRESS
     subject    "A new FUSE Forge project, #{project.name}, is awaiting approval."
     body       :project => project

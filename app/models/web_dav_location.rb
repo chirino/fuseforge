@@ -4,19 +4,20 @@ class WebDavLocation < ActiveRecord::Base
   belongs_to :project
   
   INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com' : 'fusesourcedev.com'
-  WEBDAV_PATH = '/var/dav'
+  DAV_ROOT = '/var/forge/dav'
   
-  SITE_DIR_NAME = 'site'
-  SITES_DIR_NAME = 'sites'
-  FILES_DIR_NAME = 'files'
-  DOWNLOAD_DIR_NAME = 'download'
+  def repo_filepath
+    "#{DAV_ROOT}/repos/#{key}"
+  end
+  
+  def dav_prefix
+    "/forge/dav"
+  end
 
-  APACHE_ALIAS_PREFIX = 'forge/dav/'
-  APACHE_FILES_ALIAS_PREFIX = "forge/#{FILES_DIR_NAME}/"
-  APACHE_SITES_ALIAS_PREFIX = "forge/#{SITES_DIR_NAME}/"
-  APACHE_SITE_PREFIX = 'dav_'
-  WEBSITE_URL_PREFIX = "http://#{INTERNAL_HOST}/forge/#{SITES_DIR_NAME}"
-
+  def site_prefix
+    "/forge/sites"
+  end
+  
   def before_save
     self.external_url = '' if use_internal?
   end
@@ -25,12 +26,12 @@ class WebDavLocation < ActiveRecord::Base
     return true unless exists_internally?
     
     # Disable the apache site file, reload the apache config, delete the apache site file, and delete the webdav directory.
-    conn = open_conn
-    disable_apache_site_file(apache_site_file_name, conn)     
-    reload_apache_config(conn)
-    remove_apache_site_file(apache_site_file_name, conn)
-    remove_directory(webdav_collection_path, conn)
-    close_conn(conn)
+    # conn = open_conn
+    # disable_apache_site_file(apache_site_file_name, conn)     
+    # reload_apache_config(conn)
+    # remove_apache_site_file(apache_site_file_name, conn)
+    # remove_directory(webdav_collection_path, conn)
+    # close_conn(conn)
     true
   end
   
@@ -43,20 +44,20 @@ class WebDavLocation < ActiveRecord::Base
   end
   
   def exists_internally?
-    path_exists?(webdav_collection_path)
+    path_exists?("#{repo_filepath}")
   end  
   
   def internal_url
-    "http://#{INTERNAL_HOST}/#{webdav_alias}"
+    "http://#{INTERNAL_HOST}#{dav_prefix}/#{key}"
   end  
   
   def internal_files_url
-    "http://#{INTERNAL_HOST}/#{files_alias}"
+    "http://#{INTERNAL_HOST}#{site_prefix}/#{key}/download"
   end  
   
   def website_url
     if use_internal?
-       "#{WEBSITE_URL_PREFIX}/#{project.shortname.downcase}/"
+       "http://#{INTERNAL_HOST}#{site_prefix}/#{key}"
     else
       nil
     end  
@@ -70,23 +71,33 @@ class WebDavLocation < ActiveRecord::Base
     use_internal? ? internal_files_url : external_url
   end
     
-  def create_internal
-    return true if not use_internal? or exists_internally?
+  def create_internal(reload=true)
+    return true if not use_internal?
     
-    # Disable the apache site file, reload the apache config, delete the apache site file, and delete the webdav directory.
-    # Create the webdav directory, create the apache site file, enable the apache site file, and reload the apache config
     conn = open_conn
-    create_directory(webdav_collection_path, conn)
-    create_directory(webdav_collection_site_path, conn)
-    create_directory(webdav_collection_download_path, conn)
-    run_cmd_str("sudo chmod -R g+w #{webdav_collection_site_path}", 'Error chmoding webdav website dir!', conn)
-    create_file(external_site_index_file, "#{webdav_collection_site_path}/index.html", conn)
-    chown_dir("#{webdav_collection_path}/")
-    create_apache_site_file(apache_site_file, apache_site_file_name, conn)
-    enable_apache_site_file(apache_site_file_name, conn)
-    reload_apache_config(conn)
-    close_conn(conn)
+
+    if !remote_dir_exists?(conn, repo_filepath) 
+      remote_system(conn, "mkdir -p #{repo_filepath}", APACHE_USER)
+      remote_system(conn, "mkdir -p #{repo_filepath}/site", APACHE_USER)
+      remote_system(conn, "mkdir -p #{repo_filepath}/download", APACHE_USER)
+      remote_write(conn, external_site_index_file, "#{repo_filepath}/index.html", APACHE_USER) 
+    end
+
+    remote_write(conn, apache_dav_file, "#{DAV_ROOT}/httpd.conf/default-virtualhost/#{key}")==0 or raise 'Error creating apache conf file!'
+    remote_write(conn, apache_site_file, "#{DAV_ROOT}/httpd.conf/sites/#{key}")==0 or raise 'Error creating apache conf file!'  
+      
+    if reload
+      remote_system(conn, '/etc/init.d/apache2 reload', "root")==0 or raise 'Error reloading apache config!'
+    end
+    
     true
+    
+  rescue => error
+    puts "Error creating the web dav directory: #{error}"
+    print error.backtrace.join("\n")
+    logger.error "Error creating the web dav directory: #{error}"    
+  ensure
+    close_conn(conn)
   end  
   
   private
@@ -95,87 +106,108 @@ class WebDavLocation < ActiveRecord::Base
     self.project.shortname.downcase
   end
   
-  def webdav_collection_path
-    "#{WEBDAV_PATH}/#{key}"
+  def apache_write_groups
+    groups = "#{CrowdGroup.forge_admin_group.name}"
+    self.project.admin_groups.each do |group|
+      groups += ",#{group.name}"
+    end
+    self.project.member_groups.each do |group|
+      groups += ",#{group.name}"
+    end
+    return groups
   end
+
+  def apache_dav_file
+    rc = <<EOF
+  Alias #{dav_prefix}/#{key} #{repo_filepath}
+  <Directory #{repo_filepath}/>
+    Options Indexes MultiViews
+    AllowOverride None
+    Order allow,deny
+    allow from all 
+  </Directory>  
+  <Location #{dav_prefix}/#{key}>
+    Dav On
+    AuthType Basic
+    AuthName "FUSE Source Login"
+    PerlAuthenHandler Apache::CrowdAuth
+    PerlSetVar CrowdAppName ruby
+    PerlSetVar CrowdAppPassword password
+    PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
+    PerlAuthzHandler Apache::CrowdAuthz
+    PerlSetVar CrowdAllowedGroups #{apache_write_groups}
+    require valid-user
+  </Location>
   
-  def webdav_collection_site_path
-    "#{webdav_collection_path}/#{SITE_DIR_NAME}"
+  #
+  # Allowing external users to push http files from our domain
+  # could open a XSS security hole.. perhaps we should eleminate this and
+  # only serve that site from the $project.fusesource.org domain.
+  # 
+  Alias #{site_prefix}/#{key} #{repo_filepath}
+EOF
+
+    if self.project.is_private
+      b = <<EOF
+  <Location #{site_prefix}/#{key}>
+    Dav On
+    AuthType Basic
+    AuthName "FUSE Source Login"
+    PerlAuthenHandler Apache::CrowdAuth
+    PerlSetVar CrowdAppName ruby
+    PerlSetVar CrowdAppPassword password
+    PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
+    PerlAuthzHandler Apache::CrowdAuthz
+    PerlSetVar CrowdAllowedGroups #{apache_write_groups}
+    require valid-user
+  </Location>
+EOF
+      rc += b;
+    end
+    return rc
   end
-  
-  def webdav_collection_download_path
-    "#{webdav_collection_path}/#{DOWNLOAD_DIR_NAME}"
-  end
-  
-  def webdav_alias
-    "#{APACHE_ALIAS_PREFIX}#{key}"
-  end  
-  
-  def files_alias
-    "#{APACHE_FILES_ALIAS_PREFIX}#{key}"
-  end  
-  
-  def sites_alias
-    "#{APACHE_SITES_ALIAS_PREFIX}#{key}"
-  end  
-  
+
   def apache_site_file
-<<eos
-  <Directory #{webdav_collection_path}/>
+    rc = <<EOF
+<VirtualHost *>
+  ServerName #{key}.fusesource.org
+  DocumentRoot #{repo_filepath}
+  <Directory #{repo_filepath}/>
     Options Indexes MultiViews
     AllowOverride None
     Order allow,deny
     allow from all 
-  </Directory>
+  </Directory> 
+EOF
   
-  Alias /#{files_alias} #{webdav_collection_path}
-  Alias /#{sites_alias} #{webdav_collection_path}/#{SITE_DIR_NAME}
-
-  Alias /#{webdav_alias} #{webdav_collection_path}
-  <Location /#{webdav_alias}>
-    Dav On
+    if self.project.is_private
+      b = <<EOF
+  <Location />
     AuthType Basic
-    AuthName "FUSE Forge Webdav"
+    AuthName "FUSE Source Login"
     PerlAuthenHandler Apache::CrowdAuth
     PerlSetVar CrowdAppName ruby
     PerlSetVar CrowdAppPassword password
-    PerlSetVar CrowdSOAPURL http://#{CROWD_HOST}:8095/crowd/services/SecurityServer
+    PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
-    PerlSetVar CrowdAllowedGroups #{SiteAdminGroup.new.name},#{project.default_admin_group_name},#{project.default_member_group_name}
+    PerlSetVar CrowdAllowedGroups #{apache_write_groups}
     require valid-user
   </Location>
-
-  <Directory #{webdav_collection_path}/#{DOWNLOAD_DIR_NAME}>
-    Options Indexes MultiViews
-    AllowOverride None
-    Order allow,deny
-    allow from all 
-  </Directory>
-  
-  Alias /#{webdav_alias}/download #{webdav_collection_path}/#{DOWNLOAD_DIR_NAME}
-  <Location /#{webdav_alias}/#{DOWNLOAD_DIR_NAME}>
-    Dav On
-    AuthType Basic
-    AuthName "FUSE Forge Webdav"
-    PerlAuthenHandler Apache::CrowdAuth
-    PerlSetVar CrowdAppName ruby
-    PerlSetVar CrowdAppPassword password
-    PerlSetVar CrowdSOAPURL http://#{CROWD_HOST}:8095/crowd/services/SecurityServer
-    PerlAuthzHandler Apache::CrowdAuthz
-    PerlSetVar CrowdAllowedGroups #{SiteAdminGroup.new.name},#{project.default_admin_group_name}
-    require valid-user
-  </Location>
-eos
-  end
-
-  def apache_site_file_name
-    "#{APACHE_SITE_PREFIX}#{key}"
+EOF
+      rc += b;
+    end
+    b = <<EOF
+</VirtualHost>
+EOF
+    rc += b;
+    return rc;
   end
   
   def external_site_index_file
-<<eos
+    rc = <<EOF
   <h1>#{project.name}</h1>
   <a href=\"#{project.internal_url}\">Project Page</a>
-eos
+EOF
+    return rc;
   end
 end

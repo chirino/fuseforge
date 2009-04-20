@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+
+if ARGV[0]
+  RAILS_ENV = ARGV[0] 
+else
+  RAILS_ENV = "development"
+end
+
+require File.dirname(__FILE__) + '/../config/boot'
+require RAILS_ROOT + '/config/environment'
+
+Project.all.each do |project|
+  if project.repository.use_internal
+    puts "Installing SVN REPO: #{project.name}"
+    project.repository.create_internal false
+  end
+  if project.web_dav_location.use_internal
+    puts "Installing DAV: #{project.name}"
+    project.web_dav_location.create_internal false
+  end
+end

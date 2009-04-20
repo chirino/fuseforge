@@ -4,7 +4,7 @@ gem 'soap4r'
 require 'jira_lib/defaultDriver.rb'
 
 class JiraInterface
-  ENDPOINT_URL = JIRA_URL + "/issues/rpc/soap/jirasoapservice-v2"
+  ENDPOINT_URL = JIRA_URL + "/rpc/soap/jirasoapservice-v2"
 
   MEMBERS = "all"
   LOGIN = 'forgeadmin'

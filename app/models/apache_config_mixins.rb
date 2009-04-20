@@ -1,34 +1,43 @@
 require 'net/ssh'
 
 module ApacheConfigMixins
-  APACHE_USER = 'www-data'
-
-#  HOST = Socket.gethostname == 'dude' ? 'fusesource.com/forge' : 'fusesourcedev.com/forge'
-  HOST = RAILS_ENV == 'development' ? 'forge.fusesourcedev.com' : nil
-
-  LOGIN_USER = 'root'
- 
+  
+  APACHE_USER = SVN_DAV_HOST[:apache_user]
+  APACHE_GROUP = SVN_DAV_HOST[:apache_group]
   
   def open_conn
-    RAILS_ENV == 'development' ? Net::SSH.start(HOST, LOGIN_USER) : nil
+    SVN_DAV_HOST.has_key?(:ssh) ? Net::SSH.start(SVN_DAV_HOST[:ssh][:host], SVN_DAV_HOST[:ssh][:user], SVN_DAV_HOST[:ssh][:options]) : nil;
   end
   
   def close_conn(conn)
     conn.close unless conn.nil?
   end
   
-  def path_exists?(path_str)
-    conn = open_conn
-    if conn
-      conn.exec!("[ -d #{path_str} ] && echo 'true' || echo 'false'").chomp == 'true' ? true : false
-    else
-      system("[ -d #{path_str} ]")
-    end
-  rescue
-    logger.error "Error checking for directory!: #{path_str}"
-  ensure
-    close_conn(conn)  
+  
+  def remote_write(conn, content, file, user=nil)
+      remote_system(conn, "tee '#{file}' > /dev/null <<EOF\n#{content}\nEOF", user)
   end
+
+  def remote_file_exists?(conn, file, user=nil)
+    remote_system(conn, "[ -f #{file} ]", user)==0 ? true : false
+  end
+
+  def remote_dir_exists?(conn, dir, user=nil)
+    remote_system(conn, "[ -d #{dir} ]", user)==0 ? true : false
+  end
+  
+  def remote_system(conn, command, user=nil)
+    command = "sudo -u #{user} "+command if user
+    #puts "DEBUG Running: #{command}"
+    if conn
+      conn.exec(command)
+      return conn.exec!("echo $?").to_i
+    else
+      system(command)
+      return $?
+    end
+  end  
+
 
   def reload_apache_config(conn=nil)
     run_cmd_str('sudo /etc/init.d/apache2 reload', 'Error reloading apache config!', conn)
@@ -51,11 +60,11 @@ module ApacheConfigMixins
   end  
 
   def create_directory(path_str, conn=nil)
-    run_cmd_str("sudo -u www-data mkdir #{path_str}", 'Error creating directory!', conn)
+    run_cmd_str("sudo -u #{APACHE_USER} mkdir #{path_str}", 'Error creating directory!', conn)
   end
     
   def remove_directory(path_str, conn=nil)
-    run_cmd_str("sudo -u www-data rm -rf #{path_str}", 'Error removing directory!', conn)
+    run_cmd_str("sudo -u #{APACHE_USER} rm -rf #{path_str}", 'Error removing directory!', conn)
   end  
 
   def create_file(file_contents, file_path, conn=nil)
@@ -67,10 +76,32 @@ module ApacheConfigMixins
   end  
 
   def chown_dir(path_str, conn=nil)
-    run_cmd_str("sudo chown -R www-data:www-data #{path_str}", 'Error chowning directory!', conn)
+    run_cmd_str("sudo chown -R #{APACHE_USER}:#{APACHE_GROUP} #{path_str}", 'Error chowning directory!', conn)
+  end
+  
+  def file_exists?(conn, path_str )
+    if conn
+      conn.exec!("[ -f #{path_str} ] ; echo $?").to_i
+    else
+      system("[ -f #{path_str} ]")
+    end
+  end
+
+  def path_exists?(path_str)
+    conn = open_conn
+    if conn
+      conn.exec!("[ -d #{path_str} ] ; echo $?").to_i
+    else
+      system("[ -d #{path_str} ]")
+    end
+  rescue
+    logger.error "Error checking for directory!: #{path_str}"
+  ensure
+    close_conn(conn)  
   end
     
   def run_cmd_str(cmd_str, err_msg, conn)
+    puts "DEBUG Running: #{cmd_str}"
     if conn
       conn.exec!(cmd_str)
     else

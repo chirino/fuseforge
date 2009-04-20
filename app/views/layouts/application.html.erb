@@ -16,16 +16,16 @@
         <%= link_to(image_tag('fuseforge-logo.png'), root_path, :alt => 'FUSE Forge Community') -%>
         <ul>
           <% unless logged_in? %>
-          <li> <b><%= link_to 'Register!', "/forge/register?clicked=yes" -%></b></li>
+          <li> <b><%= link_to 'Register!', :controller=>"registrations", :action => 'new', :clicked=>"yes"-%></b></li>
           <% end %>
           <% if logged_in? %>
           <li id="loggedIn">
             <span id="greeting">Welcome, <%= current_user.full_name -%></span> 
-            <%= link_to 'Log Out', '/forge/logout?clicked=yes', :method => :delete %>
+            <%= link_to 'Log Out', :controller => 'sessions', :action => 'destroy', :clicked=>"yes"-%>
           </li>
           <% else %>
           <li id="loggedOut">
-            <%= link_to 'Log in', '/forge/login?clicked=yes' -%>
+            <%= link_to 'Log in', :controller => 'sessions', :action => 'new', :clicked=>"yes" -%>
           </li>
           <% end %>
         </ul>

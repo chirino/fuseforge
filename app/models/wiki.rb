@@ -5,8 +5,7 @@ class Wiki < ActiveRecord::Base
   #TODO: remove the wiki_pages table
   has_many :wiki_pages, :dependent => :destroy
   
-  CONFLUENCE_INTERNAL_PATH = 'wiki/display/'
-  CONFLUENCE_INTERNAL_URL = CONFLUENCE_URL + '/' + CONFLUENCE_INTERNAL_PATH
+  CONFLUENCE_INTERNAL_URL = CONFLUENCE_URL + '/display/'
   
   def before_save
     self.external_url = '' if use_internal?

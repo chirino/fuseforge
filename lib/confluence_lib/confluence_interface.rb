@@ -5,7 +5,7 @@ require 'confluence_lib/confluence_defaultDriver.rb'
 
 class ConfluenceInterface
   
-  ENDPOINT_URL = CONFLUENCE_URL + "/wiki/rpc/soap-axis/confluenceservice-v1"
+  ENDPOINT_URL = CONFLUENCE_URL + "/rpc/soap-axis/confluenceservice-v1"
   LOGIN = 'forgeadmin'
   PASSWORD = 'forgeadmin'
   def initialize

@@ -24,10 +24,11 @@ class User < ActiveRecord::Base
     begin
       crowd_user = Crowd.new.find_by_token(crowd_token) # throws SOAP::FaultError
     rescue SOAP::FaultError
+      logger.warn "Crowd Error: #{$!}"
       return false
     end
 
-    return false unless RegisteredUserGroup.new.user_names.include?(crowd_user.name)
+    return false unless CrowdGroup.registered_user_group.user_names.include?(crowd_user.name)
 
     self.find_or_create_by_login(crowd_user.name)
   end
@@ -41,16 +42,17 @@ class User < ActiveRecord::Base
     begin
       crowd_user = Crowd.new.find_by_name(crowd_login) # throws SOAP::FaultError
     rescue SOAP::FaultError
+      logger.warn "Crowd Error: #{$!}"
       return false
     end
 
-    return false unless RegisteredUserGroup.new.user_names.include?(crowd_user.name)
+    return false unless CrowdGroup.registered_user_group.user_names.include?(crowd_user.name)
 
     self.find_or_create_by_login(crowd_user.name)
   end  
   
   def self.is_registered_user?(crowd_login)
-    RegisteredUserGroup.new.user_names.include?(crowd_login)
+    CrowdGroup.registered_user_group.user_names.include?(crowd_login)
   end
     
   def after_initialize
@@ -58,6 +60,7 @@ class User < ActiveRecord::Base
       begin
         @crowd_user = Crowd.new.find_by_name(self.login)
       rescue SOAP::FaultError
+        logger.warn "Crowd Error: #{$!}"
       end
 
       @crowd_group_names = Crowd.new.find_group_memberships(@crowd_user.name)  
@@ -66,8 +69,8 @@ class User < ActiveRecord::Base
   end
   
   def after_create
-    JiraFuseforgeDeveloperGroup.new.add_user(self)
-    ConfluenceFuseforgeUserGroup.new.add_user(self)
+    CrowdGroup.jira_developer_group.add_user(self)
+    CrowdGroup.confluence_user_group.add_user(self)
   end  
   
   def populate_crowd_attributes    
@@ -81,7 +84,7 @@ class User < ActiveRecord::Base
   end
 
   def is_registered_user?
-    RegisteredUserGroup.new.user_names.include?(self.login)
+    CrowdGroup.registered_user_group.user_names.include?(self.login)
   end
   
   def is_subscribing_customer?
@@ -90,15 +93,15 @@ class User < ActiveRecord::Base
   end
   
   def is_company_employee?
-    CompanyEmployeeGroup.new.user_names.include?(self.login)
+    CrowdGroup.company_employee_group.user_names.include?(self.login)
   end
   
   def is_jira_fuseforge_developer?
-    JiraFuseforgeDeveloperGroup.new.user_names.include?(self.login)
+    CrowdGroup.jira_developer_group.user_names.include?(self.login)
   end  
     
   def is_confluence_fuseforge_user?
-    ConfluenceFuseforgeUserGroup.new.user_names.include?(self.login)
+    CrowdGroup.confluence_user_group.user_names.include?(self.login)
   end  
     
   def is_project_administrator?
@@ -118,7 +121,7 @@ class User < ActiveRecord::Base
   end  
 
   def is_site_admin?
-    SiteAdminGroup.new.user_names.include?(self.login)
+    CrowdGroup.forge_admin_group.user_names.include?(self.login)
   end
   
   def projects
