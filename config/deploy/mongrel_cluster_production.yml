@@ -1,9 +1,0 @@
---- 
-cwd: /data/fuseforge/current
-port: "4500"
-environment: production
-address: 172.21.0.245
-pid_file: /data/fuseforge/shared/pids/mongrel.pid
-servers: 4
-user: rails
-group: fuseforge

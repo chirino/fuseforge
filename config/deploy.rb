@@ -1,7 +1,7 @@
 require 'mongrel_cluster/recipes' 
 
-set :stages, %w(production testing)
-set :default_stage, "testing"
+set :stages, %w(default)
+set :default_stage, "default"
 require 'capistrano/ext/multistage'
 
 set :application, 'fuseforge'

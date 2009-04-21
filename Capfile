@@ -13,8 +13,7 @@ namespace :db do
   end
 end
 
-# http://nubyonrails.com/articles/tips-for-upgrading-to-capistrano-2
-set :mongrel_config, "/etc/mongrel_cluster/#{application}.yml" 
+set :mongrel_config, "/data/fuseforge/shared/config/mongrel_cluster/mongrel_cluster.yml" 
 
 namespace :deploy do
 
@@ -23,7 +22,6 @@ namespace :deploy do
 
   task :fuseforge_setup do
   	run "mkdir -p #{shared_path}/config"
-    run "mkdir -p #{shared_path}/projects"
   end
 
 end
