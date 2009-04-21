@@ -11,7 +11,7 @@ set :repository, 'http://fusesource.com/forge/svn/fuseforge/rails/trunk'
 
 task :after_update_code, :roles => :app do
   invoke_command "cp -f #{shared_path}/config/crowd.yml #{release_path}/config/crowd.yml" 
-  invoke_command "ln -fs #{shared_path}/assets #{release_path}/assets" 
+  invoke_command "ln -fs /var/forge/assets #{release_path}/assets" 
 end
 
 namespace :deploy do
@@ -77,3 +77,20 @@ end
 after "deploy:start", "delayed_job:start" 
 after "deploy:stop", "delayed_job:stop" 
 after "deploy:restart", "delayed_job:restart" 
+
+namespace :db do
+  desc "Make symlink for database yaml" 
+  task :symlink do
+    run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml" 
+  end
+end
+
+set :mongrel_config, "/data/fuseforge/shared/config/mongrel_cluster/mongrel_cluster.yml" 
+namespace :deploy do
+  task :fuseforge_setup do
+  	run "mkdir -p #{shared_path}/config"
+  end
+end
+
+after "deploy:update_code", "db:symlink" 
+after "deploy:setup", "deploy:fuseforge_setup"
