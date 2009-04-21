@@ -66,8 +66,8 @@ class Project < ActiveRecord::Base
   belongs_to :updated_by, :class_name => "User", :foreign_key => "updated_by_id"
   
   has_attached_file :image, 
-    :url => "/:class/:id/:attachment/:style.:extension",
-    :path => ":rails_root/assets/:class/:attachment/:id/:style_:basename.:extension",      
+    :url => "/attachments/:class/:id/:attachment/:style.:extension",
+    :path => ":rails_root/public/attachments/:class/:attachment/:id/:style_:basename.:extension",      
     :default_url => "/images/missing_project_:style.gif",
     :styles => { :medium => "160x160#", :thumb => "70x70#" }
   

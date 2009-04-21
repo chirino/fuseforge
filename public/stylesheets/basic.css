@@ -27,7 +27,7 @@ a img {border: none;}
 
 /* Header and navigation */
 
-#header {color: white; float: left; background: #00509e url(/images/banner_curve.png) no-repeat center top;}
+#header {color: white; float: left; background: #00509e url(../images/banner_curve.png) no-repeat center top;}
 #header img {padding: 25px 0 25px 0; float: left;}
 
 #header ul {float: right; margin: 25px, 0, 0, 0;}

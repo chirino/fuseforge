@@ -11,7 +11,7 @@ set :repository, 'http://fusesource.com/forge/svn/fuseforge/rails/trunk'
 
 task :after_update_code, :roles => :app do
   invoke_command "cp -f #{shared_path}/config/crowd.yml #{release_path}/config/crowd.yml" 
-  invoke_command "ln -fs /var/forge/assets #{release_path}/assets" 
+  invoke_command "ln -fs /var/forge/attachments #{release_path}/public/attachments" 
 end
 
 namespace :deploy do
