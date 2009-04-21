@@ -68,7 +68,7 @@ class ProjectsController < ApplicationController
 
   def show
     respond_to do |format|
-      format.html
+      format.html { render :layout => "new_look" }
       format.xml  { render :xml => @project }
     end
   end

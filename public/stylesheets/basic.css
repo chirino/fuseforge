@@ -30,7 +30,7 @@ a img {border: none;}
 #header {color: white; float: left; background: #00509e url(/images/banner_curve.png) no-repeat center top;}
 #header img {padding: 25px 0 25px 0; float: left;}
 
-#header ul {float: right; margin-top: 25px;}
+#header ul {float: right; margin: 25px, 0, 0, 0;}
 #header a {color: #8bb7e2;}
 #header input {border: 1px solid #4c545b; color: #4c545b; font-size: 1.2em;}
 #header input[type=submit] {background-color: #13599b; border-color: #3373b1; color: white;}

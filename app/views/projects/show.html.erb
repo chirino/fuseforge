@@ -1,138 +1,124 @@
-<div class="wrapper">
-  <h1>
-    <%= @project.name -%>
-	  <% if @project.is_private? %>
-	  <small>*** Private ***</small>
-	  <% end %>
-  </h1>
-  <div class="one_column section">
-    <div class="interior" style="min-height: 100px;">
-      <div id="project_picture">
-  	    <%= image_tag @project.image.url(:medium) %>
-      </div>
-    	<div id="project_menu">
-        <%= link_to("Website", @project.external_website) unless @project.external_website.blank? -%>
-        <% if logged_in? %>
-        | <%= link_to "Admins", project_project_administrators_path(@project) -%>
-        | <%= link_to "Members", project_project_members_path(@project) -%>
-        <% end %>
-        <% if @project.repository.is_active? %>
-        | <%= link_to("Repository", @project.repository.url) -%>
-        <% end %>
-        <% if @project.web_dav_location.is_active? %>
-        | <%= link_to("Files", @project.web_dav_location.files_url)  -%>
-        <% end %>
-        <% if @project.issue_tracker.is_active? %>
-        | <%= link_to("Issue Tracker", @project.issue_tracker.url) -%>
-        <% end %>
-        <%if @project.forum.is_active?%>
-        | <%= link_to("Forum", @project.forum.url) -%>
-        <% end %>
-        <%if @project.wiki.is_active? %>
-        | <%= link_to("Wiki", @project.wiki.url) -%>
-        <% end %>
-        <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
-   	    | <%= link_to 'Administration', project_administration_path(@project) %>
-   	    <% end %>
-      </div>
-      <div id="project_attributes">
-      	<strong>Status:</strong> <%= h @project.status.name -%>
-      	<strong>Maturity:</strong> <%= h @project.maturity.name -%>
-      	<strong>Category:</strong> <%= h @project.category.name -%>
-      	<% unless @project.license.blank? %>
-      	<strong>License:</strong>  
-      	<% if @project.license == ProjectLicense.other %>
-      	<%= link_to(h(@project.license.name), @project.other_license_url, :popup => true) -%>
-      	<% else %>    
-      	<%= link_to(h(@project.license.name), @project.license.url, :popup => true) -%>
-      	<% end %>
-        <% end %>
-      </div>
-    </div>
-    <div style="clear:both;"></div>
-	</div>
-</div>	
-<div style="clear:both;"></div>
-<div class="wrapper">
+  <div id="menu">
+  	<div class="wrapper">
+    	<div class="left">
+    	  <%= link_to 'Forge', root_path -%> &gt;
+    	  <%= link_to 'Projects', projects_path -%> &gt;
+    	  <%= link_to @project.name, @project -%>
+    	</div>
 
-	<div class="two_column section">
-	  <div class="interior">
-      <h2>Description</h2>
-      <p><%= sanitize @project.description %></p>
-	  </div>
+    	<div class="right">
+        <% allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do %>
+          <%= link_to 'Admin-Project', project_administration_path(@project) %> |
+   	    <% end %>
+        <% allow :user => :is_site_admin? do %>
+          <%= link_to 'Admin-Forge', admin_path -%> |
+        <% end %>
+        <%= link_to 'Search', projects_path(:show_search_form => true) -%>
+    	</div>
+  	</div>
+  </div>
+  
+  <div id="overview">
+  	<div class="wrapper">
+    	<div class="details">
+	      <% if @project.is_private? %>
+    	  <div><div class="label">Visibility:</div>*** Private ***</div>
+	      <% end %>
+    	  <div><div class="label">Category:</div><%= h @project.category.name -%></div>
+        <div><div class="label">Status:</div><%= h @project.status.name -%></div>
+        <div><div class="label">Maturity:</div><%= h @project.maturity.name -%></div>
+      	<% unless @project.license.blank? %>
+        	<div><div class="label">License:</div>
+        	<% if @project.license == ProjectLicense.other %>
+        	  <%= link_to(h(@project.license.name), @project.other_license_url, :popup => true) -%>
+        	<% else %>    
+        	  <%= link_to(h(@project.license.name), @project.license.url, :popup => true) -%>
+        	<% end %>
+          </div>
+        <% end %>
+        <div><div class="label">View Project:</div>
+            <%= link_to "Admins", project_project_administrators_path(@project) -%>, 
+            <%= link_to "Members", project_project_members_path(@project) -%>
+          </div>
+        <div><div class="label">Tags:</div>
+        <% @project.tags.each do |tag| %>
+          <%= link_to tag.name, projects_path(:tag => tag.name, :show_search_form => true) -%>
+        <% end %>
+        </div>
+    	</div>
+    	
+    	<div class="logo">
+    	  <%= image_tag @project.image.url(:medium) if @project.image.valid? %>
+    	</div>
+    	<div class="message">
+    	  <h1><%= @project.name -%></h1>
+        <%= sanitize @project.description %>
+    	</div>
+  	</div>
   </div>
 
-	<div class="two_column section">
-	  <div class="interior">
-      <h2>Downloads</h2>
-	    <% @project.downloads.each do |download| %>
-  	    <% if download.track? %>  
-          <p>
-            <% if logged_in? %>
-              <%= link_to h(download.description), project_download_requests_path(:project_id => @project, 
-                   :desc => download.description, :url => download.url), :method => :post -%>
-            <% else %>
-              <%= h(download.description) -%> <strong>(Login to access this download)</strong>       
-            <% end %>       
-          </p>
-        <% else %>
-          <p>
-          <%= link_to h(download.description), download.url -%>
-          </p>
-        <% end %>  
-      <% end %>
-    </div>    
-	</div>
+  <div id="spot">
+  	<div class="wrapper">
+      <div class="title"></div>
+      <div class="content">
+    	  <table><tr>
+    	    <% if !@project.external_website.blank? -%>
+    	    <td>
+      	    <h2>Learn More</h2>
+      	    <a href="<%= url_for(@project.external_website) %>">
+      	      <%= image_tag('spot-learn-more.jpg', :alt => "Learn More") -%>
+        	    <br/>
+        	    Documentation
+      	    </a>
+    	    </td>
+    	    <td>
+      	    <h2>Get Started</h2>  
+      	    <a href="<%= url_for(@project.external_website) %>/downloads">
+      	      <%= image_tag('spot-download-releases.jpg', :alt => "Download Releases") -%>
+        	    <br/>
+        	    Get the latest version here
+      	    </a>
+    	    </td>
+    	    <% end -%>
+    	    <td>
+    	    <h2>Get Involved</h2>  
+      	    <div class="spot-balloon">
+      	      <ul>
+                <%if @project.forum.is_active?%>
+              	  <li><%= link_to("Forums", @project.forum.url) -%></li>
+                <% end %>
+                <% if @project.issue_tracker.is_active? %>
+              	  <li><%= link_to("Issue Tracker", @project.issue_tracker.url) -%></li>
+                <% end %>
+                <%if @project.wiki.is_active? %>
+                  <li><%= link_to("Wiki", @project.wiki.url) -%></li>
+                <% end %>
+                <% if @project.repository.is_active? %>
+                  <li><%= link_to("Source Code", @project.repository.url) -%></li>
+                <% end %>
+                <% if @project.web_dav_location.is_active? %>
+                  <li><%= link_to("WebDAV", @project.web_dav_location.files_url)  -%></li>
+                <% end %>      	        
+      	      </ul>
+      	    </div>
+      	    Join the community!
+    	    </td>
+  	    </tr></table>
+      </div>
+  	</div>
+  </div>
 
-  <%= render :partial => 'tags' %>
-
-	<div class="two_column section">
-	  <div class="interior">
-      <h2>Activity</h2>
-      <p><strong>Downloads:</strong> <%= @project.download_requests.size -%></p>
-      <p><strong>Commits:</strong> <%= @project.repository.commits -%></p>
-      <p><strong>Last Commit At:</strong> <%= @project.repository.last_commit_at -%></p>
-	  </div>
-	</div>  
-
-  <div class="two_column section">
-    <div class="interior">
-      <h2>Recent News</h2>
-      <ul>
+  <div id="news">
+  	<div class="wrapper">
+  	  <h1>Recent News</h1>
 	    <% @project.news_items.recent.each do |i| %>
-        <li><%= link_to truncate(h(i.title), 55), project_project_news_item_path(:project_id => @project, :id => i) -%></li>
+    	  <div class="post">
+    	    <h2><%= link_to truncate(h(i.title), 55), project_project_news_item_path(:project_id => @project, :id => i) -%></h2>
+    	    <%= sanitize truncate(i.contents, 800) %>
+          <div class="details">Posted by <%= i.created_by.full_name -%> on <%= i.created_at -%></div>
+    	  </div>
       <% end %>
-      </ul>
-    </div>
-  </div>  
-
-<%
-  # < % if @project.forum.use_internal? % >
-  # <div class="two_column section">
-  #   <div class="interior">
-  #     <h2>Latest Forum Posts</h2>
-  #     <ul>
-  #       < % @project.forum.recent_posts.each do |i| % >
-  #       <li>< %= link_to truncate(h(i.post_subject), 55), i.url -% ></li>
-  #     < % end % >
-  #     </ul>
-  #   </div>
-  # </div>  
-  # < % end % >
--%>
-<%
-  # < % if @project.wiki.use_internal? % >
-  # <div class="two_column section">
-  #   <div class="interior">
-  #     <h2>Recent Wiki Updates</h2>
-  #     <ul>
-  #       < % @project.wiki.get_latest_activity.each do |i| % >
-  #       <li>< %= link_to truncate(h(i[:title]), 55), i[:url] -% ></li>
-  #     < % end % >
-  #     </ul>
-  #   </div>
-  # </div>  
-  # < % end % >
--%>
+  	</div>
+  </div>
   
 </div>
