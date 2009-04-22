@@ -75,6 +75,12 @@ class ApplicationController < ActionController::Base
     @current_user = false    
   end  
 
+  def login_required
+    if !@current_user
+      redirect_to "#{FUSESOURCE_URL}/login?return_to=#{external_url_to(request.request_uri)}"
+    end    
+  end
+  
   #
   # Called when a user does not have access to the requested page.
   # if he is logged in, we show him a 401, otherwise we give him
