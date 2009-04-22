@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
     if @current_user
       render_401
     else
-      redirect_to "#{FUSESOURCE_URL}/login?return_to=#{request.url}"
+      redirect_to "#{FUSESOURCE_URL}/login?return_to=#{external_url_to(request.request_uri)}"
     end
   end
   
@@ -101,8 +101,20 @@ class ApplicationController < ActionController::Base
       format.xml  { render :nothing => true, :status => '401 Unauthorized' } 
 	  end 
 	  true 
-  end 
+  end
   
+  def external_url_to(uri)
+    if request.env['HTTP_X_FORWARDED_HOST']
+      host = request.env['HTTP_X_FORWARDED_HOST'].to_s.split(/,\s*/).first
+      return request.protocol + host + uri
+    else
+      return request.protocol + request.host_with_port + uri
+    end
+  end
+  
+  def forwarded_hosts
+  end
+        
   protected
   
   def rescue_action_in_public(e) 
