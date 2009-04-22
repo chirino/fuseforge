@@ -4,11 +4,11 @@ gem 'soap4r'
 require 'jira_lib/defaultDriver.rb'
 
 class JiraInterface
-  ENDPOINT_URL = JIRA_URL + "/rpc/soap/jirasoapservice-v2"
+  ENDPOINT_URL = JIRA_CONFIG[:url] + "/rpc/soap/jirasoapservice-v2"
 
   MEMBERS = "all"
-  LOGIN = 'forgeadmin'
-  PASSWORD = 'forgeadmin'
+  LOGIN = JIRA_CONFIG[:login]
+  PASSWORD = JIRA_CONFIG[:password]
 
   ADMIN_GROUP_PERMISSIONS = {
    23 => :administer_projects,

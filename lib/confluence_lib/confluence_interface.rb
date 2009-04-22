@@ -5,9 +5,10 @@ require 'confluence_lib/confluence_defaultDriver.rb'
 
 class ConfluenceInterface
   
-  ENDPOINT_URL = CONFLUENCE_URL + "/rpc/soap-axis/confluenceservice-v1"
-  LOGIN = 'forgeadmin'
-  PASSWORD = 'forgeadmin'
+  ENDPOINT_URL = CONFLUENCE_CONFIG[:url] + "/rpc/soap-axis/confluenceservice-v1"
+  LOGIN = CONFLUENCE_CONFIG[:login]
+  PASSWORD = CONFLUENCE_CONFIG[:password]
+  
   def initialize
     @confluence_soap_service = ConfluenceSoapService.new(ENDPOINT_URL)
 

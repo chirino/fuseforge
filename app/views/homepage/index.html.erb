@@ -1,112 +1,68 @@
-<div class="wrapper">
-  <div class="one_column section">
-    <div class="interior">
-      <h2>Welcome</h2>
-  	  <p>
-  		  FUSE Forge is the new developer center for hosting extensions to <%= link_to 'FUSE', 'http://fusesource.com' -%>,
-  		  the leading open source ESB and integration platform.
-	    </p>
-	    <p>
-		    Projects hosted on FUSEForge automatically have an integrated forum, wiki, source code repository, and issue tracker.  
-		    Contributing to FUSEForge offers many great benefits to the FUSE community.
-	    </p>
-    </div>
-    <div style="clear:both;"></div>
-  </div>
-  <div class="one_column section">
-    <div class="interior">
-      <h2>Featured Projects</h2>
-      <% @featured_projects.each do |project| %>
-      <div style="float:left;text-align:center;margin:10px;">
-        <%= link_to(image_tag(project.image.url(:thumb)), project_path(project)) %>
-        <br />
-        <%= link_to h(project.name), project_path(project) %>  
-      </div>  
-      <% end %>
-    </div>
-    <div style="clear:both;"></div>
-  </div>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>My Projects</h2>
-      <ul>
-        <% @my_projects.each do |project| %>
-        <li><%= link_to h(project.name), project_path(project) -%></li>
+  <div id="menu">
+  	<div class="wrapper">
+    	<div class="left">
+    	  <%= link_to 'Forge', root_path -%> &gt;
+    	</div>
+
+    	<div class="right">
+        <%= link_to 'Projects', projects_path -%> |
+        <%= link_to 'Create', new_project_path -%> |
+        <% allow :user => :is_site_admin? do %>
+          <%= link_to 'Admin-Forge', admin_path -%> |
         <% end %>
-      </ul>
-    </div>
-  </div>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>New Projects</h2>
-      <ul>
-        <% Project.public.approved.recent.each do |project| %>
-        <li><%= link_to h(project.name), project_path(project) -%></li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>FUSEForge News</h2>
-      <ul>
-        <% @fuseforge_news_items.each do |i| %>
-        <li><%= link_to h(i.homepage_title), 
-                 i.is_a?(NewsItem) ? news_item_path(i) : project_project_news_item_path(:project_id => i.project, :id => i) -%></li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>FUSESource News</h2>
-      <ul>
-        <% @fusesource_news_items.each do |i| %>
-        <li><%= link_to h(i.title), i.link_to_source, :popup => true -%></li>
-        <% end %>
-      </ul>
-    </div>
-  </div>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>Most Active</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Activity</th>
-            <th>Project</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @most_active_projects.each do |i| %>
-          <tr>
-            <td><%= i.repository.commits -%></td>
-            <td><%= i.name -%></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="two_column section">
-    <div class="interior">
-      <h2>Top Downloads</h2>
-    	<table>
-    	  <thead>
-    	    <tr>
-    	      <th>Downloads</th>
-    	      <th>Project</th>
-    	    </tr>
-    	  </thead>
-    	  <tbody>
-    	    <% @top_project_downloads.each do |i| %>
-    	    <tr>
-    	      <td><%= i.downloads.count -%></td>
-    	      <td><%= i.name -%></td>
-    	    </tr>
-          <% end %>
-    	  </tbody>
-    	</table>
+        <%= link_to 'Search', projects_path(:show_search_form => true) -%>
+    	</div>
   	</div>
   </div>
-</div>
+  
+  <div id="overview">
+  	<div class="wrapper">
+    	<div class="message">
+    	  <h1>FUSE Forge</h1>
+        FUSE Forge is the developer center for hosting extensions to <%= link_to 'FUSE', 'http://fusesource.com' -%>,
+  		  the leading open source ESB and integration platform.
+    	</div>
+  	</div>
+  </div>
+
+  <div id="project-section">
+  	<div class="wrapper">
+  	  
+  	  <% unless @my_projects.empty? %>
+    	  <div class="message">
+    	    My Projects
+  	    </div>
+    	  <div class="list">
+        <% @my_projects.each do |project| %>
+      	  <div class="project">
+      	    <div class="logo"><%= link_to(image_tag(project.image.url(:thumb)), project_path(project)) %></div>
+      	    <div class="details">
+        	    <div class="category"><%= h(project.category.name) -%></div>
+        	    <h1><%= link_to h(project.name), project_path(project) -%></h1>
+        	    <p><%= sanitize project.description -%></p>
+        	    <%= link_to(image_tag("images/more-about-this-project.jpg"), project_path(project)) %>
+      	    </div>
+    	    </div>
+	      </div>
+        <% end %>
+      <% end %>
+
+  	  <div class="message">
+  	    Featured Projects
+	    </div>
+  	  <div class="list">
+      <% @featured_projects.each do |project| %>
+    	  <div class="project">
+    	    <div class="logo"><%= link_to(image_tag(project.image.url(:thumb)), project_path(project)) %></div>
+    	    <div class="details">
+      	    <div class="category"><%=h(project.category.name)-%></div>
+      	    <h1><%= link_to h(project.name), project_path(project) -%></h1>
+      	    <p><%= sanitize @project.description -%></p>
+      	    <%= link_to(image_tag("images/more-about-this-project.jpg"), project_path(project)) %>
+    	    </div>
+  	    </div>
+      <% end %>
+	    </div>
+	    
+  	</div>
+  </div>

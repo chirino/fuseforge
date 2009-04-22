@@ -26,6 +26,8 @@ CROWD_SOAP_URL = "http://fusesource.com/crowd/services/SecurityServer"
 FUSESOURCE_URL = "http://fusesource.com" 
 JIRA_URL = "http://fusesource.com/issues"
 CONFLUENCE_URL = 'http://fusesource.com/wiki'
+JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
+CONFLUENCE_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
 
 CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
 

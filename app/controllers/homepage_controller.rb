@@ -11,7 +11,7 @@ class HomepageController < ApplicationController
     @top_project_downloads = Project.most_downloaded
 
     respond_to do |format|
-      format.html # index.html.erb
+      format.html { render :layout=>"new_look" }
     end
   end
 end

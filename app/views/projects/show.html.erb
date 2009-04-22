@@ -36,10 +36,6 @@
         	<% end %>
           </div>
         <% end %>
-        <div><div class="label">View Project:</div>
-            <%= link_to "Admins", project_project_administrators_path(@project) -%>, 
-            <%= link_to "Members", project_project_members_path(@project) -%>
-          </div>
         <div><div class="label">Tags:</div>
         <% @project.tags.each do |tag| %>
           <%= link_to tag.name, projects_path(:tag => tag.name, :show_search_form => true) -%>
