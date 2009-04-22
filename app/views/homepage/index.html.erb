@@ -57,7 +57,7 @@
     	    <div class="details">
       	    <div class="category"><%=h(project.category.name)-%></div>
       	    <h1><%= link_to h(project.name), project_path(project) -%></h1>
-      	    <p><%= sanitize @project.description -%></p>
+      	    <p><%= sanitize project.description -%></p>
       	    <%= link_to(image_tag("images/more-about-this-project.jpg"), project_path(project)) %>
     	    </div>
   	    </div>
