@@ -1,7 +1,4 @@
 class Forum < ActiveRecord::Base
-  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com/forge' : 'fusesourcedev.com/forge'
-  INTERNAL_PATH = '/forum'
-  INTERNAL_URL = 'http://' + INTERNAL_HOST + INTERNAL_PATH
 
   belongs_to :project
   belongs_to :phpbb_forum, :class_name => "PhpbbForum", :foreign_key => "phpbb_forum_id"
@@ -46,7 +43,7 @@ class Forum < ActiveRecord::Base
   end
   
   def internal_url
-    "#{INTERNAL_URL}/viewforum.php?f=#{phpbb_forum.forum_id}&start=0"    
+     "#{FORGE_URL}/forum/viewforum.php?f=#{phpbb_forum.forum_id}&start=0"    
   end  
   
   def url

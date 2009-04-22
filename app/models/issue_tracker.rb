@@ -3,8 +3,7 @@ require 'uri'
 require 'jira_lib/jira_interface.rb'
 
 class IssueTracker < ActiveRecord::Base
-  JIRA_INTERNAL_PATH = 'browse/'
-  JIRA_INTERNAL_URL = JIRA_URL + '/' + JIRA_INTERNAL_PATH
+  JIRA_INTERNAL_URL = JIRA_URL + '/browse/'
 
   belongs_to :project
   

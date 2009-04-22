@@ -21,12 +21,14 @@ config.action_controller.perform_caching             = true
 # Disable delivery errors, bad email addresses will be ignored
 # config.action_mailer.raise_delivery_errors = false
 
+FORGE_URL = "http://fusesource.com/forge"
 CROWD_SOAP_URL = "http://fusesource.com/crowd/services/SecurityServer"
 FUSESOURCE_URL = "http://fusesource.com" 
-FUSEFORGE_URL = "http://fusesource.com/forge"
-REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
 JIRA_URL = "http://fusesource.com/issues"
 CONFLUENCE_URL = 'http://fusesource.com/wiki'
+
+CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
+
 SVN_DAV_HOST = {
   :apache_user=> "www-data",
   :apache_group=> "www-data", 

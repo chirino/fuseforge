@@ -228,11 +228,11 @@ class Project < ActiveRecord::Base
   end  
   
   def internal_url
-    "#{FUSEFORGE_URL}/projects/#{shortname.downcase}"
+    "#{FORGE_URL}/projects/#{shortname.downcase}"
   end
   
   def unapproved_url
-    "#{FUSEFORGE_URL}/unapproved_projects/#{shortname.downcase}"
+    "#{FORGE_URL}/unapproved_projects/#{shortname.downcase}"
   end  
   
   def external_website

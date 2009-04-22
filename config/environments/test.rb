@@ -21,12 +21,12 @@ config.action_controller.allow_forgery_protection    = false
 # ActionMailer::Base.deliveries array.
 config.action_mailer.delivery_method = :test
 
-
+FORGE_URL = "http://fusesourcedev.com/forge"
 CROWD_SOAP_URL = "http://fusesourcedev.com/crowd/services/SecurityServer"
 FUSESOURCE_URL = "http://fusesourcedev.com" 
-FUSEFORGE_URL = "http://fusesourcedev.com/forge"
-REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
 JIRA_URL = "http://fusesourcedev.com/issues"
 CONFLUENCE_URL = 'http://fusesourcedev.com/wiki'
+
+CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
 
 config.action_mailer.default_url_options = { :host => "fusesourcedev.com" }

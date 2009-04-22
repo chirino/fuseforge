@@ -3,7 +3,6 @@ class Repository < ActiveRecord::Base
     
   belongs_to :project
   
-  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com/forge' : 'fusesourcedev.com/forge'
   SVN_ROOT = '/var/forge/svn'
 
   def repos_filepath
@@ -51,7 +50,7 @@ class Repository < ActiveRecord::Base
   end  
   
   def internal_url
-    "http://#{INTERNAL_HOST}/forge/svn/#{key}"
+    "#{FORGE_URL}/svn/#{key}"
   end  
   
   def url

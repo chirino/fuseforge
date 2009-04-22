@@ -3,7 +3,6 @@ class WebDavLocation < ActiveRecord::Base
   
   belongs_to :project
   
-  INTERNAL_HOST = Socket.gethostname == 'dude' ? 'fusesource.com' : 'fusesourcedev.com'
   DAV_ROOT = '/var/forge/dav'
   
   def repo_filepath
@@ -48,16 +47,16 @@ class WebDavLocation < ActiveRecord::Base
   end  
   
   def internal_url
-    "http://#{INTERNAL_HOST}#{dav_prefix}/#{key}"
+    "#{FORGE_URL}#{dav_prefix}/#{key}"
   end  
   
   def internal_files_url
-    "http://#{INTERNAL_HOST}#{site_prefix}/#{key}/download"
+    "#{FORGE_URL}#{site_prefix}/#{key}/download"
   end  
   
   def website_url
     if use_internal?
-       "http://#{INTERNAL_HOST}#{site_prefix}/#{key}"
+       "#{FORGE_URL}#{site_prefix}/#{key}"
     else
       nil
     end  

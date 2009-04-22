@@ -16,12 +16,13 @@ config.action_controller.perform_caching             = false
 # Don't care if the mailer can't send
 config.action_mailer.raise_delivery_errors = false
 
+FORGE_URL = "http://fusesourcedev.com/forge"
 CROWD_URL = "http://fusesourcedev.com/crowd"
 FUSESOURCE_URL = "http://fusesourcedev.com" 
-FUSEFORGE_URL = "http://fusesourcedev.com/forge"
-REDIRECT_BACK_COOKIE_DOMAIN_NAME = CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
 JIRA_URL = "http://fusesourcedev.com/issues"
 CONFLUENCE_URL = 'http://fusesourcedev.com/wiki'
+
+CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
 
 SVN_DAV_HOST = {
   :apache_user => "www-data", 

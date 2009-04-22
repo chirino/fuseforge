@@ -2,8 +2,6 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-#  include AuthenticatedSystem
-
   CROWD_COOKIE_NAME="crowd.token_key"
   CROWD_CHECK_INTERVAL_SECONDS = 60
 
