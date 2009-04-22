@@ -10,6 +10,7 @@ class SessionsController < ApplicationController
 
   def destroy
     reset_session
-    redirect_to "#{FUSESOURCE_URL}/logout?return_to=#{FUSEFORGE_URL}"
+    return_to = request.protocol + request.host_with_port + root_path
+    redirect_to "#{FUSESOURCE_URL}/logout?return_to=#{return_to}"
   end
 end

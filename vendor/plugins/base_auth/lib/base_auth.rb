@@ -38,6 +38,7 @@ module Authorization
             raise ArgumentError( ":exec doesn't accept values of class #{exec.class.name}" )
         end
       elsif conditions[:user]
+        return false unless current_user
         if conditions[:user].is_a?( String )
           return current_user.instance_eval conditions[:user]
         end

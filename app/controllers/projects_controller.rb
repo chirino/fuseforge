@@ -6,14 +6,13 @@ class ProjectsController < ApplicationController
   before_filter :get_project, :only => [:show, :edit, :update, :destroy]
   before_filter :get_terms_and_conditions_text, :only => [:new, :create]
   
-  deny :show, :edit, :update, :destroy, :exec => :project_unapproved_and_user_not_site_admin?, :redirect_to => :projects
-  deny :show, :edit, :update, :destroy, :exec => :project_private_and_user_not_member?, :redirect_to => :projects
+  deny :show, :edit, :update, :destroy, :exec => :project_unapproved_and_user_not_site_admin?, :method => :access_denied
+  deny :show, :edit, :update, :destroy, :exec => :project_private_and_user_not_member?, :method => :access_denied
   
-#  allow :new, :create, :user => :is_registered_user?, :redirect_to => '/forge'
-  allow :index, :new, :create, :user => :is_company_employee?, :redirect_to => '/forge'
+  allow :index, :new, :create, :user => :is_company_employee?, :method => :access_denied
   
-  allow :edit, :update, :user => :is_project_administrator_for?, :redirect_to => :project
-  allow :destroy, :user => :is_site_admin?, :redirect_to => :project
+  allow :edit, :update, :user => :is_project_administrator_for?, :method => :access_denied
+  allow :destroy, :user => :is_site_admin?, :method => :access_denied
 
   def index
     @tags = Project.tag_counts

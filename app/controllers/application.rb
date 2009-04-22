@@ -2,12 +2,12 @@
 # Likewise, all the methods added will be available for all controllers.
 
 class ApplicationController < ActionController::Base
-  include AuthenticatedSystem
+#  include AuthenticatedSystem
 
   CROWD_COOKIE_NAME="crowd.token_key"
   CROWD_CHECK_INTERVAL_SECONDS = 60
 
-  before_filter :login_from_cookie
+  before_filter :login_current_user
   before_filter :login_required
   before_filter :set_observers_current_user
   before_filter :set_return_to
@@ -31,36 +31,87 @@ class ApplicationController < ActionController::Base
   
   def set_observers_current_user
     UserActionObserver.current_user = ProjectObserver.current_user = WikiPageAttachmentDownloadObserver.current_user = \
-     DownloadRequestObserver.current_user = current_user
-  end
-
-  # overriding default implementation
-  def authorized?       
-#    if need_to_check_with_crowd?
-      # resetting the user_id will cause rails to login_from_cookie which checks with Crowd
-#      session[:user_id] = nil
-#    end      
-    super
+    DownloadRequestObserver.current_user = @current_user
   end
       
-  # overriding default implementation
-#  def login_from_cookie
-#    session[:last_crowd_check] = Time.now
-#    token = cookies[CROWD_COOKIE_NAME]
-#    user = User.authenticate_with_crowd_token(token, request)
-#    self.current_user = user    
-#  end
-  def login_from_cookie   
-     return if cookies[CROWD_COOKIE_NAME] && logged_in?
-     user = User.authenticate_with_crowd_token(cookies[CROWD_COOKIE_NAME], request)
-     self.current_user = user if user
+  def logged_in?
+    @current_user != false
   end
   
-#  def need_to_check_with_crowd?
-#    begin
-#      session[:last_crowd_check] < Time.now.ago(CROWD_CHECK_INTERVAL_SECONDS)
-#    rescue
-#      true
-#    end
-#  end
+  def current_user
+    @current_user ||= false
+  end
+    
+  helper_method :current_user, :logged_in?
+    
+  def login_current_user
+    return if @current_user
+    # Try first to use the session to figure out who is logged in to avoid hitting crowd 
+    # all the time.
+    @current_user = User.find_by_id(session[:user_id]) if session[:user_id]
+    if @current_user
+      # Expire the session if the crowd token changes.
+      if @current_user.crowd_token != cookies[CROWD_COOKIE_NAME]
+        @current_user.crowd_token = nil
+        @current_user.save
+        reset_session
+        @current_user = false
+      else
+        return
+      end
+    end
+
+    # Try to do a crowd login.
+    if cookies[CROWD_COOKIE_NAME] 
+      @current_user = User.authenticate_with_crowd_token(cookies[CROWD_COOKIE_NAME], request)
+      # Keep track of the login so we can subseqently use the session
+      if @current_user
+        @current_user.crowd_token = cookies[CROWD_COOKIE_NAME]
+        @current_user.save
+        session[:user_id] = @current_user.id
+        return;
+      end
+    end    
+    @current_user = false    
+  end  
+
+  #
+  # Called when a user does not have access to the requested page.
+  # if he is logged in, we show him a 401, otherwise we give him
+  # a chance to login.
+  def access_denied
+    if @current_user
+      render_401
+    else
+      redirect_to "#{FUSESOURCE_URL}/login?return_to=#{request.url}"
+    end
+  end
+  
+  def render_404 
+	  respond_to do |format| 
+	    format.html { render :file => "#{RAILS_ROOT}/public/404.html", :status => '404 Not Found' } 
+      format.xml  { render :nothing => true, :status => '404 Not Found' } 
+	  end 
+	  true 
+  end 
+
+  def render_401 
+	  respond_to do |format| 
+	    format.html { render :file => "#{RAILS_ROOT}/public/401.html", :status => '401 Unauthorized' } 
+      format.xml  { render :nothing => true, :status => '401 Unauthorized' } 
+	  end 
+	  true 
+  end 
+  
+  protected
+  
+  def rescue_action_in_public(e) 
+	  case e when ActiveRecord::RecordNotFound 
+	    render_404 
+	  else 
+	    super 
+	  end 
+	end
+
+
 end
