@@ -45,7 +45,15 @@
         </div>
       </div>
       
-      <%= render :partial => 'shared/flash_msg' %>
+      <% if flash[:notice] || flash[:error] -%>
+        <div id="flash">
+        	<div class="wrapper">
+          <%= content_tag('div', h(flash[:notice]), :class => 'notice', :id => 'notice') if flash[:notice] %>
+          <%= content_tag('div', h(flash[:error]), :class => 'notice error', :id => 'error') if flash[:error] %>
+          </div>
+        </div>
+      <% end -%>
+      
       <%= yield %>
       
       <div id="footer">
