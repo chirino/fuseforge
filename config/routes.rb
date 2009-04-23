@@ -17,10 +17,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :news_items
 
   map.resources :featured_projects
-
-  map.resources :wiki_page_attachments do |wiki_page_attachment|
-    wiki_page_attachment.resources :attached_files, :only => [:show]
-  end  
   
   map.resources :projects do |project|
     project.resources :downloads
@@ -33,11 +29,6 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :project_member_groups, :except => [:edit, :update]
     project.resources :project_tags, :only => [:index, :create, :destroy]
     project.resource  :issue_tracker
-    project.resources :wiki_pages do |wiki_page|
-      wiki_page.resources :wiki_page_versions, :only => [:index, :show, :update]
-      wiki_page.resources :wiki_page_tags, :only => [:index, :destroy, :create]
-      wiki_page.resources :wiki_page_attachments
-    end
   end  
   
   map.resources :unapproved_projects, :only => [:index, :show, :update, :destroy]

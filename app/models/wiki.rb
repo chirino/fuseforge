@@ -4,9 +4,6 @@ require 'benchmark_http_requests'
 class Wiki < ActiveRecord::Base
   belongs_to :project
 
-  #TODO: remove the wiki_pages table
-  has_many :wiki_pages, :dependent => :destroy
-  
   CONFLUENCE_INTERNAL_URL = CONFLUENCE_URL + '/display/'
   
   def before_save
@@ -14,8 +11,6 @@ class Wiki < ActiveRecord::Base
   end
   
   def after_create
-    #self.wiki_pages << WikiPage.create(:slug => 'Downloads', 
-    # :body => 'Use this page to provide links to any downloads you wish to provide.')
   end
   
   def before_destroy

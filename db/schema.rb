@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090423033936) do
+ActiveRecord::Schema.define(:version => 20090423173352) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -216,49 +216,6 @@ ActiveRecord::Schema.define(:version => 20090423033936) do
     t.string   "external_url"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "wiki_page_attachment_downloads", :force => true do |t|
-    t.integer  "wiki_page_attachment_id"
-    t.integer  "downloaded_by_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "wiki_page_attachments", :force => true do |t|
-    t.integer  "wiki_page_id"
-    t.string   "attached_file_file_name"
-    t.string   "attached_file_content_type"
-    t.integer  "attached_file_file_size"
-    t.datetime "attached_file_updated_at"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "track_downloads"
-    t.boolean  "include_in_project_homepage_download_stats"
-  end
-
-  create_table "wiki_page_versions", :force => true do |t|
-    t.integer  "wiki_page_id"
-    t.integer  "version"
-    t.string   "slug"
-    t.text     "body"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.datetime "updated_at"
-    t.integer  "wiki_id"
-  end
-
-  create_table "wiki_pages", :force => true do |t|
-    t.string   "slug"
-    t.text     "body"
-    t.integer  "version"
-    t.integer  "created_by_id"
-    t.integer  "updated_by_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "wiki_id"
   end
 
   create_table "wikis", :force => true do |t|

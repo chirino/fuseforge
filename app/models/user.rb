@@ -7,7 +7,6 @@ class User < ActiveRecord::Base
   acts_as_tagger
   
   has_one :prospective_project_member
-  has_many :wiki_pages
   
   belongs_to :phpbb_user, :class_name => "PhpbbUser", :foreign_key => "phpbb_user_id"
 

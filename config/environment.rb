@@ -72,8 +72,7 @@ Rails::Initializer.run do |config|
 
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
-  config.active_record.observers = :user_action_observer, :project_observer, :wiki_page_attachment_download_observer,
-                                   :download_request_observer
+  config.active_record.observers = :user_action_observer, :project_observer, :download_request_observer
 end
 
 REDIRECT_BACK_COOKIE_NAME = 'fusesource.redirect_back'
