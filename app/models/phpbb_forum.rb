@@ -1,7 +1,5 @@
 class PhpbbForum < ActiveRecord::Base
-  FORUM_CACHE_PATH = '/data/phpBB3/cache'
-  FORUM_HOST = "forge.fusesourcedev.com"
-  FORUM_LOGIN_USER = 'rails'
+  FORUM_CACHE_PATH = ""
   
   establish_connection "phpbb"
   set_table_name "phpbb_forums"
@@ -73,19 +71,8 @@ class PhpbbForum < ActiveRecord::Base
   end
   
   def purge_cache
-    if RAILS_ENV == 'development'
-      Net::SSH.start(FORUM_HOST, FORUM_LOGIN_USER, :port => 30064) do |ssh|
-        begin
-          ssh.exec!("sudo rm #{FORUM_CACHE_PATH}/*")
-          ssh.exec!("sudo -u www-data echo '#{htaccess_file_contents}' > #{FORUM_CACHE_PATH}/.htaccess")
-        rescue
-          raise "Error purging forum cache!"
-        end
-      end  
-    else
-      system("sudo rm #{FORUM_CACHE_PATH}/*")  
-      system("sudo -u www-data echo '#{htaccess_file_contents}' > #{FORUM_CACHE_PATH}/.htaccess")
-    end      
+    system("sudo -u #{FORUM_CONFIG[:user]} rm #{FORUM_CONFIG[:path]}/cache/*")  
+    system("sudo -u #{FORUM_CONFIG[:user]} echo '#{htaccess_file_contents}' > #{FORUM_CONFIG[:path]}/cache/.htaccess")
   end
   
   private

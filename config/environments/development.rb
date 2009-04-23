@@ -22,7 +22,7 @@ FUSESOURCE_URL = "http://fusesourcedev.com"
 JIRA_URL = "http://fusesourcedev.com/issues"
 CONFLUENCE_URL = 'http://fusesourcedev.com/wiki'
 JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
-CONFLUENCE_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
+CONFLUENCE_CONFIG = { :url => CONFLUENCE_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
 
 CROWD_COOKIE_DOMAIN_NAME = ".fusesourcedev.com" 
 
@@ -34,6 +34,11 @@ SVN_DAV_HOST = {
   #   :user=>ENV["USER"], 
   #   :options => {}
   # }
+}
+
+FORUM_CONFIG = {
+  :path => '/data/phpBB3',
+  :user => "www-data", 
 }
 
 config.action_mailer.default_url_options = { :host => "fusesourcedev.com" }
