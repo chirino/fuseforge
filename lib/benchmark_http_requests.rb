@@ -14,6 +14,14 @@ module BenchmarkLogging
       result = nil
       seconds = Benchmark.realtime { result = yield }
       logger.add(log_level, format_benchmark_log_message(seconds, title, details))
+      
+      # Uncomment if your trying to figure out who's doing the HTTP call.
+      # begin
+      #   raise 'error'
+      # rescue Exception => error
+      #   logger.error(error.backtrace.join("\n"))
+      # end
+          
       result
     else
       yield

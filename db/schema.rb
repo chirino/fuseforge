@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090422062828) do
+ActiveRecord::Schema.define(:version => 20090423033936) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -203,6 +203,10 @@ ActiveRecord::Schema.define(:version => 20090422062828) do
     t.integer "phpbb_user_id"
     t.string  "crowd_token"
     t.string  "ssh_public_key"
+    t.string  "first_name"
+    t.string  "last_name"
+    t.string  "email"
+    t.text    "groups_cache"
   end
 
   create_table "web_dav_locations", :force => true do |t|
