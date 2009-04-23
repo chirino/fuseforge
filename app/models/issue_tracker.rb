@@ -1,6 +1,7 @@
 require 'net/http'
 require 'uri'
 require 'jira_lib/jira_interface.rb'
+require 'benchmark_http_requests'
 
 class IssueTracker < ActiveRecord::Base
   JIRA_INTERNAL_URL = JIRA_URL + '/browse/'
@@ -13,8 +14,12 @@ class IssueTracker < ActiveRecord::Base
   
   def before_destroy
     return true unless exists_internally?
-    
-    JiraInterface.new.remove_project(self.project.shortname)
+    begin
+      JiraInterface.new.remove_project(self.project.shortname)
+    rescue Exception => error
+      logger.error "* [Project] #{project.name} failed to delete JIRA project #{error.class.name}: #{error.message}"
+      logger.error(error)
+    end
   end
 
   def is_active?

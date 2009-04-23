@@ -1,4 +1,5 @@
 require 'jira_lib/jira_interface.rb'
+require 'benchmark_http_requests'
 
 class Issue
   RECENT_ISSUES_LIMIT = 5

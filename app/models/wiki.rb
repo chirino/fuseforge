@@ -1,4 +1,6 @@
 require 'confluence_lib/confluence_interface.rb'
+require 'benchmark_http_requests'
+
 class Wiki < ActiveRecord::Base
   belongs_to :project
 

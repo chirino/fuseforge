@@ -1,5 +1,6 @@
 require 'net/http'
 require 'uri'
+require 'benchmark_http_requests'
 
 class User < ActiveRecord::Base
   acts_as_tagger
@@ -144,4 +145,6 @@ class User < ActiveRecord::Base
   def crowd_group_names
     @crowd_group_names
   end
+  
+    
 end
