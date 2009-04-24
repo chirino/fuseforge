@@ -239,7 +239,7 @@ div#footer { padding: 40px 0 40px 0; }
     text-align: right;
 }
 
-table.project-list td, th {
+table.project-list td, table.project-list th {
     font-family: HelveticaNeue,"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif;
     vertical-align: middle;
     padding: 0 5px 0 5px;
@@ -332,7 +332,6 @@ table.project-list td.description {
   font-family: "Lucida Grande", "Bitstream Vera Sans", Helvetica, Verdana, Arial, sans-serif;
   font-size: 100%;
   width: 100%;
-  height: 3.75em;
   margin-top: 4px;
   margin-bottom: 4px;  
 }
