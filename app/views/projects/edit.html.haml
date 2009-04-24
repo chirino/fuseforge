@@ -1,0 +1,31 @@
+#menu
+  .wrapper
+    .left
+      = link_to 'Forge', root_path
+      \&gt;
+      = link_to 'Create', new_project_path
+    .right
+      = link_to 'Projects', projects_path
+      |
+      - allow :user => :is_site_admin? do
+        = link_to 'Admin-Forge', admin_path
+        |
+      = link_to 'Search', projects_path(:show_search_form => true)
+
+#overview
+  .wrapper
+    .message
+      %h2 
+        = "Editing #{@project.name}"
+      
+#section
+  .wrapper
+    = render :partial => 'js_validation'
+    - form_for(@project, :html => { :multipart => true, :onsubmit => 'return validate_form()' }) do |f|
+      = render :partial => 'form', :object => f
+      .form_button
+        = f.submit "Update"
+    .bottom_links
+      = link_to 'Show', @project
+      |
+      = link_to 'Back to Project Administration', project_administration_path(@project)

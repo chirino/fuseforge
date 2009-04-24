@@ -1,0 +1,133 @@
+#js_errors.errorExplanation{ :style => "display:none;" }
+= error_messages_for 'project', 'issue_tracker', 'repository', 'wiki',  :object => [@project, @project.issue_tracker, @project.repository, @project.forum, @project.wiki]
+
+%table.fieldset
+  %tr
+    %th.label
+      = form.label :name
+    %td.field
+      = form.text_field :name, :class => 'textbox'
+    %td.help Required.
+  - if ['new', 'create'].include?(controller.action_name)
+    %tr
+      %th.label
+        = form.label :shortname
+      %td.field
+        = form.text_field :shortname, :class => 'textbox'
+        #status
+        = observe_field  "project_shortname", :frequency => 0.10, :url => { :action=>'validate_proj_sname' },  :with => "'proj_sname='+escape(value)", :update => "status"
+      %td.help Required. Must be between 3-16 uppercase, alphabetic characters.  No numbers, spaces, hyphens, or underscores.
+  %tr
+    %th.label
+      = form.label :image, "Logo"
+    %td.field
+      - if ['edit', 'update'].include?(controller.action_name)
+        = image_tag @project.image.url(:thumb)
+        %br
+      = form.file_field :image
+    %td.help
+  %tr
+    %th.label
+      = form.label :description
+    %td.field
+      = form.text_area :description, :rows => 10
+    %td.help Required.      
+  %tr
+    %th.label
+      = form.label :license_id
+    %td.field
+      = form.select :license_id, ProjectLicense.options_for_select, { :prompt => true }, { :onchange => "toggle_other_license_url('project_license_id','#{ProjectLicense.other.id}')" }
+      #other-license-url{ :style => "display:#{@display_other_license_url};" }
+        %br
+        = form.text_field :other_license_url, :class => 'textbox'        
+    %td.help Required.
+  %tr
+    %th.label
+      = form.label :project_maturity_id
+    %td.field
+      = form.select :project_maturity_id, ProjectMaturity.options_for_select, { :prompt => true }
+    %td.help Required.
+  %tr
+    %th.label
+      = form.label :project_category_id
+    %td.field
+      = form.select :project_category_id, ProjectCategory.options_for_select, { :prompt => true }
+    %td.help Required.
+  %tr
+    %th.label 
+      = form.label :is_private, "Security"
+    %td.field
+      = form.check_box :is_private
+      = form.label :is_private, 'Private project'
+    %td.help
+  %tr
+    %th.label
+      = form.label :external_url, "Website URL"
+    %td.field
+      = form.text_field :external_url, :class => 'textbox'
+    %td.help
+  %tr
+    %th.label
+      = form.label :issue_tracker, "Issue Tracker"
+    %td.field
+      - fields_for @project.issue_tracker do |issue_tracker_fields|
+        = issue_tracker_fields.check_box :use_internal, :onchange => "Element.toggle('issue-tracker-external-url')"
+        = issue_tracker_fields.label :use_internal, "Allocate a FUSE Forge issue tracker?"
+        #issue-tracker-external-url{ :style => "display:#{@display_issue_tracker_external_url}; margin-top:5px;" }
+          = issue_tracker_fields.label :external_url, "External issue tracker URL"
+          %br
+          = issue_tracker_fields.text_field :external_url, :class => 'textbox'
+    %td.help
+  %tr
+    %th.label
+      = form.label :repository, "Source Repository"
+    %td.field
+      - fields_for @project.repository do |repository_fields|
+        = repository_fields.check_box :use_internal, :onchange => "Element.toggle('repository-external-url')"
+        = repository_fields.label :use_internal, "Allocate a FUSE Forge Subversion repository?"
+        #repository-external-url{ :style => "display:#{@display_repository_external_url}; margin-top:5px;" }
+          = repository_fields.label :external_url, "External Source Repository URL"
+          %br
+          = repository_fields.text_field :external_url, :class => 'textbox'
+    %td.help
+  %tr
+    %th.label
+      - if @project.forum.internal_supported?
+        = form.label :forum, "Forums"
+      - else
+        = form.label :forum, "Forums URL"
+    %td.field
+      - fields_for @project.forum do |forum_fields|
+        - if @project.forum.internal_supported?
+          = forum_fields.check_box :use_internal, :onchange => "Element.toggle('forum-external-url')"
+          = forum_fields.label :use_internal, "Allocate FUSE Forge forums?"
+          #forum-external-url{ :style => "display:#{@display_forum_external_url}; margin-top:5px;" }
+            = forum_fields.label :external_url, "External Forum URL"
+            = forum_fields.text_field :external_url, :class => 'textbox'
+        - else
+          = forum_fields.text_field :external_url, :class => 'textbox'
+    %td.help
+  %tr
+    %th.label
+      = form.label :wiki, "Wiki"
+    %td.field
+      - fields_for @project.wiki do |wiki_fields|
+        = wiki_fields.check_box :use_internal, :onchange => "Element.toggle('wiki-external-url')"
+        = wiki_fields.label :use_internal, "Allocate a FUSE Forge wiki?"
+        #wiki-external-url{ :style => "display:#{@display_wiki_external_url}; margin-top:5px;" }
+          = wiki_fields.label :external_url, "External wiki URL"
+          = wiki_fields.text_field :external_url, :class => 'textbox'
+    %td.help
+  %tr
+    %th.label
+      = form.label :web_dav_location, "WebDAV"
+    %td.field
+      - fields_for @project.web_dav_location do |web_dav_location_fields|
+        = web_dav_location_fields.check_box :use_internal, :onchange => "Element.toggle('web-dav-location-external-url')"
+        = web_dav_location_fields.label :use_internal, "Allocate a FUSE Forge WebDAV Location?"
+        #web-dav-location-external-url{ :style => "display:#{@display_web_dav_location_external_url}; margin-top:5px;" }
+          = web_dav_location_fields.label :external_url, "External WebDAV URL"
+          = web_dav_location_fields.text_field :external_url, :class => 'textbox'
+    %td.help 
+
+

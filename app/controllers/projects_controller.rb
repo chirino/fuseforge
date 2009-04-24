@@ -84,7 +84,7 @@ class ProjectsController < ApplicationController
     set_display_other_license_url
 
     respond_to do |format|
-      format.html
+      format.html { render :layout => "new_look" }
       format.xml  { render :xml => @project }
     end
   end
@@ -121,7 +121,7 @@ class ProjectsController < ApplicationController
         format.html { redirect_to :controller => 'homepage' }
         format.xml  { render :xml => @project, :status => :created, :location => @project }
       else
-        format.html { render :action => "new" }
+        format.html { render :action => "new", :layout => "new_look" }
         format.xml  { render :xml => @project.errors, :status => :unprocessable_entity }
       end
     end
@@ -130,6 +130,10 @@ class ProjectsController < ApplicationController
   def edit
     set_display_external_urls
     set_display_other_license_url
+    
+    respond_to do |format|
+      format.html { render :layout => "new_look" }
+    end
   end
   
   def update
@@ -149,7 +153,7 @@ class ProjectsController < ApplicationController
         format.html { redirect_to(@project) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit" }
+        format.html { render :action => "edit", :layout => "new_look" }
         format.xml  { render :xml => @project.errors, :status => :unprocessable_entity }
       end
     end
