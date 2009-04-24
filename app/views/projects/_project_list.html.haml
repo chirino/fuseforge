@@ -1,0 +1,13 @@
+.list
+  - projects.each do |project|
+    .project
+      .logo
+        = link_to(image_tag(project.image.url(:thumb)), project_path(project))
+      .details
+        .category
+          = h(project.category.name)
+        %h1
+          = link_to h(project.name), project_path(project)
+        %p
+          = sanitize( truncate(project.description, 50) )
+        = link_to(image_tag("more-about-this-project.jpg"), project_path(project))

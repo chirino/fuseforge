@@ -8,9 +8,8 @@ class ProjectsController < ApplicationController
   
   deny :show, :edit, :update, :destroy, :exec => :project_unapproved_and_user_not_site_admin?, :method => :access_denied
   deny :show, :edit, :update, :destroy, :exec => :project_private_and_user_not_member?, :method => :access_denied
-  
-  allow :index, :new, :create, :user => :is_company_employee?, :method => :access_denied
-  
+
+  allow :new, :create, :user => :is_company_employee?, :method => :access_denied
   allow :edit, :update, :user => :is_project_administrator_for?, :method => :access_denied
   allow :destroy, :user => :is_site_admin?, :method => :access_denied
 
@@ -60,7 +59,7 @@ class ProjectsController < ApplicationController
     end        
     
     respond_to do |format|
-      format.html { params[:show_search_form] ? render(:action => 'filtered_index') : render(:action => 'index') }
+      format.html { params[:show_search_form] ? render(:action => 'filtered_index', :layout => "new_look") : render(:action => 'index', :layout => "new_look") }
       format.xml  { render :xml => @projects }
     end
   end
