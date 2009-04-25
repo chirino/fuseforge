@@ -236,6 +236,13 @@ div#footer { padding: 40px 0 40px 0; }
     min-width:300px;
     max-width:300px;
 }
+
+#project-search .level-1 { font-size: .6em; }
+#project-search .level-2 { font-size: .8em; }
+#project-search .level-3 { font-size: 1.0em; }
+#project-search .level-4 { font-size: 1.2em; }
+#project-search .level-5 { font-size: 1.4em; }
+
 #advanced_search_fields table {
     padding:10px;
 }
