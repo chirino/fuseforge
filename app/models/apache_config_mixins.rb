@@ -28,16 +28,41 @@ module ApacheConfigMixins
   
   def remote_system(conn, command, user=nil)
     command = "sudo -u #{user} "+command if user
-    #puts "DEBUG Running: #{command}"
     if conn
-      conn.exec(command)
-      return conn.exec!("echo $?").to_i
+      benchmark("SSH Command", command) do
+        conn.exec(command)
+        conn.exec!("echo $?").to_i
+      end
     else
-      system(command)
-      return $?
+      benchmark("System Command", command) do
+        system(command)
+        $?
+      end
     end
   end  
 
+  def benchmark(title, details, log_level=Logger::DEBUG)
+    logger = ActiveRecord::Base.logger;
+    if logger && logger.level <= log_level
+      result = nil
+      seconds = Benchmark.realtime { result = yield }
+      logger.add(log_level, format_benchmark_log_message(seconds, title, result, details))
+      result
+    else
+      yield
+    end
+  end
+  
+  def format_benchmark_log_message(seconds, title, result, details)
+    #if( @colorize_logging ) 
+      titile_color, details_color, result_color, end_color = "\e[4;34;1m", "\e[0;1m", "\e[4;32;1m", "\e[0m"
+    #else
+    #  titile_color, details_color, end_color = "", "", ""
+    #end    
+    log_entry = "  #{titile_color}#{title} (#{sprintf("%.1f", seconds * 1000)}ms)#{end_color}"
+    log_entry << "#{details_color}:  #{details}#{end_color} : #{result_color}#{result}#{end_color}" if details
+    log_entry
+  end
 
   def reload_apache_config(conn=nil)
     run_cmd_str('sudo /etc/init.d/apache2 reload', 'Error reloading apache config!', conn)
