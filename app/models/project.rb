@@ -111,12 +111,12 @@ class Project < ActiveRecord::Base
   end
   
   def name=(value)
-    forum.change_name(value) if (value != read_attribute(:name)) and not new_record?
+    forum.change_name(value) if (value != read_attribute(:name)) and not new_record? and forum.internal_supported?
     write_attribute(:name, value)
   end  
   
   def description=(value)
-    forum.change_description(value) if (value != read_attribute(:description)) and not new_record?
+    forum.change_description(value) if (value != read_attribute(:description)) and not new_record? and forum.internal_supported?
     write_attribute(:description, value)
   end  
   
@@ -128,12 +128,12 @@ class Project < ActiveRecord::Base
         wiki.make_private
         issue_tracker.make_private
         repository.make_private
-        forum.make_private
+        forum.make_private and forum.internal_supported?
       else
         wiki.make_public
         issue_tracker.make_public
         repository.make_public
-        forum.make_public
+        forum.make_public and forum.internal_supported?
       end
     end  
     
@@ -282,7 +282,7 @@ class Project < ActiveRecord::Base
   def init_components
     issue_tracker.create_internal
     wiki.create_internal
-    forum.create_internal 
+    forum.create_internal and forum.internal_supported?
     repository.create_internal 
     web_dav_location.create_internal
   end  
