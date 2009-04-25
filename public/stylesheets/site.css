@@ -59,9 +59,13 @@ div#footer { padding: 40px 0 40px 0; }
  * Flash Message Section
  * ==================================================================== */ 
 
-#flash {
-  margin: 0 20px 0 20px;
-  color: #74C244;	
+#flash #notice {
+  padding: 20px;
+  background-color: #E5EDF5;
+  font-family: HelveticaNeue,"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif; 
+  font-size: 12pt; font-weight: bold;
+  border-bottom: thin solid #DDD;
+  margin: 10px;
 }
 
 /* ==================================================================== *

@@ -276,6 +276,7 @@ class Project < ActiveRecord::Base
     add_administrator(created_by)
     member_groups << ProjectMemberGroup.new(:name => default_member_group_name)
     add_member(created_by)
+    member_groups << ProjectMemberGroup.new(:name => CrowdGroup.company_employee_group.name)
   end
   
   def init_components

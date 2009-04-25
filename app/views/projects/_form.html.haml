@@ -38,6 +38,7 @@
     %td.field
       = form.select :license_id, ProjectLicense.options_for_select, { :prompt => true }, { :onchange => "toggle_other_license_url('project_license_id','#{ProjectLicense.other.id}')" }
       #other-license-url{ :style => "display:#{@display_other_license_url};" }
+        = form.label :other_license_url, "License URL"
         %br
         = form.text_field :other_license_url, :class => 'textbox'        
     %td.help Required.
