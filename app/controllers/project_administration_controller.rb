@@ -11,6 +11,11 @@ class ProjectAdministrationController < ApplicationController
     end
   end
 
+  def redeploy_internal_components
+  	@project.init_components
+    render(:action => 'index')
+  end
+
   #
   # Tag Editing...
   #

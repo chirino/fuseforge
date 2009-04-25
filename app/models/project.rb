@@ -268,6 +268,14 @@ class Project < ActiveRecord::Base
     end
     @@most_downloaded 
   end
+  
+  def init_components
+    repository.create_internal 
+    web_dav_location.create_internal
+    forum.create_internal and forum.internal_supported?
+    issue_tracker.create_internal
+    wiki.create_internal
+  end  
     
   private
   
@@ -278,15 +286,7 @@ class Project < ActiveRecord::Base
     add_member(created_by)
     member_groups << ProjectMemberGroup.new(:name => CrowdGroup.company_employee_group.name)
   end
-  
-  def init_components
-    issue_tracker.create_internal
-    wiki.create_internal
-    forum.create_internal and forum.internal_supported?
-    repository.create_internal 
-    web_dav_location.create_internal
-  end  
-  
+    
   def allow_terms_and_conditions_validation?
     @accepted_terms_at.blank?
   end

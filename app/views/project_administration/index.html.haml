@@ -36,5 +36,7 @@
       - if @project.is_active?
         - allow :user => :is_site_admin? do
           %li= link_to 'Inactivate', @project, :confirm => 'Are you sure?', :method => :delete
+      %li= link_to 'Redeploy internal components', :action=>"redeploy_internal_components", :id => @project
+          
     .bottom_links
       = link_to 'Back to Project Home', project_path(@project)
