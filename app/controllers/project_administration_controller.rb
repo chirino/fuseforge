@@ -31,8 +31,7 @@ class ProjectAdministrationController < ApplicationController
   end
   
   def auto_complete_for_tag
-    tag = h(params[:tag])
-    tag = '' unless tag
+    tag = params[:tag] || '' 
     @regex = Regexp.new("(#{Regexp.escape(tag)})", true)
     @tags = Project.tag_counts.select{|x| @regex.match(x.name) }.sort{|x,y| x.name<=>y.name}.first(10)
     render(:partial => 'autocomplete_tags')
