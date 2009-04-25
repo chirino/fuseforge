@@ -110,6 +110,13 @@ module AutoCompleteMacrosHelper
     content_tag("div", "", :id => "#{object}_#{method}_auto_complete", :class => "auto_complete") +
     auto_complete_field("#{object}_#{method}", { :url => { :action => "auto_complete_for_#{object}_#{method}" } }.update(completion_options))
   end
+
+  def text_field_tag_with_auto_complete(name, value, tag_options = {}, completion_options = {})
+    (completion_options[:skip_style] ? "" : auto_complete_stylesheet) +
+    text_field_tag(name, value, tag_options) +
+    content_tag("div", "", :id => "#{name}_auto_complete", :class => "auto_complete") +
+    auto_complete_field("#{name}", { :url => { :action => "auto_complete_for_#{name}" } }.update(completion_options))
+  end
   
   private
     def auto_complete_stylesheet

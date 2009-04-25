@@ -1,0 +1,40 @@
+#menu
+  .wrapper
+    .left
+      = link_to 'Forge', root_path
+      >
+      = link_to 'Projects', projects_path
+      >
+      = link_to @project.name, @project
+      >
+      = link_to 'Admin', project_administration_path(@project)
+      
+    .right
+      - allow :user => :is_site_admin? do
+        = link_to 'Admin-Forge', admin_path
+        |
+      = link_to 'Search', projects_path(:show_search_form => true)
+
+#overview
+  .wrapper
+    .message
+      %h2 
+        Project Administration for
+        = h @project.name
+#section
+  .wrapper
+    %ul
+      %li= link_to 'Project Details', edit_project_path(@project)
+      %li= link_to 'Tags', :action=>"edit_tags", :id => @project
+      %li= link_to "Admins", project_project_administrators_path(@project)
+      %li= link_to "Members", project_project_members_path(@project)
+      - allow :exec => proc { @current_user.is_company_employee? } do
+        %li= link_to 'Admin Groups', project_project_admin_groups_path(:project_id => @project)
+        %li= link_to 'Member Groups', project_project_member_groups_path(:project_id => @project)
+      %li= link_to 'Downloads', project_downloads_path(@project)
+      %li= link_to 'News Items', project_project_news_items_path(:project_id => @project, :from_project_admin => true)
+      - if @project.is_active?
+        - allow :user => :is_site_admin? do
+          %li= link_to 'Inactivate', @project, :confirm => 'Are you sure?', :method => :delete
+    .bottom_links
+      = link_to 'Back to Project Home', project_path(@project)

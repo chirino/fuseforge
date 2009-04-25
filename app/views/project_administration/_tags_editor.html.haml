@@ -1,0 +1,14 @@
+#tags
+  %ul
+    - if( @project.tag_list.length > 0 )
+      - @project.tag_list.sort.each do |tag|
+        %li
+          = tag
+          = link_to_remote "remove", :update => 'tags', :url => { :action => :remove_tag, :id => @project, :tag=>tag }
+        
+  - form_remote_tag :update => 'tags', :url => { :action => :add_tag, :id => @project } do
+    -#= text_field_tag 'tag', '', {:autocomplete => "off"}
+    = text_field_tag_with_auto_complete 'tag', '', {:autocomplete => "off"}, {}
+    = submit_tag "Add"
+    
+    
