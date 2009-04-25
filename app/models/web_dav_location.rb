@@ -47,16 +47,12 @@ class WebDavLocation < ActiveRecord::Base
   end  
   
   def internal_url
-    "#{FORGE_URL}#{dav_prefix}/#{key}"
+    "#{FORGE_URL}/dav/#{key}"
   end  
-  
-  def internal_files_url
-    "#{FORGE_URL}#{site_prefix}/#{key}/download"
-  end  
-  
+    
   def website_url
     if use_internal?
-       "#{FORGE_URL}#{site_prefix}/#{key}"
+       "#{FORGE_URL}/sites/#{key}"
     else
       nil
     end  
@@ -66,10 +62,6 @@ class WebDavLocation < ActiveRecord::Base
     use_internal? ? internal_url : external_url
   end
 
-  def files_url
-    use_internal? ? internal_files_url : external_url
-  end
-    
   def create_internal(reload=true)
     return true if not use_internal?
     
