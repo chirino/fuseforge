@@ -269,6 +269,10 @@ class Project < ActiveRecord::Base
     @@most_downloaded 
   end
   
+  def key
+    self.shortname.downcase
+  end
+  
   def init_components
     repository.create_internal 
     web_dav_location.create_internal

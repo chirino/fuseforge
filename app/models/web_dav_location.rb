@@ -94,7 +94,7 @@ class WebDavLocation < ActiveRecord::Base
   private
   
   def key
-    self.project.shortname.downcase
+    self.project.key
   end
   
   def apache_write_groups

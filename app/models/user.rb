@@ -5,10 +5,11 @@ require 'yaml'
 
 class User < ActiveRecord::Base
   acts_as_tagger
-  
   has_one :prospective_project_member
-  
   belongs_to :phpbb_user, :class_name => "PhpbbUser", :foreign_key => "phpbb_user_id"
+  
+  CROWD_CACHE_TIMEOUT = 60*60;
+  
 
   # Virtual attributes for data stored in the external datastore
   # attr_accessor :password, :first_name, :last_name, :email, :company, :title, :phone, :country
@@ -59,14 +60,41 @@ class User < ActiveRecord::Base
     return rc
   end  
   
+  def to_time( dest )
+    Time.utc(dest.year, dest.month, dest.day, dest.hour, dest.min, dest.sec)
+  end
+
+  def after_find
+    if !self.cached_at
+      crowd_refresh 
+    else 
+      now = Time.now.utc.to_i;
+      was = to_time(self.cached_at).to_i;
+      if ( was+30 < now ) 
+        crowd_refresh 
+      end
+    end
+  end
+
+  def crowd_refresh
+    begin
+      crowd_user = Crowd.new.find_by_name(login) # throws SOAP::FaultError
+      return unless CrowdGroup.registered_user_group.user_names.include?(crowd_user.name)
+      data_refresh(crowd_user)
+      save
+    rescue SOAP::FaultError
+      logger.warn "Crowd Error: #{$!}"
+    end
+  end
+  
   def data_refresh(crowd_user)   
     @crowd_user = crowd_user
     self.first_name = @crowd_user.first_name
     self.last_name = @crowd_user.last_name
     self.email = @crowd_user.email
-    
     @crowd_group_names = Crowd.new.find_group_memberships(@crowd_user.name)
     self.groups_cache = YAML::dump(@crowd_group_names)
+    self.cached_at = Time.now.utc;
   end
   
   def crowd_group_names
