@@ -34,7 +34,7 @@ DAV_CONFIG = SVN_CONFIG = {
   :user=> "www-data",
 }
 MAILMAN_CONFIG = {
-  :user=>'list'
+  :user=>'list',
   :domain=>"fusesourcedev.com"
 }
 FORUM_CONFIG = {

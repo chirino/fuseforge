@@ -31,11 +31,11 @@ CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com"
 JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
 CONFLUENCE_CONFIG = { :url => CONFLUENCE_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
 DAV_CONFIG = SVN_CONFIG = {
-  :user=> "www-data",
-  :domain=>"fusesource.org"
+  :user=> "www-data"
 }
 MAILMAN_CONFIG = {
-  :user=>'list'
+  :user=>'list',
+  :domain=>"fusesource.org"
 }
 FORUM_CONFIG = {
   :user => "www-data", 
