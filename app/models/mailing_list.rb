@@ -10,6 +10,11 @@ class MailingList < ActiveRecord::Base
   validates_presence_of :name
   validates_associated :project
 
+  validates_format_of :internal_replyto, {:with => RFC822::EmailAddress, :message=>'is an invalid email', :allow_nil=>true, :allow_blank=>true} 
+  validates_format_of :external_post_address, {:with => RFC822::EmailAddress, :message=>'is an invalid email', :allow_nil=>true, :allow_blank=>true}
+  validates_format_of :external_subscribe_address, {:with => RFC822::EmailAddress, :message=>'is an invalid email', :allow_nil=>true, :allow_blank=>true} 
+  validates_format_of :external_unsubscribe_address, {:with => RFC822::EmailAddress, :message=>'is an invalid email', :allow_nil=>true, :allow_blank=>true}
+
   def post_address
     use_internal? ? internal_post_address : external_post_address
   end  
