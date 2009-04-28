@@ -289,13 +289,13 @@ class Project < ActiveRecord::Base
   end
   
   def add_default_mailing_lists
-    list = MailingList.new( :name => "dev", :use_internal=>true )
-    list.project = self
-    list.save
+    dev_list = MailingList.new( :name => "dev", :use_internal=>true )
+    dev_list.project = self
+    dev_list.save
     
-    list = MailingList.new( :name => "commits", :use_internal=>true, :internal_replyto=>"dev" )
-    list.project = self
-    list.save
+    commits_list = MailingList.new( :name => "commits", :use_internal=>true, :internal_replyto=>dev_list.post_address )
+    commits_list.project = self
+    commits_list.save
   end
     
   def allow_terms_and_conditions_validation?

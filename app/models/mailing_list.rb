@@ -93,7 +93,7 @@ respond_to_post_requests = 0
 max_message_size = 1024
 msg_footer = ''
 advertised = 0
-subscribe_policy = 1
+subscribe_policy = #{project.is_private ? '3' : '1'}
       """
     if internal_replyto.blank?
       rc += """
@@ -102,8 +102,8 @@ reply_to_address = ''
         """
     else
       rc += """
-reply_goes_to_list = 1
-reply_to_address = ''
+reply_goes_to_list = 3
+reply_to_address = '#{internal_replyto}'
         """
     end
     return rc
