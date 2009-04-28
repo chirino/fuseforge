@@ -80,25 +80,25 @@ class MailingList < ActiveRecord::Base
     
   def list_configuration
     rc = """
-      real_name = '#{full_name}'
-      description = '#{project.name} #{name} mailing list'
-      host_name = '#{MAILING_LIST_DOMAIN}'
-      subject_prefix = ''
-      respond_to_post_requests = 0
-      max_message_size = 1024
-      msg_footer = ''
-      advertised = 0
-      subscribe_policy = 1
+real_name = '#{full_name}'
+description = '#{project.name} #{name} mailing list'
+host_name = '#{MAILING_LIST_DOMAIN}'
+subject_prefix = ''
+respond_to_post_requests = 0
+max_message_size = 1024
+msg_footer = ''
+advertised = 0
+subscribe_policy = 1
       """
     if internal_replyto.blank?
       rc += """
-        reply_goes_to_list = 1
-        reply_to_address = ''
+reply_goes_to_list = 1
+reply_to_address = ''
         """
     else
       rc += """
-        reply_goes_to_list = 1
-        reply_to_address = ''
+reply_goes_to_list = 1
+reply_to_address = ''
         """
     end
     return rc
