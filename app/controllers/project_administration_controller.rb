@@ -12,7 +12,7 @@ class ProjectAdministrationController < ApplicationController
   end
 
   def redeploy_internal_components
-	  @project.init_components
+	  @project.deploy_internal_components
     flash[:notice] = 'Project components redeployed.'
     render(:action => 'index')
   end

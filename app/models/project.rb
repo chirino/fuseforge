@@ -159,6 +159,7 @@ class Project < ActiveRecord::Base
     add_default_groups
     self.status = ProjectStatus.active
     save
+    deploy_internal_components
     Notifier.deliver_project_approval_notification(self)
   end  
   
@@ -266,7 +267,7 @@ class Project < ActiveRecord::Base
     self.shortname.downcase
   end
   
-  def init_components
+  def deploy_internal_components
     repository.create_internal 
     web_dav_location.create_internal
     mailing_lists.each do  |ml|
