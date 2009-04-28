@@ -18,4 +18,10 @@ Project.all.each do |project|
     puts "Installing DAV: #{project.name}"
     project.web_dav_location.create_internal false
   end
+  project.mailing_lists.each do  |ml|
+    if ml.use_internal?
+      puts "Installing Mailing List: #{ml.post_address}"
+      ml.create_internal 
+    end
+  end
 end

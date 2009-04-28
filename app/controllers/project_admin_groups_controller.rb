@@ -38,6 +38,7 @@ class ProjectAdminGroupsController < BaseProjectsController
 
     respond_to do |format|
       if @project_admin_group.save
+        @project.update_permissions
 #        JiraInterface.new.add_groups_to_project(@project.shortname, params[:project_admin_group][:name], "ADMIN")
 
         Delayed::Job.enqueue(AddGroupToJiraProjectJob.new(@project.shortname, params[:project_admin_group][:name], "ADMIN")) \
@@ -55,7 +56,7 @@ class ProjectAdminGroupsController < BaseProjectsController
 
   def destroy
     @project_admin_group.destroy
-
+    @project.update_permissions
     respond_to do |format|
       format.html { redirect_to(project_project_admin_groups_path(:project_id => @project.id)) }
       format.xml  { head :ok }

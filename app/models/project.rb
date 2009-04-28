@@ -122,21 +122,25 @@ class Project < ActiveRecord::Base
     bool_value = value == "1" ? true : false
     
     if (bool_value != read_attribute(:is_private)) and not new_record?
-      if bool_value
-        wiki.make_private
-        issue_tracker.make_private
-        repository.make_private
-        forum.make_private and forum.internal_supported?
-      else
-        wiki.make_public
-        issue_tracker.make_public
-        repository.make_public
-        forum.make_public and forum.internal_supported?
-      end
+      write_attribute(:is_private, value)
+      update_permissions
     end  
-    
-    write_attribute(:is_private, value)
   end  
+  
+  def update_permissions
+    repository.update_permissions
+    web_dav_location.update_permissions
+    
+    if is_private?
+      wiki.make_private
+      issue_tracker.make_private
+      forum.make_private and forum.internal_supported?
+    else
+      wiki.make_public
+      issue_tracker.make_public
+      forum.make_public and forum.internal_supported?
+    end
+  end
   
   def is_active?
     status == ProjectStatus.active
@@ -265,6 +269,9 @@ class Project < ActiveRecord::Base
   def init_components
     repository.create_internal 
     web_dav_location.create_internal
+    mailing_lists.each do  |ml|
+      ml.create_internal
+    end
     forum.create_internal and forum.internal_supported?
     issue_tracker.create_internal
     wiki.create_internal

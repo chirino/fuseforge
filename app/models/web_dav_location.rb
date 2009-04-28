@@ -1,6 +1,6 @@
+require 'command_executor'
+
 class WebDavLocation < ActiveRecord::Base
-  include ApacheConfigMixins
-  
   belongs_to :project
   
   DAV_ROOT = '/var/forge/dav'
@@ -22,8 +22,7 @@ class WebDavLocation < ActiveRecord::Base
   end
   
   def before_destroy
-    return true unless exists_internally?
-    
+    # return true unless exists_internally?
     # Disable the apache site file, reload the apache config, delete the apache site file, and delete the webdav directory.
     # conn = open_conn
     # disable_apache_site_file(apache_site_file_name, conn)     
@@ -41,10 +40,6 @@ class WebDavLocation < ActiveRecord::Base
   def is_active?
     use_internal? or not external_url.blank?
   end
-  
-  def exists_internally?
-    path_exists?("#{repo_filepath}")
-  end  
   
   def internal_url
     "#{FORGE_URL}/dav/#{key}"
@@ -65,31 +60,45 @@ class WebDavLocation < ActiveRecord::Base
   def create_internal(reload=true)
     return true if not use_internal?
     
-    conn = open_conn
-
-    if !remote_dir_exists?(conn, repo_filepath) 
-      remote_system(conn, "mkdir -p #{repo_filepath}", APACHE_USER)
-      remote_system(conn, "mkdir -p #{repo_filepath}/site", APACHE_USER)
-      remote_system(conn, "mkdir -p #{repo_filepath}/download", APACHE_USER)
-      remote_write(conn, external_site_index_file, "#{repo_filepath}/index.html", APACHE_USER) 
-    end
-
-    remote_write(conn, apache_dav_file, "#{DAV_ROOT}/httpd.conf/default-virtualhost/#{key}")==0 or raise 'Error creating apache conf file!'
-    remote_write(conn, apache_site_file, "#{DAV_ROOT}/httpd.conf/sites/#{key}")==0 or raise 'Error creating apache conf file!'  
-      
-    if reload
-      remote_system(conn, '/etc/init.d/apache2 reload', "root")==0 or raise 'Error reloading apache config!'
-    end
+    apache_user = SVN_DAV_HOST[:apache_user]
     
+    # if SVN_DAV_HOST[:ssh] is nil, then commands are run locally 
+    CommandExecutor.open(SVN_DAV_HOST[:ssh]) do |x|
+
+      if !x.dir_exists?(repo_filepath) 
+        x.system("mkdir -p #{repo_filepath}", apache_user)
+        x.system("mkdir -p #{repo_filepath}/site", apache_user)
+        x.system("mkdir -p #{repo_filepath}/download", apache_user)
+        x.write(external_site_index_file, "#{repo_filepath}/index.html", apache_user) 
+      end
+
+      x.write(apache_dav_file, "#{DAV_ROOT}/httpd.conf/default-virtualhost/#{key}")==0 or raise 'Error creating apache conf file!'
+      x.write(apache_site_file, "#{DAV_ROOT}/httpd.conf/sites/#{key}")==0 or raise 'Error creating apache conf file!'  
+      
+      if reload
+        x.system('/etc/init.d/apache2 reload', "root")==0 or raise 'Error reloading apache config!'
+      end
+    
+    end
+    true
+
+    
+  rescue => error
+    logger.error """Error creating the web dav directory: #{error}\n#{error.backtrace.join("\n")}"""
+  end 
+  
+  def update_permissions
+    
+    CommandExecutor.open(SVN_DAV_HOST[:ssh]) do |x|
+      x.write(apache_dav_file, "#{DAV_ROOT}/httpd.conf/default-virtualhost/#{key}")==0 or raise 'Error creating apache conf file!'
+      x.write(apache_site_file, "#{DAV_ROOT}/httpd.conf/sites/#{key}")==0 or raise 'Error creating apache conf file!'  
+      x.system('/etc/init.d/apache2 reload', "root")==0 or raise 'Error reloading apache config!'
+    end
     true
     
   rescue => error
-    puts "Error creating the web dav directory: #{error}"
-    print error.backtrace.join("\n")
-    logger.error "Error creating the web dav directory: #{error}"    
-  ensure
-    close_conn(conn)
-  end  
+    logger.error """Error updating web dav permissions: #{error}\n#{error.backtrace.join("\n")}"""    
+  end
   
   private
   

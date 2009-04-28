@@ -1,6 +1,6 @@
+require 'command_executor'
+
 class Repository < ActiveRecord::Base
-  include ApacheConfigMixins
-    
   belongs_to :project
   
   SVN_ROOT = '/var/forge/svn'
@@ -27,7 +27,7 @@ class Repository < ActiveRecord::Base
   end
   
   def before_destroy
-    return true unless exists_internally?
+    # return true unless exists_internally?
 
     # Disable the apache site file, reload the apache config, delete the apache site file, delete the repo permissions file,
     # and delete the repository.
@@ -44,10 +44,6 @@ class Repository < ActiveRecord::Base
   def is_active?
     use_internal? or not external_url.blank?
   end
-  
-  def exists_internally?
-    path_exists?(repo_filepath)
-  end  
   
   def internal_url
     "#{FORGE_URL}/svn/#{key}"
@@ -78,45 +74,38 @@ class Repository < ActiveRecord::Base
   def create_internal(reload=true)
     return true if not use_internal?
 
-    # Create the repo, create the permissions file, create the site file, enable the site file, and reload the apache config.
-    conn = open_conn
+    apache_user = SVN_DAV_HOST[:apache_user]
     
-    # Only create the repo if it does not exist
-    if !remote_dir_exists?(conn, repo_filepath, APACHE_USER)
-      remote_system(conn, "svnadmin create #{repo_filepath}", APACHE_USER)==0 or raise 'Error creating repository!'
-    end
+    # if SVN_DAV_HOST[:ssh] is nil, then commands are run locally 
+    CommandExecutor.open(SVN_DAV_HOST[:ssh]) do |x|
     
-    # Generate the config files for the repo.
-    remote_write(conn, authz_file_content, authz_filepath) 
-    remote_write(conn, httpd_conf_content, httpd_conf_filepath)==0 or raise 'Error creating apache site file!'
+      # Only create the repo if it does not exist
+      if !x.dir_exists?(repo_filepath, apache_user)
+        x.system("svnadmin create #{repo_filepath}", apache_user)==0 or raise 'Error creating repository!'
+      end
+    
+      # Generate the config files for the repo.
+      x.write(authz_file_content, authz_filepath) 
+      x.write(httpd_conf_content, httpd_conf_filepath)==0 or raise 'Error creating apache site file!'
 
-    if reload
-      reload_apache_config(conn)
+      if reload
+        x.system('/etc/init.d/apache2 reload', "root")==0 or raise 'Error reloading apache config!'
+      end
+      
     end
     true
     
   rescue => error
-    puts "Error creating the svn repo: #{error}"
-    print error.backtrace.join("\n")
-    logger.error "Error creating the svn repo: #{error}"    
-  ensure
-    close_conn(conn)
+    logger.error """Error creating the svn repo: #{error}\n#{error.backtrace.join("\n")}"""
   end    
   
-  def make_private
-    reset_perm_file(true)
-  end
-  
-  def make_public
-    reset_perm_file(false)
-  end    
-  
-  def reset_perm_file(make_private)
-    conn = open_conn
-    create_file(make_private ? apache_repo_private_perm_file : apache_repo_public_perm_file, authz_filepath)
-    reload_apache_config(conn)
-    close_conn(conn)
+  def update_permissions
+    CommandExecutor.open(SVN_DAV_HOST[:ssh]) do |x|
+      x.write(authz_file_content, authz_filepath) 
+    end
     true
+  rescue => error
+    logger.error """Error update the svn permissions: #{error}\n#{error.backtrace.join("\n")}"""
   end
   
   private
