@@ -28,7 +28,7 @@ class ApplicationController < ActionController::Base
   end
   
   def set_observers_current_user
-    UserActionObserver.current_user = ProjectObserver.current_user = DownloadRequestObserver.current_user = @current_user
+    UserActionObserver.current_user = ProjectObserver.current_user = @current_user
   end
       
   def logged_in?

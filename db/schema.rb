@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090427184202) do
+ActiveRecord::Schema.define(:version => 20090428004558) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -22,24 +22,6 @@ ActiveRecord::Schema.define(:version => 20090427184202) do
     t.string   "locked_by"
     t.datetime "created_at"
     t.datetime "updated_at"
-  end
-
-  create_table "download_requests", :force => true do |t|
-    t.string   "url"
-    t.string   "description"
-    t.integer  "created_by_id"
-    t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "downloads", :force => true do |t|
-    t.string   "url"
-    t.string   "description"
-    t.integer  "project_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "track",       :default => false
   end
 
   create_table "featured_projects", :force => true do |t|

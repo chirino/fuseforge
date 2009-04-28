@@ -5,8 +5,7 @@ class Project < ActiveRecord::Base
   
   #Caching stuff
   FOUR_HOURS = 14400
-  @@most_active = @@most_active_time = @@most_downloaded = @@most_downloaded_time = nil
-  
+  @@most_active = @@most_active_time =  nil
   
   acts_as_taggable_on :tags
   
@@ -21,8 +20,6 @@ class Project < ActiveRecord::Base
   
   has_many :news_items, :class_name => "ProjectNewsItem", :dependent => :destroy
   has_many :prospective_members, :class_name => "ProspectiveProjectMember", :dependent => :destroy
-  has_many :downloads, :dependent => :destroy
-  has_many :download_requests, :dependent => :destroy
   has_many :mailing_lists, :dependent => :destroy
   
   has_many :groups, :class_name => "ProjectGroup", :dependent => :destroy do
@@ -261,16 +258,7 @@ class Project < ActiveRecord::Base
     end
     @@most_active   
   end
-    
-  def self.most_downloaded
-    if @@most_downloaded.blank? or @@most_downloaded_time.blank? or (@@most_downloaded_time < Time.now.ago(FOUR_HOURS))
-      @@most_downloaded = self.public.approved.sort { |a, b| 
-       b.downloads.count <=> a.downloads.count }[0...PROJECTS_MOST_DOWNLOADED_LIMIT]
-      @@most_active_time = Time.now
-    end
-    @@most_downloaded 
-  end
-  
+      
   def key
     self.shortname.downcase
   end

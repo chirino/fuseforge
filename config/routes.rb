@@ -15,8 +15,6 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :project_mailing_lists, :name_prefix => "", :as => 'mailing-lists'
     project.resources :project_tags, :as => 'tags', :only => [:index, :create, :destroy]
     project.resource  :issue_tracker
-    project.resources :downloads
-    project.resources :download_requests, :only => [:create]
     project.resources :images, :only => [:show]
   end  
   
