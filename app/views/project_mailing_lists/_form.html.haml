@@ -1,0 +1,42 @@
+= form.error_messages
+%table.fieldset
+  - if ['new', 'create'].include?(controller.action_name)
+    %tr
+      %th.label
+        = form.label :name
+      %td.field
+        = form.text_field :name, :class => 'textbox'
+      %td.help Required.
+    
+  %tr
+    %th.label
+      = form.label :use_internal
+    %td.field
+      = form.check_box :use_internal, :onchange => "$('tr_internal_replyto', 'tr_external_post_address', 'tr_external_subscribe_address', 'tr_external_unsubscribe_address').invoke('toggle');"
+    %td.help
+
+  %tr#tr_internal_replyto{:style=>"#{display_if_internal}"}
+    %th.label
+      = form.label :internal_replyto
+    %td.field
+      = form.text_field :internal_replyto, :class => 'textbox'
+    %td.help
+
+  %tr#tr_external_post_address{:style=>"#{display_unless_internal}"}
+    %th.label
+      = form.label :external_post_address
+    %td.field
+      = form.text_field :external_post_address, :class => 'textbox'
+    %td.help Required.
+  %tr#tr_external_subscribe_address{:style=>"#{display_unless_internal}"}
+    %th.label
+      = form.label :external_subscribe_address
+    %td.field
+      = form.text_field :external_subscribe_address, :class => 'textbox'
+    %td.help 
+  %tr#tr_external_unsubscribe_address{:style=>"#{display_unless_internal}"}
+    %th.label
+      = form.label :external_unsubscribe_address
+    %td.field
+      = form.text_field :external_unsubscribe_address, :class => 'textbox'
+    %td.help 

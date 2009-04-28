@@ -23,6 +23,7 @@ class Project < ActiveRecord::Base
   has_many :prospective_members, :class_name => "ProspectiveProjectMember", :dependent => :destroy
   has_many :downloads, :dependent => :destroy
   has_many :download_requests, :dependent => :destroy
+  has_many :mailing_lists, :dependent => :destroy
   
   has_many :groups, :class_name => "ProjectGroup", :dependent => :destroy do
     def users
@@ -106,7 +107,8 @@ class Project < ActiveRecord::Base
   end
     
   def after_create
-    init_groups
+    add_default_groups
+    add_default_mailing_lists
     Notifier.deliver_project_creation_notification(self)
   end
   
@@ -154,7 +156,7 @@ class Project < ActiveRecord::Base
   end  
   
   def approve
-    init_components
+    add_default_groups
     self.status = ProjectStatus.active
     save
     Notifier.deliver_project_approval_notification(self)
@@ -280,15 +282,26 @@ class Project < ActiveRecord::Base
     issue_tracker.create_internal
     wiki.create_internal
   end  
-    
+  
+  
   private
   
-  def init_groups
+  def add_default_groups
     admin_groups << ProjectAdminGroup.new(:name => default_admin_group_name)
     add_administrator(created_by)
     member_groups << ProjectMemberGroup.new(:name => default_member_group_name)
     add_member(created_by)
     member_groups << ProjectMemberGroup.new(:name => CrowdGroup.company_employee_group.name)
+  end
+  
+  def add_default_mailing_lists
+    list = MailingList.new( :name => "dev", :use_internal=>true )
+    list.project = self
+    list.save
+    
+    list = MailingList.new( :name => "commits", :use_internal=>true, :internal_replyto=>"dev" )
+    list.project = self
+    list.save
   end
     
   def allow_terms_and_conditions_validation?

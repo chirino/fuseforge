@@ -2,41 +2,36 @@ ActionController::Routing::Routes.draw do |map|
   
   # See how all your routes lay out with "rake routes"
 
-  map.resources :project_categories
-
-  map.resources :project_maturities
-  
-  map.resources :project_licenses
-  
-  map.resources :project_statuses
-
   map.login '/login', :controller => 'sessions', :action => 'new'
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.register '/register', :controller => 'registrations', :action => 'new'
   
-  map.resources :news_items
-
-  map.resources :featured_projects
-  
   map.resources :projects do |project|
+    project.resources :project_administrators, :as => 'admin-users', :except => [:edit, :update]
+    project.resources :project_members, :as => 'member-users', :except => [:edit, :update]
+    project.resources :project_admin_groups, :as => 'admin-groups', :except => [:edit, :update]
+    project.resources :project_member_groups, :as => 'member-groups', :except => [:edit, :update]
+    project.resources :project_news_items, :as => 'news-items'
+    project.resources :project_mailing_lists, :name_prefix => "", :as => 'mailing-lists'
+    project.resources :project_tags, :as => 'tags', :only => [:index, :create, :destroy]
+    project.resource  :issue_tracker
     project.resources :downloads
     project.resources :download_requests, :only => [:create]
     project.resources :images, :only => [:show]
-    project.resources :project_news_items
-    project.resources :project_administrators, :except => [:edit, :update]
-    project.resources :project_members, :except => [:edit, :update]
-    project.resources :project_admin_groups, :except => [:edit, :update]
-    project.resources :project_member_groups, :except => [:edit, :update]
-    project.resources :project_tags, :only => [:index, :create, :destroy]
-    project.resource  :issue_tracker
   end  
   
-  map.resources :unapproved_projects, :only => [:index, :show, :update, :destroy]
-  
-  map.project_administration '/project/:id/project_administration', :controller => 'project_administration', :action => 'index'
-  map.admin 'admin', :controller => 'admin', :action => 'index'
-
   map.connect '/project-sites/:shortname', :controller => 'projects', :action => 'show'
+  map.project_administration '/project/:id/project_administration', :controller => 'project_administration', :action => 'index'
+  
+  map.admin 'admin', :controller => 'admin', :action => 'index'
+  map.resources :news_items, :path_prefix => "/admin", :as => 'news-items'
+  map.resources :featured_projects, :path_prefix => "/admin", :as => 'featured'
+  map.resources :project_categories, :path_prefix => "/admin", :as => 'categories'
+  map.resources :project_maturities, :path_prefix => "/admin", :as => 'maturities'
+  map.resources :project_licenses, :path_prefix => "/admin", :as => 'licenses'
+  map.resources :project_statuses, :path_prefix => "/admin", :as => 'statuses'
+  map.resources :unapproved_projects, :path_prefix => "/admin", :only => [:index, :show, :update, :destroy]
+
   
   # The priority is based upon order of creation: first created -> highest priority.
 

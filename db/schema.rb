@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090427152626) do
+ActiveRecord::Schema.define(:version => 20090427184202) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -67,6 +67,18 @@ ActiveRecord::Schema.define(:version => 20090427152626) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "mailing_lists", :force => true do |t|
+    t.integer "project_id"
+    t.string  "name"
+    t.boolean "use_internal"
+    t.string  "external_post_address"
+    t.string  "external_subscribe_address"
+    t.string  "external_unsubscribe_address"
+    t.string  "internal_replyto"
+  end
+
+  add_index "mailing_lists", ["project_id", "name"], :name => "index_mailing_lists_on_project_id_and_name", :unique => true
 
   create_table "news_items", :force => true do |t|
     t.string   "title"

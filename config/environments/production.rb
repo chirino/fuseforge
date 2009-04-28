@@ -28,6 +28,7 @@ JIRA_URL = "http://fusesource.com/issues"
 CONFLUENCE_URL = 'http://fusesource.com/wiki'
 JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
 CONFLUENCE_CONFIG = { :url => CONFLUENCE_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
+MAILING_LIST_DOMAIN = "fusesource.org"
 
 CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
 

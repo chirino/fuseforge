@@ -26,6 +26,7 @@
     %ul
       %li= link_to 'Project Details', edit_project_path(@project)
       %li= link_to 'Tags', :action=>"edit_tags", :id => @project
+      %li= link_to "Mailing Lists", project_mailing_lists_path(@project)
       %li= link_to "Admins", project_project_administrators_path(@project)
       %li= link_to "Members", project_project_members_path(@project)
       - allow :exec => proc { @current_user.is_company_employee? } do

@@ -1,0 +1,35 @@
+#menu
+  .wrapper
+    .left
+      = link_to 'Forge', root_path
+      >
+      = link_to 'Projects', projects_path
+      >
+      = link_to @project.name, @project
+      >
+      = link_to 'Admin', project_administration_path(@project)
+      >
+      = link_to 'Mailing Lists', project_mailing_lists_path(:project_id => @project)
+      >
+      = link_to 'Edit', edit_project_mailing_list_path(:project_id => @project, :id => @project_mailing_list)
+      
+    .right
+      - allow :user => :is_site_admin? do
+        = link_to 'Admin-Forge', admin_path
+        |
+      = link_to 'Search', projects_path(:show_search_form => true)
+
+#overview
+  .wrapper
+    .message
+      %h2&= "List #{@project_mailing_list.name} for #{@project.name}"
+      
+#section 
+  .wrapper
+    - form_for( [@project, @project_mailing_list] ) do |f|
+      = render :partial => 'form', :object => f
+      = f.submit "Update"
+    .bottom_links
+      = link_to 'Show', project_mailing_list_path(:project_id => @project, :id => @project_mailing_list)
+      |
+      = link_to 'Back', project_mailing_lists_path(:project_id => @project)
