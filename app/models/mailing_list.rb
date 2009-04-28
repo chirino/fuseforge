@@ -41,7 +41,7 @@ class MailingList < ActiveRecord::Base
     CommandExecutor.open(MAILMAN_CONFIG[:ssh]) { |x|
     
       # Only create the list if it does not exist
-      if !x.dir_exists?("/var/lib/mailman/lists/#{full_name}/config.pck")
+      if !x.file_exists?("/var/lib/mailman/lists/#{full_name}/config.pck")
         x.system("""newlist '#{full_name}' '#{admin_email}' '#{generate_passwd}' <<EOF\n\nEOF""", "list")==0  or raise "newlist command failed";
       end
       
