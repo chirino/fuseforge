@@ -1,3 +1,6 @@
+require 'command_executor'
+require 'rfc822'
+
 #
 # MailManager handles the Project Mailing Lists
 #
@@ -58,7 +61,16 @@ class MailingList < ActiveRecord::Base
   end
   
   def admin_email
-    "#{project.key}-#{name}"
+    # Finds an admin email address that can be used as the list admin
+    if project.created_by.email && project.created_by.email =~ RFC822::EmailAddress
+      return project.created_by.email
+    end
+    project.admin_groups.users.each do |x|
+      if x.email && x.email =~ RFC822::EmailAddress
+        return x.email
+      end
+    end
+    raise "No vaild admin email addresses available to be the owner of the mailing list"
   end
     
   def generate_passwd(length=10)
