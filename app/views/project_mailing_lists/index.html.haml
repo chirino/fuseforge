@@ -7,8 +7,6 @@
       >
       = link_to @project.name, @project
       >
-      = link_to 'Admin', project_administration_path(@project)
-      >
       = link_to 'Mailing Lists', project_mailing_lists_path(:project_id => @project)
       
     .right
@@ -20,29 +18,38 @@
 #overview
   .wrapper
     .message
-      %h2&= "Mailing Lists for #{h @project.name}"
+      %h2== #{h @project.name} Mailing Lists
       
-#section 
+#mailing-lists 
   .wrapper
-    %table
-      %tr
-        %th List Name
-        %th Address
-        %th Internal
-      - @project_mailing_lists.each do |project_mailing_list|
-        %tr
-          %td&= h project_mailing_list.name
-          %td&= h project_mailing_list.post_address
-          %td&= h project_mailing_list.use_internal?
-          %td
-            = link_to 'Show', project_mailing_list_path(:project_id => @project, :id => project_mailing_list)
-          - allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do
-            %td
-              = link_to 'Edit', edit_project_mailing_list_path(:project_id => @project, :id => project_mailing_list)
-          - allow :exec => proc { @current_user.is_site_admin? } do
-            %td
-              = link_to 'Remove', project_mailing_list_path(:project_id => @project, :id => project_mailing_list),  :confirm => 'Are you sure?', :method => :delete
-                  
+    - @project_mailing_lists.each do |ml|
+      %h3== #{ml.name} list
+      .admin
+        - allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do
+          = link_to 'Edit', edit_project_mailing_list_path(:project_id => @project, :id => ml)
+        - allow :exec => proc { @current_user.is_site_admin? } do
+          = link_to 'Remove', project_mailing_list_path(:project_id => @project, :id => ml),  :confirm => 'Are you sure?', :method => :delete
+      .details
+        - if ml.use_internal?
+          %p 
+            Is a Forge managed mailing list.
+            - unless ml.internal_replyto.blank?
+              == The reply-to is set to #{ml.internal_replyto}
+        - else
+          %p Is an external mailing list.
+        
+        %table
+          %tr
+            %th To post an email: 
+            %td= mail_to ml.post_address
+          %tr
+            %th To subscribe: 
+            %td= mail_to ml.subscribe_address
+          %tr
+            %th To unsubscribe: 
+            %td= mail_to ml.unsubscribe_address
+
+
     .bottom_links
       - allow :exec => proc { @current_user.is_site_admin? } do
         = link_to 'New Mailing List', new_project_mailing_list_path(:project_id => @project)

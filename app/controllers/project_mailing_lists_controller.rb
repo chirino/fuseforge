@@ -1,5 +1,6 @@
 class ProjectMailingListsController < ApplicationController
-  
+  skip_before_filter :login_required, :only => [:index]
+
   layout "new_look"
   before_filter :get_project
   before_filter :get_project_mailing_list, :only => [:show, :edit, :update, :destroy]

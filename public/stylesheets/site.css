@@ -351,6 +351,34 @@ table.project-list td.description {
 }
 
 /* ==================================================================== *
+ * Mailing List Styles
+ * ==================================================================== */
+#mailing-lists { width: 100%; float: left; }
+#mailing-lists h3 {
+  display:inline;
+}
+#mailing-lists div.admin {
+  display:inline;
+}
+#mailing-lists div.admin a{
+  font-family: HelveticaNeue,"Helvetica Neue",Helvetica,Arial,Verdana,sans-serif; 
+  font-size: 10pt; font-weight: bold; 
+  color: #F16501;
+  padding: 10px 0 10px 0;
+}
+#mailing-lists div.details {
+    padding-left: 20px;   
+}
+#mailing-lists table {
+    padding: 10px;
+}
+#mailing-lists th {
+    text-align: right;
+    background: #E5EDF5;
+    padding: 0 10px 0 10px;
+}
+
+/* ==================================================================== *
  * Application Misc
  * ==================================================================== */
 .terms_and_conditions {
