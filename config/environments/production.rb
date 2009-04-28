@@ -32,18 +32,15 @@ MAILING_LIST_DOMAIN = "fusesource.org"
 
 CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
 
-SVN_DAV_HOST = {
-  :apache_user=> "www-data",
-  :apache_group=> "www-data", 
-  # :ssh=> {
-  #   :host=>"localhost", 
-  #   :user=>ENV["USER"], 
-  #   :options => {}
-  # }
+DAV_CONFIG = SVN_CONFIG = {
+  :user=> "www-data",
+}
+MAILMAN_CONFIG = {
+  :user=>'list'
 }
 FORUM_CONFIG = {
-  :path => '/data/phpBB3',
   :user => "www-data", 
+  :path => '/data/phpBB3',
 }
 
 config.action_mailer.default_url_options = { :host => "fusesource.com" }  

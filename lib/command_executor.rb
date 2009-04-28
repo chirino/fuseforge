@@ -38,12 +38,12 @@ class CommandExecutor
     if @ssh
       benchmark("SSH Command", command) do
         @output = @ssh.exec(command)
-        return @ssh.exec!("echo $?").to_i
+        @ssh.exec!("echo $?").to_i
       end
     else
       benchmark("System Command", command) do
         @output = `#{command}`
-        return $?
+        $?
       end
     end
   end 
@@ -68,7 +68,7 @@ class CommandExecutor
   
   def format_benchmark_log_message(seconds, title, result, details)
     #if( @colorize_logging ) 
-      titile_color, details_color, result_color, end_color = "\e[4;34;1m", "\e[0;1m", "\e[4;32;1m", "\e[0m"
+      titile_color, details_color, result_color, end_color = "\e[4;32;1m", "\e[0;1m", "\e[4;32;1m", "\e[0m"
     #else
     #  titile_color, details_color, end_color = "", "", ""
     #end    

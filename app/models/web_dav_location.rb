@@ -60,10 +60,10 @@ class WebDavLocation < ActiveRecord::Base
   def create_internal(reload=true)
     return true if not use_internal?
     
-    apache_user = SVN_DAV_HOST[:apache_user]
+    apache_user = DAV_CONFIG[:user]
     
-    # if SVN_DAV_HOST[:ssh] is nil, then commands are run locally 
-    CommandExecutor.open(SVN_DAV_HOST[:ssh]) do |x|
+    # if DAV_CONFIG[:ssh] is nil, then commands are run locally 
+    CommandExecutor.open(DAV_CONFIG[:ssh]) do |x|
 
       if !x.dir_exists?(repo_filepath) 
         x.system("mkdir -p #{repo_filepath}", apache_user)
@@ -89,7 +89,7 @@ class WebDavLocation < ActiveRecord::Base
   
   def update_permissions
     
-    CommandExecutor.open(SVN_DAV_HOST[:ssh]) do |x|
+    CommandExecutor.open(DAV_CONFIG[:ssh]) do |x|
       x.write(apache_dav_file, "#{DAV_ROOT}/httpd.conf/default-virtualhost/#{key}")==0 or raise 'Error creating apache conf file!'
       x.write(apache_site_file, "#{DAV_ROOT}/httpd.conf/sites/#{key}")==0 or raise 'Error creating apache conf file!'  
       x.system('/etc/init.d/apache2 reload', "root")==0 or raise 'Error reloading apache config!'

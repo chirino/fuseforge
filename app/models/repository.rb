@@ -74,10 +74,10 @@ class Repository < ActiveRecord::Base
   def create_internal(reload=true)
     return true if not use_internal?
 
-    apache_user = SVN_DAV_HOST[:apache_user]
+    apache_user = SVN_CONFIG[:user]
     
-    # if SVN_DAV_HOST[:ssh] is nil, then commands are run locally 
-    CommandExecutor.open(SVN_DAV_HOST[:ssh]) do |x|
+    # if SVN_CONFIG[:ssh] is nil, then commands are run locally 
+    CommandExecutor.open(SVN_CONFIG[:ssh]) do |x|
     
       # Only create the repo if it does not exist
       if !x.dir_exists?(repo_filepath, apache_user)
@@ -100,7 +100,7 @@ class Repository < ActiveRecord::Base
   end    
   
   def update_permissions
-    CommandExecutor.open(SVN_DAV_HOST[:ssh]) do |x|
+    CommandExecutor.open(SVN_CONFIG[:ssh]) do |x|
       x.write(authz_file_content, authz_filepath) 
     end
     true

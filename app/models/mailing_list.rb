@@ -35,11 +35,11 @@ class MailingList < ActiveRecord::Base
     return true if not use_internal?
 
     # if SVN_DAV_HOST[:ssh] is nil, then commands are run locally 
-    CommandExecutor.open(SVN_DAV_HOST[:ssh]) { |x|
+    CommandExecutor.open(MAILMAN_CONFIG[:ssh]) { |x|
     
       # Only create the list if it does not exist
       if !x.dir_exists?("/var/lib/mailman/lists/#{full_name}/config.pck")
-        x.system("""newlist '#{full_name}' '#{admin_email}' '#{generate_passwd}' 1<<EOF\n\nEOF""", "list")==0  or raise "newlist command failed";
+        x.system("""newlist '#{full_name}' '#{admin_email}' '#{generate_passwd}' <<EOF\n\nEOF""", "list")==0  or raise "newlist command failed";
       end
       
       x.write(list_configuration, "/tmp/#{full_name}.cfg")
