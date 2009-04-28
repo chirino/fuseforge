@@ -22,17 +22,18 @@ class MailingList < ActiveRecord::Base
     use_internal? ? internal_unsubscribe_address : external_unsubscribe_address
   end  
   
+  
   def internal_post_address
-    "#{full_name}@#{MAILING_LIST_DOMAIN}"
+    "#{full_name}@#{domain}"
   end  
 
   def internal_subscribe_address
-    "#{full_name}-subscribe@#{MAILING_LIST_DOMAIN}"
+    "#{full_name}-subscribe@#{domain}"
   end  
   
   def internal_unsubscribe_address
-    "#{full_name}-unsubscribe@#{MAILING_LIST_DOMAIN}"
-  end  
+    "#{full_name}-unsubscribe@#{domain}"
+  end 
   
   def create_internal
     return true if not use_internal?
@@ -54,7 +55,11 @@ class MailingList < ActiveRecord::Base
     logger.error """Error creating the mailing list: #{error}\n#{error.backtrace.join("\n")}"""
   end
   
-  private 
+  private
+  
+  def domain
+    MAILMAN_CONFIG[:domain]
+  end
   
   def full_name
     "#{project.key}-#{name}"
@@ -82,7 +87,7 @@ class MailingList < ActiveRecord::Base
     rc = """
 real_name = '#{full_name}'
 description = '#{project.name} #{name} mailing list'
-host_name = '#{MAILING_LIST_DOMAIN}'
+host_name = '#{domain}'
 subject_prefix = ''
 respond_to_post_requests = 0
 max_message_size = 1024

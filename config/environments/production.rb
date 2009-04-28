@@ -26,14 +26,13 @@ CROWD_SOAP_URL = "http://fusesource.com/crowd/services/SecurityServer"
 FUSESOURCE_URL = "http://fusesource.com" 
 JIRA_URL = "http://fusesource.com/issues"
 CONFLUENCE_URL = 'http://fusesource.com/wiki'
-JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
-CONFLUENCE_CONFIG = { :url => CONFLUENCE_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
-MAILING_LIST_DOMAIN = "fusesource.org"
-
 CROWD_COOKIE_DOMAIN_NAME = ".fusesource.com" 
 
+JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
+CONFLUENCE_CONFIG = { :url => CONFLUENCE_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
 DAV_CONFIG = SVN_CONFIG = {
   :user=> "www-data",
+  :domain=>"fusesource.org"
 }
 MAILMAN_CONFIG = {
   :user=>'list'
