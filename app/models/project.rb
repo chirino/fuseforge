@@ -1,7 +1,6 @@
 class Project < ActiveRecord::Base
   RECENT_PROJECTS_LIMIT = 5
   MOST_ACTIVE_PROJECTS_LIMIT = 4
-  PROJECTS_MOST_DOWNLOADED_LIMIT = 4
   
   #Caching stuff
   FOUR_HOURS = 14400
