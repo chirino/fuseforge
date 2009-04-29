@@ -10,18 +10,20 @@ require File.dirname(__FILE__) + '/../config/boot'
 require RAILS_ROOT + '/config/environment'
 
 Project.all.each do |project|
-  if project.repository.use_internal
-    puts "Installing SVN REPO: #{project.name}"
-    project.repository.create_internal false
-  end
-  if project.web_dav_location.use_internal
-    puts "Installing DAV: #{project.name}"
-    project.web_dav_location.create_internal false
-  end
-  project.mailing_lists.each do  |ml|
-    if ml.use_internal?
-      puts "Installing Mailing List: #{ml.post_address}"
-      ml.create_internal 
+  if project.status == ProjectStatus.active
+    if project.repository.use_internal
+      puts "Installing SVN REPO: #{project.name}"
+      project.repository.create_internal false
+    end
+    if project.web_dav_location.use_internal
+      puts "Installing DAV: #{project.name}"
+      project.web_dav_location.create_internal false
+    end
+    project.mailing_lists.each do  |ml|
+      if ml.use_internal?
+        puts "Installing Mailing List: #{ml.post_address}"
+        ml.create_internal 
+      end
     end
   end
 end

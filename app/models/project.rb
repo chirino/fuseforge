@@ -103,8 +103,6 @@ class Project < ActiveRecord::Base
   end
     
   def after_create
-    add_default_groups
-    add_default_mailing_lists
     Notifier.deliver_project_creation_notification(self)
   end
   
@@ -157,6 +155,7 @@ class Project < ActiveRecord::Base
   
   def approve
     add_default_groups
+    add_default_mailing_lists
     self.status = ProjectStatus.active
     save
     deploy_internal_components
@@ -167,7 +166,6 @@ class Project < ActiveRecord::Base
     groups.reject { |group| group.default? }.each { |group| group.destroy }
     default_administrators.each { |user| remove_administrator(user) }
     default_members.each { |user| remove_member(user) }
-    self.is_private = "1"
     self.status = ProjectStatus.inactive
     save
   end  
