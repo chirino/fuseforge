@@ -104,6 +104,7 @@ msg_footer = ''
 advertised = 0
 subscribe_policy = #{project.is_private ? '3' : '1'}
 web_page_url = '#{management_url}/'
+accept_these_nonmembers = ['#{post_address}']
       """
     if internal_replyto.blank?
       rc += """
