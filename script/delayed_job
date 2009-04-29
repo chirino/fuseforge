@@ -1,25 +1,43 @@
 #!/usr/bin/env ruby
 require 'rubygems'
 require 'daemons'
-dir = "/data/fuseforge/current"
- 
+require 'fileutils'
+
+RAILS_ROOT = File.expand_path('..', File.dirname(__FILE__))
+PID_DIR = RAILS_ROOT+'/tmp/pids'
+
 daemon_options = {
   :multiple => false,
   :dir_mode => :normal,
-  :dir => File.join(dir, 'tmp', 'pids'),
-  :backtrace => true
+  :dir => PID_DIR,
+  :backtrace => true,
+  :monitor => false
 }
+
+# Make sure the pid dir exists otherwise the Daemon errors out.
+FileUtils.mkdir_p PID_DIR unless File.exists?(PID_DIR)
  
-Daemons.run_proc('job_runner', daemon_options) do
+Daemons.run_proc('delayed_job', daemon_options) do
   if ARGV.include?('--')
     ARGV.slice! 0..ARGV.index('--')
   else
     ARGV.clear
   end
+
+  #
+  # Boot Rails
+  #
+  if ARGV[0]
+    RAILS_ENV = ARGV[0] 
+  else
+    RAILS_ENV = "development"
+  end
   
-  Dir.chdir dir
-  RAILS_ENV = 'production'
-  require File.join('config', 'environment')
+  require RAILS_ROOT + '/config/boot'
+  require RAILS_ROOT + '/config/environment'  
   
+  #
+  # Start the Delayed Job Worker
+  #
   Delayed::Worker.new.start
 end
