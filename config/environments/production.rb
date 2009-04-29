@@ -35,7 +35,8 @@ DAV_CONFIG = SVN_CONFIG = {
 }
 MAILMAN_CONFIG = {
   :user=>'list',
-  :domain=>"fusesource.org"
+  :domain=>"fusesource.org",
+  :management_url=>"http://fusesource.com/forge/mailman"
 }
 FORUM_CONFIG = {
   :user => "www-data", 

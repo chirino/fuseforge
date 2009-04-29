@@ -70,6 +70,10 @@ class MailingList < ActiveRecord::Base
     "#{project.key}-#{name}"
   end
   
+  def management_url
+    MAILMAN_CONFIG[:management_url]
+  end
+  
   def admin_email
     # Finds an admin email address that can be used as the list admin
     if project.created_by.email && project.created_by.email =~ RFC822::EmailAddress
@@ -99,6 +103,7 @@ max_message_size = 1024
 msg_footer = ''
 advertised = 0
 subscribe_policy = #{project.is_private ? '3' : '1'}
+web_page_url = '#{management_url}/'
       """
     if internal_replyto.blank?
       rc += """
