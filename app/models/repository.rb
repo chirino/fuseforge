@@ -83,6 +83,15 @@ class Repository < ActiveRecord::Base
       if !x.dir_exists?(repo_filepath, apache_user)
         x.system("svnadmin create #{repo_filepath}", apache_user)==0 or raise 'Error creating repository!'
       end
+      
+      #
+      # Setup a post-commit hook to email the mailing list if the project has
+      # a commits mailing list configured.
+      ml = project.mailing_lists.find_by_name("commits")
+      if ml
+        x.write(post_commit_hook_content(ml), "#{repo_filepath}/hooks/post-commit", apache_user) 
+        x.system("chmod a+x #{repo_filepath}/hooks/post-commit", apache_user)
+      end
     
       # Generate the config files for the repo.
       x.write(authz_file_content, authz_filepath) 
@@ -112,6 +121,14 @@ class Repository < ActiveRecord::Base
   
   def key
     self.project.shortname.downcase
+  end
+
+  def post_commit_hook_content(ml)
+    rc = <<EOS
+#!/bin/bash
+/usr/share/subversion/hook-scripts/commit-email.pl "$1" "$2" --from #{ml.post_address} -s "svn commit:" #{ml.post_address}
+EOS
+    rc
   end
 
   def authz_file_content
