@@ -113,7 +113,7 @@ reply_to_address = ''
         """
     else
       rc += """
-reply_goes_to_list = 3
+reply_goes_to_list = 2
 reply_to_address = '#{internal_replyto}'
         """
     end
