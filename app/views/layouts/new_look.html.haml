@@ -1,0 +1,86 @@
+!!! Strict
+%html{ :xmlns => "http://www.w3.org/1999/xhtml" }
+  %head
+    %meta{ :content => "text/html; charset=utf-8", "http-equiv" => "content-type" }
+    %title
+      FUSE Forge
+    %meta{ :name => "keywords", :content => "" }
+    %meta{ :name => "description", :content => "" }
+    = stylesheet_link_tag 'site'
+    = javascript_include_tag :defaults
+    = yield :script
+  %body
+    #content
+      #header
+        .wrapper
+          = link_to(image_tag('fuseforge-logo.png'), root_path, :alt => 'FUSE Forge Community')
+          %ul
+            - unless logged_in?
+              %li
+                %b
+                  = link_to 'Register!', :controller=>"registrations", :action => 'new', :clicked=>"yes"
+            - if logged_in?
+              %li#loggedIn
+                %span#greeting
+                  Welcome,
+                  = current_user.full_name
+                = link_to 'Log Out', :controller => 'sessions', :action => 'destroy', :clicked=>"yes"
+            - else
+              %li#loggedOut
+                = link_to 'Log in', :controller => 'sessions', :action => 'new', :clicked=>"yes"
+          %form#cse-search-box{ :action => "http://www.google.com/cse" }
+            %div
+              %input{ :name => "cx", :type => "hidden", :value => "000032147250332401298:ybvpeey9ecq" }
+              %input{ :name => "ie", :type => "hidden", :value => "UTF-8" }
+              %input{ :name => "q", :size => "31", :type => "text" }
+              %input{ :name => "sa", :type => "submit", :value => "Search" }
+          %script{ :type => "text/javascript", :src => "http://www.google.com/coop/cse/brand?form=cse-search-box&lang=en" }
+
+      #menu
+        .wrapper
+          .left
+            - if (bread_crumbs = yield :bread_crumbs)
+              = bread_crumbs
+            - else 
+              = link_to 'Forge', root_path
+          .right
+            = yield :menu
+            - if defined?(@project) && !@project.new_record?
+              - allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do
+                = link_to 'Manage Project', project_administration_path(@project)
+                |    
+            = link_to 'Create', new_project_path
+            |
+            = link_to 'Search', projects_path
+            - allow :user => :is_site_admin? do
+              |
+              = link_to 'Manage Forge', admin_path
+            
+        = yield :script
+        
+      - if flash[:notice] || flash[:error]
+        #flash
+          .wrapper
+            = content_tag('div', h(flash[:notice]), :class => 'notice', :id => 'notice') if flash[:notice]
+            = content_tag('div', h(flash[:error]), :class => 'notice error', :id => 'error') if flash[:error]
+            
+      = yield
+      #footer
+        .wrapper
+          %p
+            %a{ :href => "http://fusesource.com/contact" }
+              Contact Us
+            |
+            %a{ :href => "http://fusesource.com/about-this-site/" }
+              About This Site
+            |
+            %a{ :href => "http://fusesource.com/about-this-site/legal-terms-and-privacy-policy/" }
+              Legal Terms and Privacy Policy
+            |
+            %a{ :href => "http://fusesource.com/about-this-site/site-index/" }
+              Site Index
+          %p
+            \&copy;2009
+            %a{ :href => "http://www.progress.com" }
+              Progress Software Corporation
+            and/or its subsidiaries or affiliates.  All rights reserved.

@@ -4,6 +4,10 @@ class ProjectCategory < ActiveRecord::Base
   has_many :projects
   
   validates_presence_of :name
+
+  def count
+    projects.count
+  end
   
   def self.options_for_select
     self.find(:all, :order => :position).collect { |x| [x.name, x.id] }

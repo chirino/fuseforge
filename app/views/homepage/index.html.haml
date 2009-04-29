@@ -1,18 +1,3 @@
-#menu
-  .wrapper
-    .left
-      = link_to 'Forge', root_path
-      \&gt;
-    .right
-      = link_to 'Projects', projects_path
-      |
-      = link_to 'Create', new_project_path
-      |
-      - allow :user => :is_site_admin? do
-        = link_to 'Admin-Forge', admin_path
-        |
-      = link_to 'Search', projects_path(:show_search_form => true)
-      
 #overview
   .wrapper
     .message
@@ -36,3 +21,7 @@
       %h2
         Featured Projects
     = render(:partial => 'projects/project_list', :locals=>{ :projects => @featured_projects })
+    
+    .bottom_links
+      = link_to 'More Projects...', projects_path
+

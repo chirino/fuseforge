@@ -1,35 +1,87 @@
-#menu
-  .wrapper
-    .left
-      = link_to 'Forge', root_path
-      >
-      = link_to 'Projects', projects_path
+- content_for(:bread_crumbs) do
+  = link_to 'Forge', root_path
+  >
+  = link_to 'Search', projects_path(:show_search_form => true)
       
-    .right
-      = link_to 'Projects', projects_path
-      |
-      = link_to 'Create', new_project_path
-      |
-      - allow :user => :is_site_admin? do
-        = link_to 'Admin-Forge', admin_path
-        |
-      = link_to 'Search', projects_path(:show_search_form => true)
-
 #overview
   .wrapper
-    .message
-      %h2 Projects by Category
+    - form_for @search, :html => { :id => "project-search" } do |f|
+      - f.fields_for @search.conditions do |projects|
+        %table
+          %tr
+            %td.search
+              .message
+                %h2{ :style => "display:inline;" } Search 
+                = hidden_field_tag :show_search_form, true
+                = check_box_tag :advanced_search, "1", @advanced_search,  :onchange => "Element.toggle('basic_search_fields');Element.toggle('advanced_search_fields')"
+                Advanced  
+              #basic_search_fields{ :style => "display:#{@advanced_search ? 'none' : 'block'};" }
+                = text_field_tag :keywords, @keywords
+                = f.submit "Search"
+              #advanced_search_fields{ :style => "display:#{@advanced_search ? 'block' : 'none'};" }
+                %table
+                  %tr
+                    %td.label Name
+                    %td= projects.text_field :name_kw_using_or
+                  %tr
+                    %td.label Short Name
+                    %td= projects.text_field :shortname_kw_using_or
+                  %tr
+                    %td.label Description
+                    %td= projects.text_field :description_kw_using_or
+                  %tr
+                    %td.label Tag
+                    %td
+                      - projects.fields_for projects.object.tags do |tags|
+                        = tags.text_field :name_kw_using_or
+                  - allow :user => :is_site_admin? do
+                    %tr
+                      %td.label Status
+                      %td= projects.select :project_status_id, search_select_options_for_project_status, { :include_blank => 'All' }
+                  %tr
+                    %td.label Maturity
+                    %td= projects.select :project_maturity_id, ProjectMaturity.options_for_select, { :include_blank => 'All' }
+                  %tr
+                    %td.label Category
+                    %td= projects.select :project_category_id, ProjectCategory.options_for_select, { :include_blank => 'All' }
+                = f.submit "Search"
+            
+            - unless @tags.empty?
+              %td.tag_cloud
+                .message
+                  %h2 By Tags
+                - tag_cloud(@tags, @levels) do |tag, level|
+                  = link_to tag.name, projects_path(:tag => tag.name, :show_search_form => true), :class => level
+                .message
+                  %h2 By Category
+                - category_cloud do |cat, level|
+                  = link_to cat.name, projects_path(:category=>cat.id, :show_search_form => true), :class => level
+                    
 
 #project-section
   .wrapper
-    - @projects.group_by(&:category).each do |category, projects|
-      %h2
-        %a{:href=>"#", :onclick=>"Element.toggle('category-#{category.id}')"} 
-          = category.name
-      -#
-      -# We may want to remote load load the contents of this div so that the 
-      -# for when there are too many project to load at once in 1 page.
-      -#
-      %div{:id => "category-#{category.id}", :style=>"display:none;"}
-        - projects.sort! { |a,b| a.name.downcase <=> b.name.downcase }
-        = render(:partial => 'projects/project_list', :locals=>{ :projects => projects })
+    - if @projects_count.zero?
+      %p No projects were found.
+    - else
+      %table.project-list
+        %tr
+          %th Category
+          %th 
+          %th= order_by_link :name
+          %th= order_by_link :description
+        - @projects.each do |project|
+          %tr
+            %td.category
+              = h(project.category.name)
+            %td.logo
+              = link_to(image_tag(project.image.url(:thumb)), project_path(project))
+            %td.name
+              = link_to h(project.name), project_path(project)
+            %td.description
+              = sanitize(truncate(project.description, 30))
+      
+      .bottom_links
+        Per page:
+        = per_page_select
+        Page:
+        = page_select

@@ -1,6 +1,7 @@
 require 'jira_lib/jira_interface.rb'
 
 class ProjectsController < ApplicationController
+  layout "new_look"
 	skip_before_filter :login_required, :only => [:index, :show]
 
   before_filter :get_project, :only => [:show, :edit, :update, :destroy]
@@ -17,56 +18,57 @@ class ProjectsController < ApplicationController
     @tags = Project.tag_counts
     @levels = (1 .. 5).map { |i| "level-#{i}" }
     
-    if params[:show_search_form]
-      @advanced_search = false
-      search_params = { "order_by" => "name", "order_as" => "ASC" }
-      search_params.merge!(params[:search]) if params[:search]
-      search_params.delete("conditions")
-      
-      if current_user.is_site_admin?
-        @search = Project.new_search(search_params)
-      else
-        @search = Project.approved.public.new_search(search_params)
-      end
-
-      if params[:search]
-        @search.conditions.any = true
-        
-        if params[:advanced_search]
-          @advanced_search = true
-          @search.conditions.name_kw_using_or = params[:search][:conditions][:name_kw_using_or]
-          @search.conditions.shortname_kw_using_or = params[:search][:conditions][:shortname_kw_using_or]
-          @search.conditions.description_kw_using_or = params[:search][:conditions][:description_kw_using_or]
-          @search.conditions.tags.name_kw_using_or = params[:search][:conditions][:tags][:name_kw_using_or]
-          @search.conditions.project_status_id = params[:search][:conditions][:project_status_id]
-          @search.conditions.project_maturity_id = params[:search][:conditions][:project_maturity_id]
-          @search.conditions.project_category_id = params[:search][:conditions][:project_category_id]
-        else
-          @keywords = @search.conditions.name_kw_using_or = @search.conditions.shortname_kw_using_or = \
-           @search.conditions.description_kw_using_or = @search.conditions.tags.name_kw_using_or = params[:keywords]
-        end  
-      end
-      
-      # The user clicked on a tag item link either on project show or projects index.
-      if params[:tag]
-        @advanced_search = true
-        @search.conditions.tags.name_kw_using_or = params[:tag]
-      end  
-
-      @projects, @projects_count = @search.all, @search.count
+    @advanced_search = false
+    search_params = { "order_by" => "name", "order_as" => "ASC" }
+    search_params.merge!(params[:search]) if params[:search]
+    search_params.delete("conditions")
+    
+    if current_user.is_site_admin?
+      @search = Project.new_search(search_params)
     else
-      @projects = current_user.is_site_admin? ? Project.all : Project.public.approved
-    end        
+      @search = Project.approved.public.new_search(search_params)
+    end
+
+    if params[:search]
+      @search.conditions.any = true
+      
+      if params[:advanced_search]
+        @advanced_search = true
+        @search.conditions.name_kw_using_or = params[:search][:conditions][:name_kw_using_or]
+        @search.conditions.shortname_kw_using_or = params[:search][:conditions][:shortname_kw_using_or]
+        @search.conditions.description_kw_using_or = params[:search][:conditions][:description_kw_using_or]
+        @search.conditions.tags.name_kw_using_or = params[:search][:conditions][:tags][:name_kw_using_or]
+        @search.conditions.project_status_id = params[:search][:conditions][:project_status_id]
+        @search.conditions.project_maturity_id = params[:search][:conditions][:project_maturity_id]
+        @search.conditions.project_category_id = params[:search][:conditions][:project_category_id]
+      else
+        @keywords = @search.conditions.name_kw_using_or = @search.conditions.shortname_kw_using_or = \
+         @search.conditions.description_kw_using_or = @search.conditions.tags.name_kw_using_or = params[:keywords]
+      end  
+    end
+    
+    # The user clicked on a tag item link either on project show or projects index.
+    if params[:tag]
+      @advanced_search = true
+      @search.conditions.tags.name_kw_using_or = params[:tag]
+    end  
+    if params[:category]
+      @advanced_search = true
+      @search.conditions.project_category_id = params[:category]
+    end  
+
+    @projects = @search.all
+    @projects_count = @search.count
     
     respond_to do |format|
-      format.html { params[:show_search_form] ? render(:action => 'filtered_index', :layout => "new_look") : render(:action => 'index', :layout => "new_look") }
+      format.html
       format.xml  { render :xml => @projects }
     end
   end
 
   def show
     respond_to do |format|
-      format.html { render :layout => "new_look" }
+      format.html
       format.xml  { render :xml => @project }
     end
   end
@@ -83,7 +85,7 @@ class ProjectsController < ApplicationController
     set_display_other_license_url
 
     respond_to do |format|
-      format.html { render :layout => "new_look" }
+      format.html
       format.xml  { render :xml => @project }
     end
   end
@@ -120,7 +122,7 @@ class ProjectsController < ApplicationController
         format.html { redirect_to :controller => 'homepage' }
         format.xml  { render :xml => @project, :status => :created, :location => @project }
       else
-        format.html { render :action => "new", :layout => "new_look" }
+        format.html { render :action => "new" }
         format.xml  { render :xml => @project.errors, :status => :unprocessable_entity }
       end
     end
@@ -152,7 +154,7 @@ class ProjectsController < ApplicationController
         format.html { redirect_to(@project) }
         format.xml  { head :ok }
       else
-        format.html { render :action => "edit", :layout => "new_look" }
+        format.html { render :action => "edit"}
         format.xml  { render :xml => @project.errors, :status => :unprocessable_entity }
       end
     end

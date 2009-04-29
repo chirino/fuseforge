@@ -1,22 +1,14 @@
-#menu
-  .wrapper
-    .left
-      = link_to 'Forge', root_path
-      >
-      = link_to 'Projects', projects_path
-      >
-      = link_to @project.name, @project
-      >
-      = link_to 'Admin', project_administration_path(@project)
-      >
-      = link_to 'Tags', :action=>"edit_tags", :id => @project
+- content_for(:bread_crumbs) do
+  = link_to 'Forge', root_path
+  >
+  = link_to 'Projects', projects_path
+  >
+  = link_to @project.name, @project
+  >
+  = link_to 'Manage', project_administration_path(@project)
+  >
+  = link_to 'Tags', :action=>"edit_tags", :id => @project
       
-    .right
-      - allow :user => :is_site_admin? do
-        = link_to 'Admin-Forge', admin_path
-        |
-      = link_to 'Search', projects_path(:show_search_form => true)
-
 #overview
   .wrapper
     .message

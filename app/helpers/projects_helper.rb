@@ -9,6 +9,15 @@ module ProjectsHelper
     words[0..(length-1)].join(' ') + (words.length > length ? end_string : '')
   end
 
+  def category_cloud
+    cats = ProjectCategory.all
+    classes = @levels
+    max_count = cats.sort_by(&:count).last.count.to_f
+    cats.each do |cat|
+      index = ((cat.count / max_count) * (classes.size - 1)).round
+      yield cat, classes[index]
+    end
+  end
 
 end
 
