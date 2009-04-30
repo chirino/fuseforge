@@ -14,6 +14,8 @@ class ProjectsController < ApplicationController
   allow :edit, :update, :user => :is_project_administrator_for?, :method => :access_denied
   allow :destroy, :user => :is_site_admin?, :method => :access_denied
 
+  protect_from_forgery :except => [:validate_proj_sname]
+
   def index
     @tags = Project.tag_counts
     @levels = (1 .. 5).map { |i| "level-#{i}" }

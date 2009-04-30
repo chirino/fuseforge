@@ -42,9 +42,9 @@ img {border: none;}
 div#header  { border-bottom: 3px solid #00509E;}
 
 /* This makes sure the header stays anchored at the top */
-div#header  { position:absolute; top:0px;}
+/*div#header  { position:absolute; top:0px; left:0px; width:100%;}
 body { padding-top: 108px; }
-
+*/
 /* ==================================================================== *
  * Footer Section
  * ==================================================================== */ 
