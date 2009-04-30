@@ -13,8 +13,8 @@
               .message
                 %h2{ :style => "display:inline;" } Search 
                 = hidden_field_tag :show_search_form, true
-                = check_box_tag :advanced_search, "1", @advanced_search,  :onchange => "Element.toggle('basic_search_fields');Element.toggle('advanced_search_fields')"
-                Advanced  
+                = check_box_tag :advanced_search, "1", @advanced_search,  :onclick => "Element.toggle('basic_search_fields');Element.toggle('advanced_search_fields')"
+                = label_tag :advanced_search, 'Advanced'
               #basic_search_fields{ :style => "display:#{@advanced_search ? 'none' : 'block'};" }
                 = text_field_tag :keywords, @keywords
                 = f.submit "Search"

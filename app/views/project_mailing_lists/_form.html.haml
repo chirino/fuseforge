@@ -12,7 +12,7 @@
     %th.label
       = form.label :use_internal
     %td.field
-      = form.check_box :use_internal, :onchange => "$('tr_internal_replyto', 'tr_external_post_address', 'tr_external_subscribe_address', 'tr_external_unsubscribe_address').invoke('toggle');"
+      = form.check_box :use_internal, :onclick => "$('tr_internal_replyto', 'tr_external_post_address', 'tr_external_subscribe_address', 'tr_external_unsubscribe_address').invoke('toggle');"
     %td.help
 
   %tr#tr_internal_replyto{:style=>"#{display_if_internal}"}

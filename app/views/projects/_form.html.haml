@@ -36,7 +36,7 @@
     %th.label
       = form.label :license_id
     %td.field
-      = form.select :license_id, ProjectLicense.options_for_select, { :prompt => true }, { :onchange => "toggle_other_license_url('project_license_id','#{ProjectLicense.other.id}')" }
+      = form.select :license_id, ProjectLicense.options_for_select, { :prompt => true }, { :onclick => "toggle_other_license_url('project_license_id','#{ProjectLicense.other.id}')" }
       #other-license-url{ :style => "display:#{@display_other_license_url};" }
         = form.label :other_license_url, "License URL"
         %br
@@ -72,7 +72,7 @@
       = form.label :issue_tracker, "Issue Tracker"
     %td.field
       - fields_for @project.issue_tracker do |issue_tracker_fields|
-        = issue_tracker_fields.check_box :use_internal, :onchange => "Element.toggle('issue-tracker-external-url')"
+        = issue_tracker_fields.check_box :use_internal, :onclick => "Element.toggle('issue-tracker-external-url')"
         = issue_tracker_fields.label :use_internal, "Allocate a FUSE Forge issue tracker?"
         #issue-tracker-external-url{ :style => "display:#{@display_issue_tracker_external_url}; margin-top:5px;" }
           = issue_tracker_fields.label :external_url, "External issue tracker URL"
@@ -84,7 +84,7 @@
       = form.label :repository, "Source Repository"
     %td.field
       - fields_for @project.repository do |repository_fields|
-        = repository_fields.check_box :use_internal, :onchange => "Element.toggle('repository-external-url')"
+        = repository_fields.check_box :use_internal, :onclick => "Element.toggle('repository-external-url')"
         = repository_fields.label :use_internal, "Allocate a FUSE Forge Subversion repository?"
         #repository-external-url{ :style => "display:#{@display_repository_external_url}; margin-top:5px;" }
           = repository_fields.label :external_url, "External Source Repository URL"
@@ -100,7 +100,7 @@
     %td.field
       - fields_for @project.forum do |forum_fields|
         - if @project.forum.internal_supported?
-          = forum_fields.check_box :use_internal, :onchange => "Element.toggle('forum-external-url')"
+          = forum_fields.check_box :use_internal, :onclick => "Element.toggle('forum-external-url')"
           = forum_fields.label :use_internal, "Allocate FUSE Forge forums?"
           #forum-external-url{ :style => "display:#{@display_forum_external_url}; margin-top:5px;" }
             = forum_fields.label :external_url, "External Forum URL"
@@ -113,7 +113,7 @@
       = form.label :wiki, "Wiki"
     %td.field
       - fields_for @project.wiki do |wiki_fields|
-        = wiki_fields.check_box :use_internal, :onchange => "Element.toggle('wiki-external-url')"
+        = wiki_fields.check_box :use_internal, :onclick => "Element.toggle('wiki-external-url')"
         = wiki_fields.label :use_internal, "Allocate a FUSE Forge wiki?"
         #wiki-external-url{ :style => "display:#{@display_wiki_external_url}; margin-top:5px;" }
           = wiki_fields.label :external_url, "External wiki URL"
@@ -124,7 +124,7 @@
       = form.label :web_dav_location, "WebDAV"
     %td.field
       - fields_for @project.web_dav_location do |web_dav_location_fields|
-        = web_dav_location_fields.check_box :use_internal, :onchange => "Element.toggle('web-dav-location-external-url')"
+        = web_dav_location_fields.check_box :use_internal, :onclick => "Element.toggle('web-dav-location-external-url')"
         = web_dav_location_fields.label :use_internal, "Allocate a FUSE Forge WebDAV Location?"
         #web-dav-location-external-url{ :style => "display:#{@display_web_dav_location_external_url}; margin-top:5px;" }
           = web_dav_location_fields.label :external_url, "External WebDAV URL"
