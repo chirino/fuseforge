@@ -121,8 +121,8 @@ class WebDavLocation < ActiveRecord::Base
     rc = <<EOF
   Alias #{dav_prefix}/#{key} #{repo_filepath}
   <Directory #{repo_filepath}/>
-    Options Indexes MultiViews
-    AllowOverride None
+    Options Indexes MultiViews FollowSymlinks
+    AllowOverride FileInfo
     Order allow,deny
     allow from all 
   </Directory>  
@@ -173,8 +173,8 @@ EOF
   ServerName #{key}.fusesource.org
   DocumentRoot #{repo_filepath}
   <Directory #{repo_filepath}/>
-    Options Indexes MultiViews
-    AllowOverride None
+    Options Indexes MultiViews FollowSymlinks
+    AllowOverride FileInfo
     Order allow,deny
     allow from all 
   </Directory> 
