@@ -166,6 +166,10 @@ EOF
   PerlAuthzHandler Apache::CrowdAuthz
   PerlSetVar CrowdAuthzSVNAccessFile #{authz_filepath}
 
+  PerlSetVar CrowdCacheEnabled on
+  PerlSetVar CrowdCacheLocation #{SVN_ROOT}/crowd-cache/#{key}
+  PerlSetVar CrowdCacheExpiry 300
+
   require valid-user
 
 </Location>

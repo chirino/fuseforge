@@ -136,6 +136,9 @@ class WebDavLocation < ActiveRecord::Base
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
+    PerlSetVar CrowdCacheEnabled on
+    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache/#{key}
+    PerlSetVar CrowdCacheExpiry 300
     require valid-user
   </Location>
   
@@ -159,6 +162,9 @@ EOF
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
+    PerlSetVar CrowdCacheEnabled on
+    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache/#{key}
+    PerlSetVar CrowdCacheExpiry 300
     require valid-user
   </Location>
 EOF
@@ -191,6 +197,9 @@ EOF
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
+    PerlSetVar CrowdCacheEnabled on
+    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache/#{key}
+    PerlSetVar CrowdCacheExpiry 300
     require valid-user
   </Location>
 EOF

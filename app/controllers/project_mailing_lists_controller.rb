@@ -39,7 +39,7 @@ class ProjectMailingListsController < ApplicationController
       begin
         if @project_mailing_list.save
           flash[:notice] = 'Mailing list was successfully created.'
-          format.html { redirect_to(project_mailing_list_path(:project_id => @project.id, :id => @project_mailing_list.id)) }
+          format.html { redirect_to(project_mailing_lists_path(:project_id => @project.id)) }
           format.xml  { render :xml => @project_mailing_list, :status => :created, :location => @project_mailing_list }
         else
           format.html { render :action => "new" }
@@ -57,7 +57,7 @@ class ProjectMailingListsController < ApplicationController
     respond_to do |format|
       if @project_mailing_list.update_attributes(params[:mailing_list])
         flash[:notice] = 'Mailing list was successfully updated.'
-        format.html { redirect_to(project_mailing_list_path(:project_id => @project.id, :id => @project_mailing_list.id)) }
+        format.html { redirect_to(project_mailing_lists_path(:project_id => @project.id)) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit" }

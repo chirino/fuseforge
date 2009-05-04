@@ -22,7 +22,7 @@ config.action_controller.perform_caching             = true
 # config.action_mailer.raise_delivery_errors = false
 
 FORGE_URL = "http://fusesource.com/forge"
-CROWD_SOAP_URL = "http://fusesource.com/crowd/services/SecurityServer"
+CROWD_URL = "http://fusesource.com/crowd"
 FUSESOURCE_URL = "http://fusesource.com" 
 JIRA_URL = "http://fusesource.com/issues"
 CONFLUENCE_URL = 'http://fusesource.com/wiki'
