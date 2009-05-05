@@ -1,0 +1,41 @@
+- content_for(:bread_crumbs) do
+  = link_to 'Forge', root_path
+  >
+  = link_to "Profile #{@user.login}", edit_user_path(@user)
+      
+#overview
+  .wrapper
+    .message
+      %h2 
+        Profile:
+        = h @user.login
+#section
+  .wrapper
+    - form_for(@user) do |form|
+      = error_messages_for 'user', :object => [@user]
+      %table.fieldset
+        %tr
+          %th.label=  form.label :first_name
+          %td.field&= @user.first_name
+          %td.help
+        %tr
+          %th.label=  form.label :last_name
+          %td.field&= @user.last_name
+          %td.help
+        %tr
+          %th.label=  form.label :email
+          %td.field&= @user.email
+          %td.help
+        %tr
+          %th.label
+            = form.label :ssh_public_key,"SSH Public Keys"
+          %td.field.ssh_key
+            = form.text_area :ssh_public_key, :rows => 3, :wrap=>'OFF'
+          %td.help 
+            Only required if you need access to ssh secured Forge resources. Normally stored
+            as '~/.ssh/id_rsa.pub' or '~/.ssh/id_dsa.pub' on your local machine.
+
+      .form_button
+        = form.submit "Update"
+
+

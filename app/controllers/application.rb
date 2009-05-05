@@ -121,10 +121,13 @@ class ApplicationController < ActionController::Base
   protected
   
   def rescue_action_in_public(e) 
-	  case e when ActiveRecord::RecordNotFound 
-	    render_404 
-	  else 
-	    super 
+	  case e 
+  	  when ActiveRecord::RecordNotFound 
+  	    render_404 
+      when Authorization::PermissionDenied
+  	    render_401 	    
+  	  else 
+  	    super 
 	  end 
 	end
 

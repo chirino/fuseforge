@@ -8,8 +8,19 @@ class User < ActiveRecord::Base
   has_one :prospective_project_member
   belongs_to :phpbb_user, :class_name => "PhpbbUser", :foreign_key => "phpbb_user_id"
   
-  CROWD_CACHE_TIMEOUT = 60*60;
+  # TODO: investigate the following.. it should eliminate the need to explicitly use yaml 
+  serialize :crowd_group_names
+
+  # Disable mass assignment of the following attributes since they cannot be modified via a user form
+  # these values come from Crowd.
+  attr_protected :first_name
+  attr_protected :last_name
+  attr_protected :email
+  attr_protected :crowd_group_names
+  attr_protected :cached_at
   
+  # Refresh every 5 min
+  CROWD_CACHE_TIMEOUT = 60*5;
 
   # Virtual attributes for data stored in the external datastore
   # attr_accessor :password, :first_name, :last_name, :email, :company, :title, :phone, :country
@@ -70,7 +81,7 @@ class User < ActiveRecord::Base
     else 
       now = Time.now.utc.to_i;
       was = to_time(self.cached_at).to_i;
-      if ( was+30 < now ) 
+      if ( was+CROWD_CACHE_TIMEOUT < now ) 
         crowd_refresh 
       end
     end
@@ -92,20 +103,15 @@ class User < ActiveRecord::Base
     self.first_name = @crowd_user.first_name
     self.last_name = @crowd_user.last_name
     self.email = @crowd_user.email
-    @crowd_group_names = Crowd.new.find_group_memberships(@crowd_user.name)
-    self.groups_cache = YAML::dump(@crowd_group_names)
+    self.groups_cache = Crowd.new.find_group_memberships(@crowd_user.name)
     self.cached_at = Time.now.utc;
   end
   
   def crowd_group_names
-    unless @crowd_group_names
-      if self.groups_cache
-        @crowd_group_names = YAML::load(self.groups_cache)
-      else
-        @crowd_group_names = Crowd.new.find_group_memberships(self.login)
-      end
+    unless self.groups_cache
+      self.groups_cache = Crowd.new.find_group_memberships(self.login)
     end
-    @crowd_group_names
+    self.groups_cache
   end
   
   def self.is_registered_user?(crowd_login)
@@ -114,27 +120,22 @@ class User < ActiveRecord::Base
       
   def is_registered_user?
     crowd_group_names.index(CrowdGroup.registered_user_group.name)!=nil 
-    #CrowdGroup.registered_user_group.user_names.include?(self.login)
   end
   
   def is_subscribing_customer?
-    # TODO:  How do we determine what a subscribing customer is?
-    true
+    false
   end
   
   def is_company_employee?
     crowd_group_names.index(CrowdGroup.company_employee_group.name)!=nil 
-#    CrowdGroup.company_employee_group.user_names.include?(self.login)
   end
   
   def is_jira_fuseforge_developer?
     crowd_group_names.index(CrowdGroup.jira_developer_group.name)!=nil 
-#    CrowdGroup.jira_developer_group.user_names.include?(self.login)
   end  
     
   def is_confluence_fuseforge_user?
     crowd_group_names.index(CrowdGroup.confluence_user_group.name)!=nil 
-#    CrowdGroup.confluence_user_group.user_names.include?(self.login)
   end  
     
   def is_project_administrator?
@@ -155,7 +156,6 @@ class User < ActiveRecord::Base
 
   def is_site_admin?
     crowd_group_names.index(CrowdGroup.forge_admin_group.name)!=nil 
-#    CrowdGroup.forge_admin_group.user_names.include?(self.login)
   end
   
   def projects

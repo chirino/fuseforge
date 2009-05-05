@@ -13,7 +13,6 @@
     #content
       #header
         .wrapper
-          = link_to(image_tag('fuseforge-logo.png'), root_path, :alt => 'FUSE Forge Community')
           %ul
             - unless logged_in?
               %li
@@ -35,6 +34,7 @@
               %input{ :name => "q", :size => "31", :type => "text" }
               %input{ :name => "sa", :type => "submit", :value => "Search" }
           %script{ :type => "text/javascript", :src => "http://www.google.com/coop/cse/brand?form=cse-search-box&lang=en" }
+          = link_to(image_tag('fuseforge-logo.png'), root_path, :alt => 'FUSE Forge Community')
 
       #menu
         .wrapper
@@ -55,6 +55,9 @@
             - allow :user => :is_site_admin? do
               |
               = link_to 'Manage Forge', admin_path
+            - if  @current_user
+              |
+              = link_to 'Edit Profile', edit_user_path(@current_user)
             
         = yield :script
         
