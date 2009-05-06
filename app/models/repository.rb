@@ -72,7 +72,7 @@ class Repository < ActiveRecord::Base
   end
   
   def create_internal(reload=true)
-    return true if not use_internal?
+    return true unless use_internal?
 
     apache_user = SVN_CONFIG[:user]
     
@@ -109,6 +109,8 @@ class Repository < ActiveRecord::Base
   end    
   
   def update_permissions
+    return true unless use_internal?
+    
     CommandExecutor.open(SVN_CONFIG[:ssh]) do |x|
       x.write(authz_file_content, authz_filepath) 
     end

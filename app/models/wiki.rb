@@ -48,6 +48,8 @@ class Wiki < ActiveRecord::Base
                    CONFLUENCE_INTERNAL_URL,
                    self.project.is_private?)
     confluence_interface.logout
+  rescue => error
+    logger.error """Error creating the confluence wiki: #{error}\n#{error.backtrace.join("\n")}"""
   end
 
   def url
@@ -77,5 +79,8 @@ class Wiki < ActiveRecord::Base
     confluence_interface.login
     confluence_interface.reset_space_perm(project.shortname, reset_to_private)
     confluence_interface.logout
+    
+  rescue => error
+    logger.error """Error updating the confluence wiki: #{error}\n#{error.backtrace.join("\n")}"""
   end  
 end

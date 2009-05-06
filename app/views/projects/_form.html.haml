@@ -1,5 +1,5 @@
 #js_errors.errorExplanation{ :style => "display:none;" }
-= error_messages_for 'project', 'issue_tracker', 'repository', 'wiki',  :object => [@project, @project.issue_tracker, @project.repository, @project.forum, @project.wiki]
+= error_messages_for 'project', 'issue_tracker', 'repository', 'git_repo', 'wiki',  :object => [@project, @project.issue_tracker, @project.repository, @project.git_repo, @project.forum, @project.wiki]
 
 %table.fieldset
   %tr
@@ -81,15 +81,35 @@
     %td.help
   %tr
     %th.label
-      = form.label :repository, "Source Repository"
+      = form.label :repository, "SVN Repository"
     %td.field
       - fields_for @project.repository do |repository_fields|
         = repository_fields.check_box :use_internal, :onclick => "Element.toggle('repository-external-url')"
         = repository_fields.label :use_internal, "Allocate a FUSE Forge Subversion repository?"
         #repository-external-url{ :style => "display:#{@display_repository_external_url}; margin-top:5px;" }
-          = repository_fields.label :external_url, "External Source Repository URL"
+          = repository_fields.label :external_url, "External SVN URL"
           %br
           = repository_fields.text_field :external_url, :class => 'textbox'
+    %td.help
+  %tr
+    %th.label
+      = form.label :git_repo, "Git Repository"
+    %td.field
+      - fields_for @project.git_repo do |git_repo_fields|
+        = git_repo_fields.check_box :use_internal, :onclick => "Element.toggle('git-repo-external-url')"
+        = git_repo_fields.label :use_internal, "Allocate a FUSE Forge Git Repository?"
+        #git-repo-external-url{ :style => "display:#{@display_git_repo_external_url}; margin-top:5px;" }
+          = git_repo_fields.label :external_commit_url, "External Commit Git URL"
+          %br
+          = git_repo_fields.text_field :external_commit_url, :class => 'textbox'
+          %br
+          = git_repo_fields.label :external_anonymous_url, "External Anonymous Access URL"
+          %br
+          = git_repo_fields.text_field :external_anonymous_url, :class => 'textbox'
+          %br
+          = git_repo_fields.label :external_web_url, "External Web URL"
+          %br
+          = git_repo_fields.text_field :external_web_url, :class => 'textbox'
     %td.help
   %tr
     %th.label

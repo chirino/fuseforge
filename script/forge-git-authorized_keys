@@ -17,8 +17,15 @@ else
   FORGE_GIT = "forge-git"
 end
 
-User.all.each do |user|
+User.all(:conditions => [ "ssh_public_key is not NULL" ]).each do |user|
   if user.ssh_public_key
-    puts """command="#{FORGE_GIT} #{user.login}",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty #{user.ssh_public_key}"""
+    # User may have entered multiple keys (they are seperated by newlines...)
+    # Split the keys up and strip them
+    keys = user.ssh_public_key.split(/\n|\r/).reject{|x| x.empty?}.map{|x| x.strip} 
+    # Get rid of lines that don't look like an ssh key
+    keys.reject!{|x| !(x =~ /^(ssh-rsa |ssh-dss )/) }
+    keys.each do |key|
+      puts """command="#{FORGE_GIT} #{user.login}",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty #{key}"""
+    end
   end
 end

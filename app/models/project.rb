@@ -13,6 +13,7 @@ class Project < ActiveRecord::Base
   has_one :featured_project, :dependent => :destroy
   has_one :issue_tracker, :dependent => :destroy
   has_one :repository, :dependent => :destroy
+  has_one :git_repo, :dependent => :destroy
   has_one :web_dav_location, :dependent => :destroy
   has_one :forum, :dependent => :destroy
   has_one :wiki, :dependent => :destroy
@@ -128,15 +129,16 @@ class Project < ActiveRecord::Base
   def update_permissions
     repository.update_permissions
     web_dav_location.update_permissions
+    git_repo.update_permissions
     
     if is_private?
       wiki.make_private
       issue_tracker.make_private
-      forum.make_private and forum.internal_supported?
+      forum.make_private if forum.internal_supported?
     else
       wiki.make_public
       issue_tracker.make_public
-      forum.make_public and forum.internal_supported?
+      forum.make_public if forum.internal_supported?
     end
   end
   
@@ -266,12 +268,13 @@ class Project < ActiveRecord::Base
   end
   
   def deploy_internal_components
-    repository.create_internal 
+    repository.create_internal
+    git_repo.create_internal
     web_dav_location.create_internal
     mailing_lists.each do  |ml|
       ml.create_internal
     end
-    forum.create_internal and forum.internal_supported?
+    forum.create_internal if forum.internal_supported?
     issue_tracker.create_internal
     wiki.create_internal
   end  

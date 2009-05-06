@@ -1,7 +1,6 @@
 require 'net/http'
 require 'uri'
 require 'benchmark_http_requests'
-require 'yaml'
 
 class User < ActiveRecord::Base
   acts_as_tagger
@@ -18,7 +17,7 @@ class User < ActiveRecord::Base
   attr_protected :email
   attr_protected :crowd_group_names
   attr_protected :cached_at
-  
+      
   # Refresh every 5 min
   CROWD_CACHE_TIMEOUT = 60*5;
 

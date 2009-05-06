@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20090428004558) do
+ActiveRecord::Schema.define(:version => 20090506123819) do
 
   create_table "delayed_jobs", :force => true do |t|
     t.integer  "priority",   :default => 0
@@ -41,6 +41,16 @@ ActiveRecord::Schema.define(:version => 20090428004558) do
     t.datetime "updated_at"
     t.integer  "phpbb_forum_id"
   end
+
+  create_table "git_repos", :force => true do |t|
+    t.integer "project_id"
+    t.boolean "use_internal"
+    t.string  "external_anonymous_url"
+    t.string  "external_commit_url"
+    t.string  "external_web_url"
+  end
+
+  add_index "git_repos", ["project_id"], :name => "index_git_repos_on_project_id", :unique => true
 
   create_table "issue_trackers", :force => true do |t|
     t.integer  "project_id"

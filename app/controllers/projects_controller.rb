@@ -77,11 +77,12 @@ class ProjectsController < ApplicationController
 
   def new
     @project = Project.new
-    @project.issue_tracker = IssueTracker.new(:use_internal => true)
-    @project.repository = Repository.new(:use_internal => true)
-    @project.web_dav_location = WebDavLocation.new(:use_internal => true)
-    @project.forum = Forum.new(:use_internal => true)
-    @project.wiki = Wiki.new(:use_internal => true)
+    @project.issue_tracker = IssueTracker.new(:use_internal => false)
+    @project.repository = Repository.new(:use_internal => false)
+    @project.git_repo = GitRepo.new(:use_internal => false)
+    @project.web_dav_location = WebDavLocation.new(:use_internal => false)
+    @project.forum = Forum.new(:use_internal => false)
+    @project.wiki = Wiki.new(:use_internal => false)
 
     set_display_external_urls
     set_display_other_license_url
@@ -110,6 +111,7 @@ class ProjectsController < ApplicationController
     @project = Project.new(params[:project])
     @project.issue_tracker = IssueTracker.new(params[:issue_tracker])
     @project.repository = Repository.new(params[:repository])
+    @project.git_repo = GitRepo.new(params[:git_repo])
     @project.web_dav_location = WebDavLocation.new(params[:web_dav_location])
     @project.forum = Forum.new(params[:forum])
     @project.wiki = Wiki.new(params[:wiki])
@@ -118,8 +120,14 @@ class ProjectsController < ApplicationController
     set_display_other_license_url
     
     respond_to do |format|
-      if @project.issue_tracker.valid? and @project.repository.valid? and @project.web_dav_location.valid? and @project.forum.valid? and \
-       @project.wiki.valid? and @project.save
+      if @project.issue_tracker.valid? and \
+         @project.repository.valid? and \
+         @project.git_repo.valid? and \
+         @project.web_dav_location.valid? and \
+         @project.forum.valid? and \
+         @project.wiki.valid? and \
+         @project.save
+       
         flash[:notice] = 'Your request to create a new project was sent to the site administrator.'
         format.html { redirect_to :controller => 'homepage' }
         format.xml  { render :xml => @project, :status => :created, :location => @project }
@@ -142,6 +150,7 @@ class ProjectsController < ApplicationController
   def update
     @project.issue_tracker.update_attributes(params[:issue_tracker])
     @project.repository.update_attributes(params[:repository])
+    @project.git_repo.update_attributes(params[:git_repo])
     @project.web_dav_location.update_attributes(params[:web_dav_location])
     @project.forum.update_attributes(params[:forum])
     @project.wiki.update_attributes(params[:wiki])
@@ -150,8 +159,14 @@ class ProjectsController < ApplicationController
     set_display_other_license_url
     
     respond_to do |format|
-      if @project.update_attributes(params[:project]) and @project.issue_tracker.valid? and @project.repository.valid? and \
-       @project.web_dav_location.valid? and @project.forum.valid? and @project.wiki.valid?
+      if @project.update_attributes(params[:project]) and \
+         @project.issue_tracker.valid? and \
+         @project.repository.valid? and \
+         @project.git_repo.valid? and \
+         @project.web_dav_location.valid? and \
+         @project.forum.valid? and \
+         @project.wiki.valid?
+         
         flash[:notice] = 'Project was successfully updated.'
         format.html { redirect_to(@project) }
         format.xml  { head :ok }
@@ -189,6 +204,7 @@ class ProjectsController < ApplicationController
   def set_display_external_urls
     @display_issue_tracker_external_url = @project.issue_tracker.use_internal? ? 'none' : 'block'
     @display_repository_external_url = @project.repository.use_internal? ? 'none' : 'block'
+    @display_git_repo_external_url = @project.git_repo.use_internal? ? 'none' : 'block'
     @display_web_dav_location_external_url = @project.web_dav_location.use_internal? ? 'none' : 'block'
     @display_forum_external_url = @project.forum.use_internal? ? 'none' : 'block'
     @display_wiki_external_url = @project.wiki.use_internal? ? 'none' : 'block'

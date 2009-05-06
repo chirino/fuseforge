@@ -58,7 +58,7 @@ class WebDavLocation < ActiveRecord::Base
   end
 
   def create_internal(reload=true)
-    return true if not use_internal?
+    return true unless use_internal?
     
     apache_user = DAV_CONFIG[:user]
     
@@ -88,6 +88,7 @@ class WebDavLocation < ActiveRecord::Base
   end 
   
   def update_permissions
+    return true unless use_internal?
     
     CommandExecutor.open(DAV_CONFIG[:ssh]) do |x|
       x.write(apache_dav_file, "#{DAV_ROOT}/httpd.conf/default-virtualhost/#{key}")==0 or raise 'Error creating apache conf file!'
