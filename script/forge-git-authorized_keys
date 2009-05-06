@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+# Outputs the authroized_keys file that needs to be installed in the .git account
+#
+
+if ARGV[0]
+  RAILS_ENV = ARGV[0] 
+else
+  RAILS_ENV = "development"
+end
+
+require File.dirname(__FILE__) + '/../config/boot'
+require RAILS_ROOT + '/config/environment'
+
+if ARGV[1]
+  FORGE_GIT = ARGV[1] 
+else
+  FORGE_GIT = "forge-git"
+end
+
+User.all.each do |user|
+  if user.ssh_public_key
+    puts """command="#{FORGE_GIT} #{user.login}",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty #{user.ssh_public_key}"""
+  end
+end
