@@ -2,9 +2,9 @@ require 'jira_lib/jira_interface.rb'
 
 class ProjectsController < ApplicationController
   layout "new_look"
-	skip_before_filter :login_required, :only => [:index, :show]
+	skip_before_filter :login_required, :only => [:index, :show, :has_git_access]
 
-  before_filter :get_project, :only => [:show, :edit, :update, :destroy]
+  before_filter :get_project, :only => [:show, :edit, :update, :destroy, :has_git_access]
   before_filter :get_terms_and_conditions_text, :only => [:new, :create]
   
   deny :show, :edit, :update, :destroy, :exec => :project_unapproved_and_user_not_site_admin?, :method => :access_denied
@@ -184,6 +184,21 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(projects_url) }
       format.xml  { head :ok }
+    end
+  end
+  
+  def has_git_access
+    rc = false
+    
+    if @project.git_repo.use_internal?
+      user = User.find_by_login(params[:user])
+      if user && user.is_project_member_for?(@project)
+        rc=true;
+      end
+    end
+    
+    respond_to do |format|
+      format.html { render :text => "#{rc}" }
     end
   end
   

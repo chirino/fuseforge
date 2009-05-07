@@ -17,6 +17,9 @@ ActionController::Routing::Routes.draw do |map|
     project.resource  :issue_tracker
     project.resources :images, :only => [:show]
   end  
+
+  map.resources :projects, :member=>{ :has_git_access => :get }, :path_names=>{ :has_git_access => 'has_git_access/:user' }
+
   
   map.connect '/project-sites/:shortname', :controller => 'projects', :action => 'show'
   map.project_administration '/project/:id/project_administration', :controller => 'project_administration', :action => 'index'

@@ -85,7 +85,26 @@ class User < ActiveRecord::Base
       end
     end
   end
-
+  
+  def after_save
+    GitRepo.send_later(:export_ssh_keys) if ssh_public_key_changed? 
+  end
+  
+  def self.each_ssh_public_key(&block)
+    User.all(:conditions => [ "ssh_public_key is not NULL" ], :order=>'login').each do |user|
+      if user.ssh_public_key
+        # User may have entered multiple keys (they are seperated by newlines...)
+        # Split the keys up and strip them
+        keys = user.ssh_public_key.split(/\n|\r/).reject{|x| x.empty?}.map{|x| x.strip} 
+        # Get rid of lines that don't look like an ssh key
+        keys.reject!{|x| !(x =~ /^(ssh-rsa |ssh-dss )/) }
+        keys.each do |key|
+          block.call(user, key)
+        end
+      end
+    end  
+  end
+  
   def crowd_refresh
     begin
       crowd_user = Crowd.new.find_by_name(login) # throws SOAP::FaultError

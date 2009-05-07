@@ -97,6 +97,7 @@ class Project < ActiveRecord::Base
   
   def before_update
     featured_project.destroy if is_private? and not featured_project.blank?
+    update_permissions if is_private_changed? 
   end
   
   def before_create
@@ -115,15 +116,6 @@ class Project < ActiveRecord::Base
   def description=(value)
     forum.change_description(value) if (value != read_attribute(:description)) and not new_record? and forum.internal_supported?
     write_attribute(:description, value)
-  end  
-  
-  def is_private=(value)
-    bool_value = value == "1" ? true : false
-    
-    if (bool_value != read_attribute(:is_private)) and not new_record?
-      write_attribute(:is_private, value)
-      update_permissions
-    end  
   end  
   
   def update_permissions

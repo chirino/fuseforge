@@ -42,6 +42,7 @@ FORUM_CONFIG = {
 GIT_CONFIG = {
   :user => "git",
   :host => "forge.#{FUSESOURCE_DOMAIN}",
-  :home => '/var/forge/git'
+  :home => '/var/forge/git',
+  :forge_git_path => '/data/fuseforge/current/script/forge-git'  
 }
 config.action_mailer.default_url_options = { :host => FUSESOURCE_DOMAIN }

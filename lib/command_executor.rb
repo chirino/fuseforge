@@ -21,8 +21,14 @@ class CommandExecutor
     return 'crap'
   end
   
-  def write(content, file, user=nil)
-      system("tee '#{file}' > /dev/null <<EOF\n#{content}\nEOF", user)
+  def write(content, remote_file, user=nil)
+    system("cat > '#{remote_file}'", user, content)
+  end
+
+  def copy(local_file, remote_file, user=nil)
+    File.open(local_file, "r") do |file|
+      system("cat > '#{remote_file}'", user, file)
+    end
   end
 
   def file_exists?(file, user=nil)
@@ -33,25 +39,81 @@ class CommandExecutor
     system("[ -d #{dir} ]", user)==0 ? true : false
   end
   
-  def system(command, user=nil)
+  def system(command, user=nil, input=nil)
     command = "sudo -u #{user} "+command if user
     if @ssh
       benchmark("SSH Command", command) do
-        @output = @ssh.exec(command)
-        @ssh.exec!("echo $?").to_i
+        
+        @output = ""
+        rc=-1
+        exit_signal=0
+        
+        channel = @ssh.open_channel do |channel|
+          # Register the callbacks...
+          channel.on_data do |channel, data|
+            @output << data
+          end
+          channel.on_extended_data do |channel, type, data|
+            if type==1
+              $stderr.print(data)
+            end
+          end
+        	channel.on_request("exit-status") do |channel, data|
+        		rc = data.read_long
+        	end
+        	channel.on_request("exit-signal") do |channel, data|
+        		exit_signal = data.read_long
+        	end
+        	
+          channel.exec(command) do |channel, success|
+            raise "could not execute command: #{command.inspect}" unless success
+            
+            if input 
+              if input.class == String
+                channel.send_data input
+              else
+                # Assume it's a IO object we can read.
+                while (data = input.read(1024))
+                    channel.send_data data
+                end
+              end
+            end
+            channel.process
+            channel.eof!
+          end
+        end
+        channel.wait
+        return rc
       end
     else
       benchmark("System Command", command) do
-        @output = `#{command}`
+        IO.popen(command, 'r+') do |pipe|          
+          if input 
+            if input.class == String
+              pipe.print input
+            else
+              # Assume it's a IO object we can read.
+              while (data = input.read(1024))
+                  pipe.print data
+              end
+            end
+          end        
+          pipe.close_write
+          @output = pipe.read
+        end
         $?
       end
     end
-  end 
-  
+  end
+    
   def output
     @output
   end
   
+  def ssh=(ssh)
+    @ssh=ssh
+  end
+
   private
 
   def benchmark(title, details, log_level=Logger::DEBUG)

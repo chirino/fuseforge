@@ -26,16 +26,52 @@ class GitRepo < ActiveRecord::Base
   
   def create_internal()
     return true if not use_internal?
+    
+    # if GIT_CONFIG[:ssh] is nil, then commands are run locally 
+    CommandExecutor.open(GIT_CONFIG[:ssh]) do |x|
+    
+      # Only create the repo if it does not exist
+      if !x.dir_exists?(repo_filepath, git_user)
+        x.system("mkdir -p #{repo_filepath} && cd #{repo_filepath} && git --bare init", git_user)==0 or raise 'Error creating git repo!'
+      end
+      
+      if project.is_private? 
+        x.system("rm #{repo_filepath}/git-daemon-export-ok", git_user)
+      else
+        x.system("touch #{repo_filepath}/git-daemon-export-ok", git_user)
+      end
+      
+      ## TODO: setup the hooks/post-update
+    end
+        
     true
   rescue => error
     logger.error """Error creating the git repo: #{error}\n#{error.backtrace.join("\n")}"""
   end    
   
   def update_permissions
-    return true if not use_internal?
-    true
-  rescue => error
-    logger.error """Error update the svn permissions: #{error}\n#{error.backtrace.join("\n")}"""
+    create_internal
+  end
+  
+  #
+  # This is usually run by the delayed_job worker.
+  #
+  def self.export_ssh_keys
+    CommandExecutor.open(GIT_CONFIG[:ssh]) do |x|
+      require 'tempfile'  
+      Tempfile.open('authorized_keys') do |tf|
+        # Create the contents of the file.
+        User.each_ssh_public_key do |user,key|
+          tf.puts "command=\"#{GIT_CONFIG[:forge_git_path]} #{user.login}\",no-port-forwarding,no-X11-forwarding,no-agent-forwarding,no-pty #{key}"
+        end
+        tf.flush
+        
+        x.system "mkdir -p #{GIT_CONFIG[:home]}/.ssh", GIT_CONFIG[:user]
+        x.copy tf.path, "#{GIT_CONFIG[:home]}/.ssh/authorized_keys.tmp", GIT_CONFIG[:user]==0 or raise("File copy failed.")
+        x.system "chmod 644 #{GIT_CONFIG[:home]}/.ssh/authorized_keys.tmp",  GIT_CONFIG[:user]==0 or raise("Chmod failed.")
+        x.system "mv #{GIT_CONFIG[:home]}/.ssh/authorized_keys.tmp #{GIT_CONFIG[:home]}/.ssh/authorized_keys", GIT_CONFIG[:user]==0 or raise("mv failed.")
+      end
+    end
   end
   
   private
@@ -44,8 +80,20 @@ class GitRepo < ActiveRecord::Base
     self.project.shortname.downcase
   end
 
+  def git_user
+    GIT_CONFIG[:user]
+  end
+
+  def git_home
+    GIT_CONFIG[:home]
+  end
+  
+  def git_host
+    GIT_CONFIG[:host]
+  end
+
   def repos_filepath
-    "#{GIT_CONFIG[:home]}/repos"
+    "#{git_home}/repos"
   end
 
   def repo_filepath
@@ -53,11 +101,11 @@ class GitRepo < ActiveRecord::Base
   end
   
   def internal_commit_url
-    "#{GIT_CONFIG[:user]}@#{GIT_CONFIG[:host]}:#{key}.git"
+    "#{git_user}@#{git_host}:#{key}.git"
   end  
 
   def internal_anonymous_url
-    "git://#{GIT_CONFIG[:host]}:#{key}.git"    
+    "git://#{git_host}:#{key}.git"    
   end
   
   def internal_web_url
