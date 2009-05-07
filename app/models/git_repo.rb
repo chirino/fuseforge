@@ -57,6 +57,7 @@ class GitRepo < ActiveRecord::Base
   # This is usually run by the delayed_job worker.
   #
   def self.export_ssh_keys
+    return true
     CommandExecutor.open(GIT_CONFIG[:ssh]) do |x|
       require 'tempfile'  
       Tempfile.open('authorized_keys') do |tf|
