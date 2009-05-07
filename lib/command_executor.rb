@@ -22,12 +22,14 @@ class CommandExecutor
   end
   
   def write(content, remote_file, user=nil)
-    system("tee '#{remote_file}' > /dev/null", user, content)
+    system("cat > '#{remote_file}'", user, content)
+    # system("tee '#{remote_file}' > /dev/null", user, content)
   end
 
   def copy(local_file, remote_file, user=nil)
     File.open(local_file, "r") do |file|
-      system("tee '#{remote_file}' > /dev/null", user, file)
+      system("cat > '#{remote_file}'", user, file)
+      # system("tee '#{remote_file}' > /dev/null", user, file)
     end
   end
 
@@ -40,7 +42,10 @@ class CommandExecutor
   end
   
   def system(command, user=nil, input=nil)
-    command = "sudo -u #{user} "+command if user
+    if user
+      command.gsub("'", "\\\\'")
+      command = "sudo -u #{user} sh -c '#{command}'"
+    end
     if @ssh
       benchmark("SSH Command", command) do
         
