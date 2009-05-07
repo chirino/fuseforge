@@ -43,7 +43,16 @@ class GitRepo < ActiveRecord::Base
         x.system("touch #{repo_filepath}/git-daemon-export-ok", git_user)
       end
       
-      ## TODO: setup the hooks/post-update
+      # Now update to use or not use the commit mailing list.
+      ml = project.mailing_lists.find_by_name("commits")
+      x.write(git_config(ml), "#{repo_filepath}/config", git_user) 
+      
+      if ml
+        x.system("ln -sf /usr/share/doc/git-core/contrib/hooks/post-receive-email #{repo_filepath}/hooks/post-receive", git_user)
+      else
+        x.system("rm #{repo_filepath}/hooks/post-receive", git_user)
+      end
+
     end
         
     true
@@ -116,4 +125,22 @@ class GitRepo < ActiveRecord::Base
     "#{FORGE_URL}/gitweb?p=${key}.git"    
   end
   
+  def git_config(ml)
+    rc = """
+[core]
+  repositoryformatversion = 0
+  filemode = true
+  bare = true
+"""
+    if( ml )
+      rc << """    
+[hooks]
+  mailinglist = #{ml.post_address}
+  announcelist =
+  envelopesender = #{ml.post_address}
+  emailprefix = svn commit:
+"""
+    end
+  end
+
 end
