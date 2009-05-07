@@ -37,7 +37,9 @@ class GitRepo < ActiveRecord::Base
       
       if project.is_private? 
         x.system("rm #{repo_filepath}/git-daemon-export-ok", git_user)
+        x.system("chmod o-rx #{repo_filepath}", git_user)
       else
+        x.system("chmod o+rx #{repo_filepath}", git_user)
         x.system("touch #{repo_filepath}/git-daemon-export-ok", git_user)
       end
       
@@ -103,15 +105,15 @@ class GitRepo < ActiveRecord::Base
   end
   
   def internal_commit_url
-    "#{git_user}@#{git_host}:#{key}.git"
+    "ssh://#{git_user}@#{git_host}/#{key}.git"
   end  
 
   def internal_anonymous_url
-    "git://#{git_host}:#{key}.git"    
+    "git://#{git_host}/#{key}.git"    
   end
   
   def internal_web_url
-    "#{FORGE_URL}/git/#{key}.git"    
+    "#{FORGE_URL}/gitweb?p=${key}.git"    
   end
   
 end

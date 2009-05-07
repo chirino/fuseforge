@@ -25,7 +25,7 @@ begin
   ssh_command = ENV['SSH_ORIGINAL_COMMAND']
 
   # parse the ssh command.. only git commands allowed.
-  ALLOWED_GIT_COMMANDS  = /^(git-upload-pack|git upload-pack|git-receive-pack|git receive-pack) '([a-z]+)\.git'$/
+  ALLOWED_GIT_COMMANDS  = /^(git-upload-pack|git upload-pack|git-receive-pack|git receive-pack) '\/?([a-z]+)\.git'$/
   fail "Not a supported git command: #{ssh_command}" unless ssh_command =~ ALLOWED_GIT_COMMANDS 
   git_command = $1
   project = $2

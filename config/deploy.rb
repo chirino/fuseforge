@@ -60,23 +60,23 @@ end
 namespace :delayed_job do
   desc "Start delayed_job process" 
   task :start, :roles => :app do
-    invoke_command "#{current_path}/script/delayed_job start" 
+    invoke_command "monit start forge_delayed_job" 
   end
 
   desc "Stop delayed_job process" 
   task :stop, :roles => :app do
-    invoke_command "#{current_path}/script/delayed_job stop" 
+    invoke_command "monit stop forge_delayed_job" 
   end
 
   desc "Restart delayed_job process" 
   task :restart, :roles => :app do
-    invoke_command "#{current_path}/script/delayed_job restart"
+    invoke_command "monit restart forge_delayed_job"
   end
 end
 
-after "deploy:start", "delayed_job:start" 
-after "deploy:stop", "delayed_job:stop" 
-after "deploy:restart", "delayed_job:restart" 
+# after "deploy:start", "delayed_job:start" 
+# after "deploy:stop", "delayed_job:stop" 
+# after "deploy:restart", "delayed_job:restart" 
 
 namespace :db do
   desc "Make symlink for database yaml" 
