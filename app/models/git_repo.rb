@@ -66,10 +66,12 @@ class GitRepo < ActiveRecord::Base
         end
         tf.flush
         
-        x.system "mkdir -p #{GIT_CONFIG[:home]}/.ssh", GIT_CONFIG[:user]
-        x.copy tf.path, "#{GIT_CONFIG[:home]}/.ssh/authorized_keys.tmp", GIT_CONFIG[:user]==0 or raise("File copy failed.")
-        x.system "chmod 644 #{GIT_CONFIG[:home]}/.ssh/authorized_keys.tmp",  GIT_CONFIG[:user]==0 or raise("Chmod failed.")
-        x.system "mv #{GIT_CONFIG[:home]}/.ssh/authorized_keys.tmp #{GIT_CONFIG[:home]}/.ssh/authorized_keys", GIT_CONFIG[:user]==0 or raise("mv failed.")
+        git_user=GIT_CONFIG[:user]
+        git_home=GIT_CONFIG[:home]        
+        x.system("mkdir -p #{git_home}/.ssh", git_user)
+        x.copy(tf.path, "#{git_home}/.ssh/authorized_keys.tmp", git_user) ==0 or raise("File copy failed.")
+        x.system("chmod 644 #{git_home}/.ssh/authorized_keys.tmp",  git_user)==0 or raise("Chmod failed.")
+        x.system("mv #{git_home}/.ssh/authorized_keys.tmp #{git_home}/.ssh/authorized_keys", git_user)==0 or raise("mv failed.")
       end
     end
   end
