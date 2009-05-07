@@ -7,6 +7,6 @@ class ProjectObserver < ActiveRecord::Observer
 
   def before_save(project)
     project.updated_by = @@current_user
-    project.is_private = false unless @@current_user.is_subscribing_customer?
   end
+  
 end

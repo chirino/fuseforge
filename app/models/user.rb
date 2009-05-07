@@ -140,10 +140,6 @@ class User < ActiveRecord::Base
     crowd_group_names.index(CrowdGroup.registered_user_group.name)!=nil 
   end
   
-  def is_subscribing_customer?
-    false
-  end
-  
   def is_company_employee?
     crowd_group_names.index(CrowdGroup.company_employee_group.name)!=nil 
   end
