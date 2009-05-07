@@ -138,7 +138,7 @@ class GitRepo < ActiveRecord::Base
   mailinglist = #{ml.post_address}
   announcelist =
   envelopesender = #{ml.post_address}
-  emailprefix = svn commit:
+  emailprefix = git push:
 """
     end
   end
