@@ -6,7 +6,7 @@ set :port, 22
 set :ssh_options, { :forward_agent => true, :keys => %w(/Users/chirino/sandbox/fuse/fuse-infra/images/common/root/.ssh/id_rsa)  }
 set :use_sudo, false
 
-host = "vmware.fusesourcedev.com"
+host = "forge.e.fusesourcedev.com"
 role :app, host
 role :web, host
 role :db,  host, :primary => true

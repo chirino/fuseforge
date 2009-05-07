@@ -22,12 +22,12 @@ class CommandExecutor
   end
   
   def write(content, remote_file, user=nil)
-    system("cat > '#{remote_file}'", user, content)
+    system("tee '#{remote_file}' > /dev/null", user, content)
   end
 
   def copy(local_file, remote_file, user=nil)
     File.open(local_file, "r") do |file|
-      system("cat > '#{remote_file}'", user, file)
+      system("tee '#{remote_file}' > /dev/null", user, file)
     end
   end
 
