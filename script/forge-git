@@ -39,6 +39,11 @@ begin
   #
   # Looks like we can let the user execute the command.
   GIT = 'git' unless defined? GIT
+  
+  Syslog.open do |syslog|
+    syslog.info "executing: #{GIT} shell -c \"#{git_command} '#{GIT_REPOS_DIR}/#{project}.git'\""
+  end
+    
   exec(GIT, 'shell', '-c', "#{git_command} '#{GIT_REPOS_DIR}/#{project}.git'")
   fail('Cannot execute git-shell.')
 rescue => e 
