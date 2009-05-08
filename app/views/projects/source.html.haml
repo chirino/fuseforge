@@ -1,0 +1,94 @@
+- content_for(:bread_crumbs) do
+  = link_to 'Forge', root_path
+  >
+  = link_to 'Projects', projects_path
+  >
+  = link_to @project.name, @project
+  >
+  = link_to 'Source', source_project_path(:id => @project)  
+
+#overview
+  .wrapper
+    .logo
+      = image_tag @project.image.url(:thumb) if @project.image.valid?
+    .message
+      %h2&== #{@project.name} Source Code
+      Want to take a look under the hood?
+      
+#section 
+  .wrapper
+    - if @project.repository.is_active?
+      .left
+        %h1 SVN Repository
+      .right
+        %h2 Overview
+        %p== The #{@project.name} project stores it’s source code in a Subversion repository at: 
+        %p= link_to("#{@project.repository.url}", "#{@project.repository.url}")
+        
+        %p 
+          Most projects do all the new development in the trunk directory. They maintenance of
+          old releases is done in the branches directory.  Finally, to find the source code for a specific
+          release, browse the tags directory.
+          
+        %p 
+          = link_to("#{@project.repository.url}/trunk", "#{@project.repository.url}/trunk")
+          %br
+          = link_to("#{@project.repository.url}/branches", "#{@project.repository.url}/branches")
+          %br
+          = link_to("#{@project.repository.url}/tags", "#{@project.repository.url}/tags")
+        
+        %h2 How to Checkout
+        
+        %p 
+          == You must first install #{link_to "a subversion client", "http://subversion.tigris.org/"}.
+          Then run:
+          
+        %pre><
+          %code><
+            :preserve
+              svn co #{@project.repository.url}/trunk  #{@project.key}
+              cd #{@project.key}
+        
+        %p 
+          You will get prompted for a user id and password.  Use the user id and password you
+          == registered with at #{link_to "http://fusesource.com", "http://fusesource.com"}.
+          == If have not registered yet, #{link_to "register now", "http://fusesource.com/register?clicked=yes"}.
+        
+    - if @project.git_repo.is_active?
+      .left
+        %h1 Git Repository
+      .right
+        %h2 Overview
+        %p== The #{@project.name} project stores it’s source code in a Git repository.
+
+        - example_url = nil
+        - unless @project.git_repo.anonymous_url.empty? 
+          - example_url = @project.git_repo.anonymous_url
+          %p This project can be cloned anonymously using the following URL:
+          %p= link_to("#{@project.git_repo.anonymous_url}", "#{@project.git_repo.anonymous_url}")
+          
+        - unless @project.git_repo.commit_url.empty? 
+          - example_url = @project.git_repo.commit_url
+          %p 
+            Project members who have configured a public SSH in their 
+            user profile 
+            can push to the repository using the following URL:
+          %p= link_to("#{@project.git_repo.commit_url}", "#{@project.git_repo.commit_url}")
+        
+        - unless @project.git_repo.web_url.empty? 
+          %p== The git repo also supports #{link_to("online browsing", "#{@project.git_repo.web_url}")}
+        
+        - if example_url
+          %h2 How to Checkout
+        
+          %p 
+            == You must first install #{link_to "a Git client", "http://git-scm.com/download"}.
+            Then you clone the repository using the Git URL:
+          
+          %pre><
+            %code><
+              :preserve
+                svn co #{example_url}
+                cd #{@project.key}
+          
+          

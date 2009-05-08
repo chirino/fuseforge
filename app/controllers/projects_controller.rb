@@ -2,13 +2,13 @@ require 'jira_lib/jira_interface.rb'
 
 class ProjectsController < ApplicationController
   layout "new_look"
-	skip_before_filter :login_required, :only => [:index, :show, :has_git_access]
+	skip_before_filter :login_required, :only => [:index, :show, :source, :has_git_access]
 
-  before_filter :get_project, :only => [:show, :edit, :update, :destroy, :has_git_access]
+  before_filter :get_project, :only => [:show, :source, :edit, :update, :destroy, :has_git_access]
   before_filter :get_terms_and_conditions_text, :only => [:new, :create]
   
-  deny :show, :edit, :update, :destroy, :exec => :project_unapproved_and_user_not_site_admin?, :method => :access_denied
-  deny :show, :edit, :update, :destroy, :exec => :project_private_and_user_not_member?, :method => :access_denied
+  deny :show, :source, :edit, :update, :destroy, :exec => :project_unapproved_and_user_not_site_admin?, :method => :access_denied
+  deny :show, :source, :edit, :update, :destroy, :exec => :project_private_and_user_not_member?, :method => :access_denied
 
   allow :new, :create, :user => :is_company_employee?, :method => :access_denied
   allow :edit, :update, :user => :is_project_administrator_for?, :method => :access_denied
@@ -72,6 +72,12 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html
       format.xml  { render :xml => @project }
+    end
+  end
+
+  def source
+    respond_to do |format|
+      format.html
     end
   end
 

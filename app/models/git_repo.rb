@@ -34,7 +34,7 @@ class GitRepo < ActiveRecord::Base
       if !x.dir_exists?(repo_filepath, git_user)
         x.system("mkdir -p #{repo_filepath} && cd #{repo_filepath} && git --bare init", git_user)==0 or raise 'Error creating git repo!'
       end      
-      x.write(project.name, "#{repo_filepath}/description", git_user) 
+      x.write("#{project.name}\n", "#{repo_filepath}/description", git_user) 
 
       if project.is_private? 
         x.system("rm #{repo_filepath}/git-daemon-export-ok", git_user)
@@ -49,7 +49,7 @@ class GitRepo < ActiveRecord::Base
       x.write(git_config(ml), "#{repo_filepath}/config", git_user) 
       
       if ml
-        x.write(". /usr/share/doc/git-core/contrib/hooks/post-receive-email", "#{repo_filepath}/hooks/post-receive", git_user) 
+        x.write(". /usr/share/doc/git-core/contrib/hooks/post-receive-email\n", "#{repo_filepath}/hooks/post-receive", git_user) 
         x.system("chmod a+x #{repo_filepath}/hooks/post-receive", git_user)
       else
         x.system("rm #{repo_filepath}/hooks/post-receive", git_user)
@@ -120,11 +120,11 @@ class GitRepo < ActiveRecord::Base
   end  
 
   def internal_anonymous_url
-    "git://#{git_host}/#{key}.git"    
+    project.is_private? ? "" : "git://#{git_host}/#{key}.git"    
   end
   
   def internal_web_url
-    "#{FORGE_URL}/gitweb?p=${key}.git"    
+    project.is_private? ? "" : "#{FORGE_URL}/gitweb?p=#{key}.git"    
   end
   
   def git_config(ml)

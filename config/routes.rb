@@ -19,6 +19,7 @@ ActionController::Routing::Routes.draw do |map|
   end  
 
   map.resources :projects, :member=>{ :has_git_access => :get }, :path_names=>{ :has_git_access => 'has_git_access/:user' }
+  map.resources :projects, :member=>{ :source => :get }
 
   
   map.connect '/project-sites/:shortname', :controller => 'projects', :action => 'show'

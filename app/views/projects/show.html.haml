@@ -82,9 +82,9 @@
                 - if @project.wiki.is_active?
                   %li
                     = link_to("Wiki", @project.wiki.url)
-                - if @project.repository.is_active?
+                - if @project.repository.is_active? || @project.git_repo.is_active?
                   %li
-                    = link_to("Source Code", @project.repository.url)
+                    = link_to 'Source Code', source_project_path(:id => @project)  
                 - if @project.web_dav_location.is_active?
                   %li
                     = link_to("WebDAV", @project.web_dav_location.url)

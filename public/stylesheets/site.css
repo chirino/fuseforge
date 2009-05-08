@@ -97,7 +97,8 @@ div#footer { padding: 40px 0 40px 0; }
 }
 
 #overview h1, #overview h2, #overview h3{ 
-    margin-top: 0px; margin-bottom: 5px; 
+/*    margin-top: 0px; */
+    margin-bottom: 5px; 
 }
 
 #overview div.details {
@@ -144,6 +145,25 @@ div#footer { padding: 40px 0 40px 0; }
 }
 #spot div.spot-balloon li {
   list-style: none;
+}
+
+/* ==================================================================== *
+ * Two Col layout
+ * ==================================================================== */ 
+#section div.left {
+  float:left;
+  width:200px;
+  text-align:right;
+  font-size: 18pt;
+  clear:both;
+}
+#section div.right {
+  float:right;
+  width:520px;
+  text-align:left;
+}
+#section div.left h1,#content div.right h1 {
+  font-size: 18pt;
 }
 
 /* ==================================================================== *
