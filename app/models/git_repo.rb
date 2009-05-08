@@ -33,8 +33,9 @@ class GitRepo < ActiveRecord::Base
       # Only create the repo if it does not exist
       if !x.dir_exists?(repo_filepath, git_user)
         x.system("mkdir -p #{repo_filepath} && cd #{repo_filepath} && git --bare init", git_user)==0 or raise 'Error creating git repo!'
-      end
-      
+      end      
+      x.write(project.name, "#{repo_filepath}/description", git_user) 
+
       if project.is_private? 
         x.system("rm #{repo_filepath}/git-daemon-export-ok", git_user)
         x.system("chmod o-rx #{repo_filepath}", git_user)
@@ -48,7 +49,8 @@ class GitRepo < ActiveRecord::Base
       x.write(git_config(ml), "#{repo_filepath}/config", git_user) 
       
       if ml
-        x.system("ln -sf /usr/share/doc/git-core/contrib/hooks/post-receive-email #{repo_filepath}/hooks/post-receive", git_user)
+        x.write(". /usr/share/doc/git-core/contrib/hooks/post-receive-email", "#{repo_filepath}/hooks/post-receive", git_user) 
+        x.system("chmod a+x #{repo_filepath}/hooks/post-receive", git_user)
       else
         x.system("rm #{repo_filepath}/hooks/post-receive", git_user)
       end
@@ -138,7 +140,7 @@ class GitRepo < ActiveRecord::Base
   mailinglist = #{ml.post_address}
   announcelist =
   envelopesender = #{ml.post_address}
-  emailprefix = git push:
+  emailprefix = git push:  
 """
     end
   end
