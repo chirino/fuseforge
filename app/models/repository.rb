@@ -156,6 +156,7 @@ EOF
 
   DAV svn
   SVNPath #{repo_filepath}
+  SVNPathAuthz off
 
   AuthType Basic
   AuthName "FUSE Forge Repository"

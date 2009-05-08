@@ -174,7 +174,7 @@ class ProjectsController < ApplicationController
          @project.wiki.valid?
          
         flash[:notice] = 'Project was successfully updated.'
-        format.html { redirect_to(@project) }
+        format.html { redirect_to project_administration_path(@project) }
         format.xml  { head :ok }
       else
         format.html { render :action => "edit"}
