@@ -95,9 +95,9 @@ class Project < ActiveRecord::Base
     self.status = ProjectStatus.unapproved
   end
   
-  def before_update
+  def before_save
     featured_project.destroy if is_private? and not featured_project.blank?
-    update_permissions if is_private_changed? 
+    update_permissions if is_private_changed? && is_active?    
   end
   
   def before_create
