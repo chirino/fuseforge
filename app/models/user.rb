@@ -4,6 +4,9 @@ require 'benchmark_http_requests'
 
 class User < ActiveRecord::Base
   acts_as_tagger
+
+  has_friendly_id :login
+
   has_one :prospective_project_member
   belongs_to :phpbb_user, :class_name => "PhpbbUser", :foreign_key => "phpbb_user_id"
   

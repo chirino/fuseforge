@@ -57,7 +57,7 @@
               = link_to 'Manage Forge', admin_path
             - if  @current_user
               |
-              = link_to 'Edit Profile', edit_user_path(@current_user)
+              = link_to 'Edit Profile', edit_self_users_path
             
         = yield :script
         

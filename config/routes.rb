@@ -34,7 +34,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :project_statuses, :path_prefix => "/admin", :as => 'statuses'
   map.resources :unapproved_projects, :path_prefix => "/admin", :only => [:index, :show, :update, :destroy]
 
-  map.resources :users, :only => [:edit, :update]
+  map.resources :users, :only => [:edit, :update, :edit_self], :collection=>{ :edit_self => :get }
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
   map.root :controller => "homepage"

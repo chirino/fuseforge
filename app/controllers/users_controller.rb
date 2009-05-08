@@ -4,6 +4,14 @@ class UsersController < ApplicationController
   before_filter :get_user, :only => [:edit, :update]
   allow :edit, :update, :exec => :can_update?
 
+  def edit_self
+    @user = @current_user
+    respond_to do |format|
+      format.html { render :action => "edit" }
+      format.xml  { render :xml => @user }
+    end
+  end
+  
   def update
     respond_to do |format|
       if @user.update_attributes(params[:user])

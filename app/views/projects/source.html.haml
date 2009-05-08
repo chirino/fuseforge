@@ -71,7 +71,7 @@
           - example_url = @project.git_repo.commit_url
           %p 
             Project members who have configured a public SSH in their 
-            user profile 
+            = link_to 'user profile', edit_self_users_path   
             can push to the repository using the following URL:
           %p= link_to("#{@project.git_repo.commit_url}", "#{@project.git_repo.commit_url}")
         
