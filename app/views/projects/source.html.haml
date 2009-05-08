@@ -68,7 +68,7 @@
           %p= link_to("#{@project.git_repo.anonymous_url}", "#{@project.git_repo.anonymous_url}")
           
         - unless @project.git_repo.commit_url.empty? 
-          - example_url = @project.git_repo.commit_url
+          - example_url = @project.git_repo.commit_url unless example_url
           %p 
             Project members who have configured a public SSH in their 
             = link_to 'user profile', edit_self_users_path   
@@ -88,7 +88,7 @@
           %pre><
             %code><
               :preserve
-                svn co #{example_url}
+                git clone #{example_url}
                 cd #{@project.key}
           
           
