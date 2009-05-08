@@ -34,7 +34,7 @@ begin
   # Hit the Forge App to ask it if the user is allowed to acces the git repo.
   uri = URI.parse("#{FORGE_URL}/projects/#{project.upcase}/has_git_access/#{user}")
   response = Net::HTTP.get(uri)
-  fail "User #{user} does not have access to git repo #{git_repo}" unless response == 'true'
+  fail "User #{user} does not have access to git repo #{project}.git" unless response == 'true'
 
   #
   # Looks like we can let the user execute the command.
@@ -47,5 +47,5 @@ begin
   exec(GIT, 'shell', '-c', "#{git_command} '#{GIT_REPOS_DIR}/#{project}.git'")
   fail('Cannot execute git-shell.')
 rescue => e 
-  fail('Unexpected failure: #{e}')
+  fail("Unexpected failure: #{e}")
 end

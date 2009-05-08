@@ -49,15 +49,15 @@
               - allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do
                 = link_to 'Manage Project', project_administration_path(@project)
                 |    
-            = link_to 'Create', new_project_path
-            |
             = link_to 'Search', projects_path
+            |
+            = link_to 'Create', new_project_path
             - allow :user => :is_site_admin? do
               |
               = link_to 'Manage Forge', admin_path
             - if  @current_user
               |
-              = link_to 'Edit Profile', edit_self_users_path
+              = link_to 'My Profile', edit_self_users_path
             
         = yield :script
         

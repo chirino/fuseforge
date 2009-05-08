@@ -35,7 +35,7 @@ class UsersController < ApplicationController
     # Site admin and update any user
     return true if @current_user.is_site_admin?
     # The current user can only update his own profile.
-    return @current_user.id.to_s == params[:id]
+    return @current_user.login == params[:id]
   end
   
 end
