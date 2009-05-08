@@ -128,7 +128,7 @@ class Repository < ActiveRecord::Base
   def post_commit_hook_content(ml)
     rc = <<EOS
 #!/bin/bash
-/usr/share/subversion/hook-scripts/commit-email.pl "\\$1" "\\$2" --from #{ml.post_address} -s "svn commit:" #{ml.post_address}
+/usr/share/subversion/hook-scripts/commit-email.pl "$1" "$2" --from #{ml.post_address} -s "svn commit:" #{ml.post_address}
 EOS
     rc
   end
