@@ -107,7 +107,7 @@ class User < ActiveRecord::Base
       end
     end  
   end
-  
+    
   def crowd_refresh
     begin
       crowd_user = Crowd.new.find_by_name(login) # throws SOAP::FaultError
@@ -119,6 +119,10 @@ class User < ActiveRecord::Base
     end
   end
   
+  def cache_invalidate
+    self.cached_at = nil
+  end
+
   def data_refresh(crowd_user)   
     @crowd_user = crowd_user
     self.first_name = @crowd_user.first_name
@@ -153,6 +157,10 @@ class User < ActiveRecord::Base
     
   def is_confluence_fuseforge_user?
     crowd_group_names.index(CrowdGroup.confluence_user_group.name)!=nil 
+  end  
+
+  def is_icla_on_file?
+    crowd_group_names.index(CrowdGroup.forge_icla_group.name)!=nil 
   end  
     
   def is_project_administrator?

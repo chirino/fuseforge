@@ -1,10 +1,10 @@
 module CrowdGroupMixins
-  def add_crowd_user(user)
-    Crowd.new.add_user_to_group(user.login, self.name)
+  def add_crowd_user(login)
+    Crowd.new.add_user_to_group(login, self.name)
   end  
   
-  def remove_crowd_user(user)
-    Crowd.new.remove_user_from_group(user.login, self.name)
+  def remove_crowd_user(login)
+    Crowd.new.remove_user_from_group(login, self.name)
   end  
   
   def user_names

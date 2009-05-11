@@ -22,21 +22,26 @@ class CrowdGroup
   def self.forge_admin_group
     CrowdGroup.new "forge-admins"
   end
-  
-  def self.confluence_user_group
-    CrowdGroup.new "forge-confluence-users"
-  end
 
   def self.company_employee_group
     CrowdGroup.new "iona-employee"
   end
-  
-  def self.jira_developer_group
-    CrowdGroup.new "jira-fuseforge-developers"
+
+  def self.forge_icla_group
+    CrowdGroup.new "forge-icla"
   end
 
   def self.registered_user_group
     CrowdGroup.new "registered-users"
   end
+  
+  def self.confluence_user_group
+    CrowdGroup.new "forge-confluence-users"
+  end
+
+  def self.jira_developer_group
+    CrowdGroup.new "jira-fuseforge-developers"
+  end
+
   
 end

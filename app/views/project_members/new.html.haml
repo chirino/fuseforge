@@ -1,0 +1,29 @@
+- content_for(:bread_crumbs) do
+  = link_to 'Forge', root_path
+  >
+  = link_to 'Projects', projects_path
+  >
+  = link_to @project.name, @project
+  >
+  = link_to 'Manage', project_administration_path(@project)
+  >
+  = link_to 'Members', project_project_members_path(:project_id => @project)
+
+#overview
+  .wrapper
+    .message
+      %h2 
+        Add Member to
+        = h @project.name
+#section
+  .wrapper
+    - form_tag( project_project_members_path(@project), :method => :post) do
+      %p
+        %label
+          User Login
+        %br
+        = text_field_tag 'login', @login
+      .form_button
+        = submit_tag "Add"
+    .bottom_links
+      = link_to 'Back', project_project_members_path(:project_id => @project)

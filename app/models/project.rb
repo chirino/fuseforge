@@ -32,6 +32,10 @@ class Project < ActiveRecord::Base
     def default
       find_by_name(proxy_owner.default_admin_group_name)
     end
+    
+    def user_names
+      all.collect { |x| x.user_names }.flatten.uniq
+    end
       
     def users
       all.collect { |x| x.users }.flatten.uniq
@@ -47,6 +51,10 @@ class Project < ActiveRecord::Base
       find_by_name(proxy_owner.default_member_group_name)
     end
       
+    def user_names
+      all.collect { |x| x.user_names }.flatten.uniq
+    end
+
     def users
       all.collect { |x| x.users }.flatten.uniq
     end
@@ -158,36 +166,27 @@ class Project < ActiveRecord::Base
   
   def inactivate
     groups.reject { |group| group.default? }.each { |group| group.destroy }
-    default_administrators.each { |user| remove_administrator(user) }
-    default_members.each { |user| remove_member(user) }
+    default_administrators.each { |login| remove_administrator(login) }
+    default_members.each { |login| remove_member(login) }
     self.status = ProjectStatus.inactive
     save
   end  
 
   def administrators
-    admin_groups.users
+    admin_groups.user_names
   end
 
-  def default_administrators
-    admin_groups.default.users
-  end
-    
   def find_administrator_by_user_id(user_id)
     user = User.find(user_id)
     administrators.include?(user) ? user : nil
   end
   
   def members
-    member_groups.users
+    member_groups.user_names
   end
   
-  def default_members
-    member_groups.default.users
-  end
-  
-  def find_member_by_user_id(user_id)
-    user = User.find(user_id)
-    members.include?(user) ? user : nil
+  def find_member_by_user_id(login)
+    members.include?(login) ? user : nil
   end
   
   def users
@@ -197,22 +196,30 @@ class Project < ActiveRecord::Base
   def approved?
     status != ProjectStatus.unapproved
   end
-    
-  def add_administrator(user)
-    admin_groups.default.add_user(user)
-  end
-    
-  def remove_administrator(user)
-    admin_groups.default.remove_user(user)
-  end
-
-  def add_member(user)
-    member_groups.default.add_user(user)
-  end
-    
-  def remove_member(user)
-    member_groups.default.remove_user(user)
-  end
+  
+  # def default_administrators
+  #   admin_groups.default.user_names
+  # end
+  #    
+  # def default_members
+  #   member_groups.default.user_names
+  # end
+  #   
+  # def add_administrator(login)
+  #   admin_groups.default.add_user(login)
+  # end
+  #   
+  # def remove_administrator(login)
+  #   admin_groups.default.remove_user(login)
+  # end
+  # 
+  # def add_member(login)
+  #   member_groups.default.add_user(login)
+  # end
+  #   
+  # def remove_member(login)
+  #   member_groups.default.remove_user(login)
+  # end
 
   def default_admin_group_name
     @default_admin_group_name ||=  "#{ProjectGroup::DEFAULT_PREFIX}-#{shortname.downcase}-#{ProjectGroup::DEFAULT_ADMIN_SUFFIX}"
@@ -275,10 +282,12 @@ class Project < ActiveRecord::Base
   private
   
   def add_default_groups
-    admin_groups << ProjectAdminGroup.new(:name => default_admin_group_name)
-    add_administrator(created_by)
-    member_groups << ProjectMemberGroup.new(:name => default_member_group_name)
-    add_member(created_by)
+    g = ProjectAdminGroup.new(:name => default_admin_group_name)
+    admin_groups << g
+    g.add_user(created_by.login)
+    g = ProjectMemberGroup.new(:name => default_member_group_name)
+    member_groups << g
+    g.add_user(created_by.login)
     member_groups << ProjectMemberGroup.new(:name => CrowdGroup.company_employee_group.name)
   end
   

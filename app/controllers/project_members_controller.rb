@@ -1,38 +1,37 @@
 class ProjectMembersController < ApplicationController
+  layout "new_look"
   before_filter :get_project
-  before_filter :get_project_member, :only => [:show, :destroy]
+  before_filter :get_project_user, :only => [:show, :destroy]
   
   allow :create, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
   
   def index
-    @project_members = @project.default_members
-    
+    @users = @group.user_names
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @project_members }
-    end
-  end
-
-  def show
-    respond_to do |format|
-      format.html # show.html.erb
-      format.xml  { render :xml => @project_member }
+      format.xml  { render :xml => @users }
     end
   end
 
   def create
     flash[:error] = nil
     @login = params[:login]
-    
     if @login.blank?
       flash[:error] = 'You must enter a user login!'
     else  
       if user = User.find_or_create_by_crowd_login(@login)
-        if @project.members.include?(user)
-          flash[:error] = "#{user.full_name} is already a project member!"
+        if @group.contains_user?(user.login)
+          flash[:error] = "#{user.full_name} is already in the group!"
         else
-          @project.add_member(user)
-          flash[:notice] = "#{user.full_name} has been made a project member."  
+          # Force a reresh to get the latest group data..
+          user.crowd_refresh
+          # User can only join if he has an ICLA on file or is an employee
+          if user.is_icla_on_file? || user.is_company_employee?
+            @group.add_user(@login)
+            flash[:notice] = "#{user.full_name} has joined the group."  
+          else
+            flash[:error] = "#{user.full_name} does not have an ICLA on file.  Please ask the user to first file an ICLA."  
+          end
         end
       else
         flash[:error] = "#{@login} is not a valid user login!"
@@ -49,8 +48,7 @@ class ProjectMembersController < ApplicationController
   end
   
   def destroy
-    @project.remove_member(@project_member)
-    
+    @group.remove_user(@user.login)
     respond_to do |format|
       format.html { redirect_to(project_project_members_path(@project)) }
       format.xml  { head :ok }
@@ -60,10 +58,11 @@ class ProjectMembersController < ApplicationController
   private
   
   def get_project
-    @project = Project.find(params[:project_id])
+    @project = Project.find(params[:project_id]);
+    @group = @project.member_groups.default 
   end
   
-  def get_project_member
-    @project_member = @project.find_member_by_user_id(params[:id])
+  def get_project_user
+    @user = User.find(params[:id])
   end  
 end

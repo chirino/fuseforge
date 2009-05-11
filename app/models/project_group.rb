@@ -12,6 +12,10 @@ class ProjectGroup < ActiveRecord::Base
   after_create :add_to_crowd
   before_destroy :remove_from_crowd
 
+  def self.group_names
+    self.all(:order => :name).collect { |x| x.name }
+  end
+
   def exists_in_crowd?
     Crowd.new.find_all_group_names.include?(name)
   end     
@@ -24,26 +28,26 @@ class ProjectGroup < ActiveRecord::Base
   def remove_from_crowd
     return unless default?
 #    Crowd.new.delete_group!(name) if exists_in_crowd?
-
   # TODO:  Take this out after we figure out problem with removing groups.
   rescue SOAP::FaultError
   end
 
-  def add_user(user)
-    add_crowd_user(user)
+  def add_user(login)
+    add_crowd_user(login)
   end
   
-  def remove_user(user)
-    remove_crowd_user(user)
-  end    
+  def remove_user(login)
+    remove_crowd_user(login)
+  end
+  
+  def contains_user?(login)
+    user_names.index(login)!=nil
+  end
     
   def default?
     false
   end
   
-  def self.group_names
-    self.all(:order => :name).collect { |x| x.name }
-  end
 end
 
 #

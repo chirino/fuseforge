@@ -1,0 +1,36 @@
+- content_for(:bread_crumbs) do
+  = link_to 'Forge', root_path
+  >
+  = link_to 'Projects', projects_path
+  >
+  = link_to @project.name, @project
+  >
+  = link_to 'Manage', project_administration_path(@project)
+  >
+  = link_to 'Admins', project_project_administrators_path(:project_id => @project)
+      
+#overview
+  .wrapper
+    .message
+      %h2 
+        Listing Members of
+        = @project.name
+#section
+  .wrapper
+    %table
+      %tr
+        %th
+          User Login
+      - show_maintenance_links = @current_user.is_project_administrator_for?(@project)
+      - @users.each do |user|
+        %tr
+          %td
+            = h user
+          %td
+            = link_to 'Remove from project', project_project_administrator_path(@project, user), :confirm => 'Are you sure?', :method => :delete
+            
+    .bottom_links
+      - if show_maintenance_links
+        = link_to 'Add project administrator', new_project_project_administrator_path(@project)
+        |
+      = link_to 'Back to project', project_path(@project)
