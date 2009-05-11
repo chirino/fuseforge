@@ -5,7 +5,7 @@ require 'uri'
 
 # Use syslog since the output of this script is usually sent to /dev/null 
 def fail(message) 
-  Syslog.open do |syslog|
+  Syslog.open("forge-git") do |syslog|
     syslog.err message
   end
   puts message
@@ -20,13 +20,14 @@ begin
 
   # load script input args.
   fail "User argument not supplied." unless ARGV[0]
-  fail "SSH_ORIGINAL_COMMAND environment variable not supplied." unless ENV['SSH_ORIGINAL_COMMAND']
   user = ARGV[0]
+
+  fail "#{user}: SSH_ORIGINAL_COMMAND environment variable not supplied." unless ENV['SSH_ORIGINAL_COMMAND']
   ssh_command = ENV['SSH_ORIGINAL_COMMAND']
 
   # parse the ssh command.. only git commands allowed.
   ALLOWED_GIT_COMMANDS  = /^(git-upload-pack|git upload-pack|git-receive-pack|git receive-pack) '\/?([a-z]+)\.git'$/
-  fail "Not a supported git command: #{ssh_command}" unless ssh_command =~ ALLOWED_GIT_COMMANDS 
+  fail "#{user}: Not a supported git command: #{ssh_command}" unless ssh_command =~ ALLOWED_GIT_COMMANDS 
   git_command = $1
   project = $2
 
@@ -34,18 +35,18 @@ begin
   # Hit the Forge App to ask it if the user is allowed to acces the git repo.
   uri = URI.parse("#{FORGE_URL}/projects/#{project.upcase}/has_git_access/#{user}")
   response = Net::HTTP.get(uri)
-  fail "User #{user} does not have access to git repo #{project}.git" unless response == 'true'
+  fail "#{user}: Does not have access to git repo #{project}.git" unless response == 'true'
 
   #
   # Looks like we can let the user execute the command.
   GIT = 'git' unless defined? GIT
   
-  Syslog.open do |syslog|
-    syslog.info "executing: #{GIT} shell -c \"#{git_command} '#{GIT_REPOS_DIR}/#{project}.git'\""
+  Syslog.open("forge-git") do |syslog|
+    syslog.info "#{user}: executing: #{GIT} shell -c \"#{git_command} '#{GIT_REPOS_DIR}/#{project}.git'\""
   end
     
   exec(GIT, 'shell', '-c', "#{git_command} '#{GIT_REPOS_DIR}/#{project}.git'")
-  fail('Cannot execute git-shell.')
+  fail('#{user}: Cannot execute git-shell.')
 rescue => e 
   fail("Unexpected failure: #{e}")
 end
