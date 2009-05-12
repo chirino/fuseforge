@@ -219,6 +219,7 @@ class ProjectsController < ApplicationController
   end
   
   def project_private_and_user_not_member?
+    puts "================== project_private_and_user_not_member"
     @project.is_private? and not current_user.is_project_member_for?(@project)
   end  
   

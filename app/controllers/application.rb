@@ -92,15 +92,15 @@ class ApplicationController < ActionController::Base
   
   def render_404 
 	  respond_to do |format| 
-	    format.html { render :file => "#{RAILS_ROOT}/public/404.html", :status => '404 Not Found' } 
+	    format.html { render :file => "#{RAILS_ROOT}/app/views/shared/404.html.haml", :layout=>"new_look", :status => '404 Not Found' } 
       format.xml  { render :nothing => true, :status => '404 Not Found' } 
 	  end 
 	  true 
   end 
 
-  def render_401 
+  def render_401
 	  respond_to do |format| 
-	    format.html { render :file => "#{RAILS_ROOT}/public/401.html", :status => '401 Unauthorized' } 
+	    format.html { render :file => "#{RAILS_ROOT}/app/views/shared/401.html.haml", :layout=>"new_look", :status => '401 Unauthorized' } 
       format.xml  { render :nothing => true, :status => '401 Unauthorized' } 
 	  end 
 	  true 

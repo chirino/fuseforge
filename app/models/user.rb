@@ -11,14 +11,14 @@ class User < ActiveRecord::Base
   belongs_to :phpbb_user, :class_name => "PhpbbUser", :foreign_key => "phpbb_user_id"
   
   # TODO: investigate the following.. it should eliminate the need to explicitly use yaml 
-  serialize :crowd_group_names
+  serialize :groups_cache
 
   # Disable mass assignment of the following attributes since they cannot be modified via a user form
   # these values come from Crowd.
   attr_protected :first_name
   attr_protected :last_name
   attr_protected :email
-  attr_protected :crowd_group_names
+  attr_protected :groups_cache
   attr_protected :cached_at
       
   # Refresh every 5 min
@@ -176,6 +176,8 @@ class User < ActiveRecord::Base
   end
   
   def is_project_member_for?(project)
+    puts "=================="
+    puts "#{project.member_groups.group_names.to_set} intersection #{crowd_group_names}"
     self.is_site_admin? || (not project.member_groups.group_names.to_set.intersection(crowd_group_names).empty?)
   end  
 
