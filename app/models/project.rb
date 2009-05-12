@@ -75,7 +75,7 @@ class Project < ActiveRecord::Base
     :url => "/attachments/:class/:attachment/:id/:style_:basename.:extension",
     :path => ":rails_root/public/attachments/:class/:attachment/:id/:style_:basename.:extension",      
     :default_url => "/images/missing_project_:style.gif",
-    :styles => { :medium => "160x160#", :thumb => "70x70#" }
+    :styles => { :medium => "160x160#", :small => "150x150#", :thumb => "70x70#" }
   
   named_scope :public, :conditions => { :is_private => false }
   named_scope :visibile_to, lambda { |user| 
