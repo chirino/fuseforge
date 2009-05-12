@@ -207,7 +207,8 @@ div#footer { padding: 40px 0 40px 0; }
 
 #project-section div.project {
   border-bottom: thin solid #DDD;
-  padding: 10px 0px 10px 0px;
+  padding: 10px;
+  min-height:170px;
 }
 
 #project-section div.logo {
