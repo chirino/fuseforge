@@ -28,7 +28,7 @@ class ProjectsController < ApplicationController
     if current_user.is_site_admin?
       @search = Project.new_search(search_params)
     else
-      @search = Project.approved.public.new_search(search_params)
+      @search = Project.approved.visibile_to(current_user).new_search(search_params)
     end
 
     if params[:search]

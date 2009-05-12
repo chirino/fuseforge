@@ -78,6 +78,14 @@ class Project < ActiveRecord::Base
     :styles => { :medium => "160x160#", :thumb => "70x70#" }
   
   named_scope :public, :conditions => { :is_private => false }
+  named_scope :visibile_to, lambda { |user| 
+    groups = user ? user.crowd_group_names : []
+    { 
+      :select => "DISTINCT projects.*",
+      :joins => "LEFT OUTER JOIN `project_groups` ON project_groups.project_id = projects.id",
+      :conditions => ['project_groups.name IN(?) OR projects.is_private=0', groups],
+    } 
+  }
   named_scope :active, lambda { { :conditions => ['project_status_id = ?', ProjectStatus.active.id] } }
   named_scope :inactive, lambda { { :conditions => ['project_status_id = ?', ProjectStatus.inactive.id] } }
   named_scope :unapproved, lambda { { :conditions => ['project_status_id = ?', ProjectStatus.unapproved.id] } }
