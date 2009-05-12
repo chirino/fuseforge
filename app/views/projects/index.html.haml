@@ -74,7 +74,7 @@
             %td.category
               = h(project.category.name)
             %td.logo
-              = link_to(image_tag(project.image.url(:thumb)), project_path(project))
+              = link_to(image_tag(project.image.url(:small)), project_path(project))
             %td.name
               = link_to h(project.name), project_path(project)
             %td.description
