@@ -3,7 +3,7 @@ set :mongrel_conf, "/data/fuseforge/shared/config/mongrel_cluster/mongrel_cluste
 set :rails_env, 'production'
 set :user, "rails"
 set :port, 22
-set :ssh_options, { :forward_agent => true, :keys => %w(/Users/chirino/sandbox/fuse/fuse-infra/images/common/root/.ssh/id_rsa)  }
+set :ssh_options, { :forward_agent => true, :keys => %w(/Users/chirino/sandbox/fuse/fuseinfra/images/common/root/.ssh/id_rsa)  }
 set :use_sudo, false
 
 host = "forge.e.fusesourcedev.com"

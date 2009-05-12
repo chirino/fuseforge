@@ -35,8 +35,7 @@ namespace :deploy do
     [ :stop, :start, :restart ].each do |t|
       desc "#{t.to_s.capitalize} the mongrel appserver"
       task t, :roles => :app do
-        #invoke_command checks the use_sudo variable to determine how to run the mongrel_rails command
-        invoke_command "mongrel_rails cluster::#{t.to_s} -C #{mongrel_conf}", :via => run_method
+        invoke_command "sudo monit -g forge_rails #{t.to_s} all" 
       end
     end
   end

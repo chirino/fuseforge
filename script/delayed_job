@@ -3,6 +3,45 @@ require 'rubygems'
 require 'daemons'
 require 'fileutils'
 
+#
+# Re-define the stop method so that it waits for the running process to stop
+# Not waiting messes up monit a bit.
+#  
+module Daemons
+  class Application
+    def stop
+
+      if options[:force] and not running?
+        self.zap
+        return
+      end
+    
+      # Catch errors when trying to kill a process that doesn't
+      # exist. This happens when the process quits and hasn't been
+      # restarted by the monitor yet. By catching the error, we allow the
+      # pid file clean-up to occur.
+      
+      begin
+        # Wait up to 10 secs for the process to die.
+        pid = @pid.pid
+        10.times do
+          Process.kill(SIGNAL, pid)
+          break unless running?
+          sleep 1 
+          break unless running?
+        end
+      rescue Errno::ESRCH => e
+        puts "#{e} #{@pid.pid}"
+        puts "deleting pid-file."
+      end
+    
+      # We try to remove the pid-files by ourselves, in case the application
+      # didn't clean it up.
+      begin; @pid.cleanup; rescue ::Exception; end
+    end
+  end
+end
+  
 RAILS_ROOT = File.expand_path('..', File.dirname(__FILE__))
 PID_DIR = RAILS_ROOT+'/tmp/pids'
 
@@ -34,7 +73,7 @@ Daemons.run_proc('delayed_job', daemon_options) do
   end
   
   require RAILS_ROOT + '/config/boot'
-  require RAILS_ROOT + '/config/environment'  
+  require RAILS_ROOT + '/config/environment'
   
   #
   # Start the Delayed Job Worker
