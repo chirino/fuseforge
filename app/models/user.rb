@@ -176,8 +176,6 @@ class User < ActiveRecord::Base
   end
   
   def is_project_member_for?(project)
-    puts "=================="
-    puts "#{project.member_groups.group_names.to_set} intersection #{crowd_group_names}"
     self.is_site_admin? || (not project.member_groups.group_names.to_set.intersection(crowd_group_names).empty?)
   end  
 

@@ -41,6 +41,21 @@
             %th To unsubscribe: 
             %td= mail_to ml.unsubscribe_address
 
+    - allow :exec => proc { @current_user.is_project_administrator_for?(@project) } do
+      %h3 Mailing Lists Password Reset
+      - form_tag( reset_admin_password_project_mailing_lists_path(@project) ) do
+        %table.fieldset
+          %tr
+            %th.label
+              = label_tag 'password'
+            %td.field
+              = password_field_tag :password, nil, :class => 'textbox'
+            %td
+              = submit_tag "Reset"
+            %td.help
+              The new mailing lists password will be emailed to all project admins.
+        
+        
 
     .bottom_links
       - allow :exec => proc { @current_user.is_site_admin? } do

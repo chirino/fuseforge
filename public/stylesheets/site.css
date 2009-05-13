@@ -306,7 +306,8 @@ table.project-list td.description {
  * ==================================================================== */
 #content table.fieldset {
   border-bottom: 1px solid #DFD3C3;
-  margin-bottom: .3em;
+  margin: 10px;
+  padding: 0px;
   width: 100%;
 }
 #content table.fieldset td, #content table.fieldset th {
@@ -345,7 +346,6 @@ table.project-list td.description {
 #content table.fieldset td.help {
   background-color: #E5EDF5;
   font-size: 80%;
-  padding: 0 10px;
   width: 31%;
 }
 #content table.fieldset input {

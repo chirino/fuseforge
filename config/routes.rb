@@ -12,7 +12,7 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :project_admin_groups, :as => 'admin-groups', :except => [:edit, :update]
     project.resources :project_member_groups, :as => 'member-groups', :except => [:edit, :update]
     project.resources :project_news_items, :as => 'news-items'
-    project.resources :project_mailing_lists, :name_prefix => "", :as => 'mailing-lists'
+    project.resources :project_mailing_lists, :name_prefix => "", :as => 'mailing-lists', :collection=>{ :reset_admin_password => :post } 
     project.resources :project_tags, :as => 'tags', :only => [:index, :create, :destroy]
     project.resource  :issue_tracker
     project.resources :images, :only => [:show]

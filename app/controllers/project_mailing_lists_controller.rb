@@ -6,7 +6,7 @@ class ProjectMailingListsController < ApplicationController
   before_filter :get_project_mailing_list, :only => [:show, :edit, :update, :destroy]
 
   deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => :homepage
-  allow :new, :create, :edit, :update, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
+  allow :new, :create, :edit, :update, :destroy, :reset_admin_password, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
 
   def index
     @project_mailing_lists = @project.mailing_lists
@@ -69,6 +69,18 @@ class ProjectMailingListsController < ApplicationController
   def destroy
     @project_mailing_list.destroy
     respond_to do |format|
+      format.html { redirect_to(project_mailing_lists_path(:project_id => @project.id)) }
+      format.xml  { head :ok }
+    end
+  end
+
+  def reset_admin_password
+    @project.mailing_lists.each do |ml|
+      ml.reset_admin_password params[:password]
+    end
+    
+    respond_to do |format|
+      flash[:notice] = 'Mailing list passwords updated.'
       format.html { redirect_to(project_mailing_lists_path(:project_id => @project.id)) }
       format.xml  { head :ok }
     end

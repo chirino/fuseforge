@@ -43,7 +43,7 @@ class MailingList < ActiveRecord::Base
   def create_internal
     return true if not use_internal?
 
-    # if SVN_DAV_HOST[:ssh] is nil, then commands are run locally 
+    # if MAILMAN_CONFIG[:ssh] is nil, then commands are run locally 
     CommandExecutor.open(MAILMAN_CONFIG[:ssh]) { |x|
     
       # Only create the list if it does not exist
@@ -51,13 +51,24 @@ class MailingList < ActiveRecord::Base
         x.system("""newlist '#{full_name}' '#{admin_email}' '#{generate_passwd}' <<EOF\n\nEOF""", "list")==0  or raise "newlist command failed";
       end
       
-      x.write(list_configuration, "/tmp/#{full_name}.cfg")
-      x.system("config_list -i /tmp/#{full_name}.cfg #{full_name}", "list")==0  or raise "Could not configure mailing list:\n #{x.output}";
+      udpate_list_configuration(x)
     }
     true
     
   rescue => error
     logger.error """Error creating the mailing list: #{error}\n#{error.backtrace.join("\n")}"""
+  end
+  
+  def reset_admin_password(passwd)
+    return false if not use_internal?
+    CommandExecutor.open(MAILMAN_CONFIG[:ssh]) do |x|
+      # We update the list first so that the admin list is up to date.
+      udpate_list_configuration(x)
+      # Changing the password will email all the admins.
+      x.system("/usr/lib/mailman/bin/change_pw -l #{full_name} -p '#{passwd}'", "list")==0
+    end
+  rescue => error
+    logger.error """Error resetting the mailing list password: #{error}\n#{error.backtrace.join("\n")}"""
   end
   
   private
@@ -74,6 +85,11 @@ class MailingList < ActiveRecord::Base
     MAILMAN_CONFIG[:management_url]
   end
   
+  def udpate_list_configuration(x)
+    x.write(list_configuration, "/tmp/#{full_name}.cfg")
+    x.system("config_list -i /tmp/#{full_name}.cfg #{full_name}", "list")==0  or raise "Could not configure mailing list:\n #{x.output}";
+  end
+  
   def admin_email
     # Finds an admin email address that can be used as the list admin
     if project.created_by.email && project.created_by.email =~ RFC822::EmailAddress
@@ -86,7 +102,17 @@ class MailingList < ActiveRecord::Base
     end
     raise "No vaild admin email addresses available to be the owner of the mailing list"
   end
-    
+  
+  def admin_emails
+    rc = Set.new
+    project.admin_groups.users.each do |x|
+      if x.email && x.email =~ RFC822::EmailAddress
+        rc << x.email
+      end
+    end
+    rc.to_a
+  end
+      
   def generate_passwd(length=10)
     chars = ("A".."Z").to_a + ("a".."z").to_a + ("1".."9").to_a 
     return Array.new(length, '').collect{chars[rand(chars.size)]}.join
@@ -107,16 +133,25 @@ web_page_url = '#{management_url}/'
 accept_these_nonmembers = ['^.*@#{domain}']
       """
     if internal_replyto.blank?
-      rc += """
+      rc << """
 reply_goes_to_list = 1
 reply_to_address = ''
         """
     else
-      rc += """
+      rc << """
 reply_goes_to_list = 2
 reply_to_address = '#{internal_replyto}'
         """
     end
+    
+    # Make all the admins the mailing list owners.
+    rc << "owner = ["
+    admin_emails.each_index do |i|
+      rc << "," unless i==0
+      rc << "'#{admin_emails[i]}'"
+    end
+    rc << "]\n"
+    
     return rc
   end
 
