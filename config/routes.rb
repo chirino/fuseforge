@@ -7,8 +7,8 @@ ActionController::Routing::Routes.draw do |map|
   map.register '/register', :controller => 'registrations', :action => 'new'
   
   map.resources :projects do |project|
-    project.resources :project_administrators, :as => 'admin-users', :except => [:edit, :update]
-    project.resources :project_members, :as => 'member-users', :except => [:edit, :update]
+    project.resources :project_administrators, :as => 'admin-users', :except => [:edit, :update], :requirements => { :id => /[^\/\?\#]+/ }
+    project.resources :project_members, :as => 'member-users', :except => [:edit, :update], :requirements => { :id => /[^\/\?\#]+/ }
     project.resources :project_admin_groups, :as => 'admin-groups', :except => [:edit, :update]
     project.resources :project_member_groups, :as => 'member-groups', :except => [:edit, :update]
     project.resources :project_news_items, :as => 'news-items'
