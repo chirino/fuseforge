@@ -74,11 +74,7 @@ module ApplicationHelper
   end  
   
   def public_path(source)
-    has_request = @controller.respond_to?(:request)
-    if has_request && defined? @controller.request.relative_url_root 
-      source = "#{@controller.request.relative_url_root}#{source}"
-    end
-    source
+    "#{ActionController::Base.relative_url_root}#{source}"
   end
   
 end
