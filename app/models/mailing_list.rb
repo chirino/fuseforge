@@ -131,17 +131,17 @@ advertised = 0
 subscribe_policy = #{project.is_private ? '3' : '1'}
 web_page_url = '#{management_url}/'
 accept_these_nonmembers = ['^.*@#{domain}']
-      """
+"""
     if internal_replyto.blank?
       rc << """
 reply_goes_to_list = 1
 reply_to_address = ''
-        """
+"""
     else
       rc << """
 reply_goes_to_list = 2
 reply_to_address = '#{internal_replyto}'
-        """
+"""
     end
     
     # Make all the admins the mailing list owners.
