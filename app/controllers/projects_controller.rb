@@ -10,7 +10,7 @@ class ProjectsController < ApplicationController
   deny :show, :source, :edit, :update, :destroy, :exec => :project_unapproved_and_user_not_site_admin?, :method => :access_denied
   deny :show, :source, :edit, :update, :destroy, :exec => :project_private_and_user_not_member?, :method => :access_denied
 
-  allow :new, :create, :user => :is_company_employee?, :method => :access_denied
+  allow :create, :exec => :can_create?, :method => :access_denied
   allow :edit, :update, :user => :is_project_administrator_for?, :method => :access_denied
   allow :destroy, :user => :is_site_admin?, :method => :access_denied
 
@@ -82,20 +82,27 @@ class ProjectsController < ApplicationController
   end
 
   def new
-    @project = Project.new
-    @project.issue_tracker = IssueTracker.new(:use_internal => false)
-    @project.repository = Repository.new(:use_internal => false)
-    @project.git_repo = GitRepo.new(:use_internal => false)
-    @project.web_dav_location = WebDavLocation.new(:use_internal => false)
-    @project.forum = Forum.new(:use_internal => false)
-    @project.wiki = Wiki.new(:use_internal => false)
+    if( can_create? )
+      @project = Project.new
+      @project.issue_tracker = IssueTracker.new(:use_internal => false)
+      @project.repository = Repository.new(:use_internal => false)
+      @project.git_repo = GitRepo.new(:use_internal => false)
+      @project.web_dav_location = WebDavLocation.new(:use_internal => false)
+      @project.forum = Forum.new(:use_internal => false)
+      @project.wiki = Wiki.new(:use_internal => false)
 
-    set_display_external_urls
-    set_display_other_license_url
+      set_display_external_urls
+      set_display_other_license_url
 
-    respond_to do |format|
-      format.html
-      format.xml  { render :xml => @project }
+      respond_to do |format|
+        format.html
+        format.xml  { render :xml => @project }
+      end
+    else
+      respond_to do |format|
+ 	      format.html { redirect_to :controller=>"users", :action=>"icla_info" } 
+        format.xml  { render :status => 401 }
+      end
     end
   end
   
@@ -219,8 +226,11 @@ class ProjectsController < ApplicationController
   end
   
   def project_private_and_user_not_member?
-    puts "================== project_private_and_user_not_member"
     @project.is_private? and not current_user.is_project_member_for?(@project)
+  end  
+
+  def can_create?
+    current_user.is_icla_on_file? || current_user.is_company_employee?
   end  
   
   def set_display_external_urls

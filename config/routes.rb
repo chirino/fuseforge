@@ -6,6 +6,9 @@ ActionController::Routing::Routes.draw do |map|
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.register '/register', :controller => 'registrations', :action => 'new'
   
+  map.resources :projects, :member=>{ :source => :get }
+  map.resources :projects, :member=>{ :has_git_access => :get }, :path_names=>{ :has_git_access => 'has_git_access/:user' }
+
   map.resources :projects do |project|
     project.resources :project_administrators, :as => 'admin-users', :except => [:edit, :update], :requirements => { :id => /[^\/\?\#]+/ }
     project.resources :project_members, :as => 'member-users', :except => [:edit, :update], :requirements => { :id => /[^\/\?\#]+/ }
@@ -18,10 +21,6 @@ ActionController::Routing::Routes.draw do |map|
     project.resources :images, :only => [:show]
   end  
 
-  map.resources :projects, :member=>{ :has_git_access => :get }, :path_names=>{ :has_git_access => 'has_git_access/:user' }
-  map.resources :projects, :member=>{ :source => :get }
-
-  
   map.connect '/project-sites/:shortname', :controller => 'projects', :action => 'show'
   map.project_administration '/project/:id/project_administration', :controller => 'project_administration', :action => 'index'
   
@@ -34,6 +33,7 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :project_statuses, :path_prefix => "/admin", :as => 'statuses'
   map.resources :unapproved_projects, :path_prefix => "/admin", :only => [:index, :show, :update, :destroy]
 
+  map.resources :users, :collection=>{ :icla_info => :get }
   map.resources :users, :only => [:edit, :update, :edit_self], :collection=>{ :edit_self => :get }, :requirements => { :id => /[^\/\?\#]+/ }
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.
