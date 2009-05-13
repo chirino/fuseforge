@@ -1,0 +1,20 @@
+- content_for(:bread_crumbs) do
+  = link_to 'Forge', root_path
+
+#overview
+  .wrapper
+    .message
+      %h2&== The Forge ICLA
+      Making sure all Forge intellectual property stays unencumbered.
+      
+#section 
+  .wrapper
+    %p 
+      So you want to participate as a contributor in a FUSE Forge project?  The first step you need
+      to do is send us as signed 
+      = link_to 'FUSE Individual Contributor Agreement', public_path('/assets/fuse-icla-05-2009.pdf')
+      
+    %p
+      Once we have received it, it will be filed and your account marked as having submitted the ICLA.  At that point
+      you will be able to join projects as a member or propose new projects.
+    
