@@ -30,7 +30,7 @@ class ProjectMembersController < ApplicationController
             @group.add_user(@login)
             flash[:notice] = "#{user.full_name} has joined the group."  
           else
-            flash[:error] = "#{user.full_name} does not have an ICLA on file.  Please ask the user to first <a href=\"#{url_for(:controller=>'users', :action=>'icla_info')}\">file an ICLA</a>."
+            flash[:error] = "#{user.full_name} does not have an ICLA on file.  Please ask the user to first <a href=\"#{icla_path}\">file an ICLA</a>."
           end
         end
       else

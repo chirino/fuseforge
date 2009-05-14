@@ -6,8 +6,11 @@ ActionController::Routing::Routes.draw do |map|
   map.logout '/logout', :controller => 'sessions', :action => 'destroy'
   map.register '/register', :controller => 'registrations', :action => 'new'
   
+  map.terms_of_use '/terms-of-use', :controller => 'homepage', :action => 'terms_of_use'
+  map.icla '/icla_info', :controller => 'homepage', :action => 'icla_info'
+
   map.resources :projects, :member=>{ :source => :get }
-  map.resources :projects, :member=>{ :has_git_access => :get }, :path_names=>{ :has_git_access => 'has_git_access/:user' }
+  map.resources :projects, :member=>{ :has_git_access => :get }, :path_names=>{ :has_git_access => 'has_git_access/:user' }, :requirements => { :user => /[^\/\?\#]+/ }
 
   map.resources :projects do |project|
     project.resources :project_administrators, :as => 'admin-users', :except => [:edit, :update], :requirements => { :id => /[^\/\?\#]+/ }
@@ -32,8 +35,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :project_licenses, :path_prefix => "/admin", :as => 'licenses'
   map.resources :project_statuses, :path_prefix => "/admin", :as => 'statuses'
   map.resources :unapproved_projects, :path_prefix => "/admin", :only => [:index, :show, :update, :destroy]
-
-  map.resources :users, :collection=>{ :icla_info => :get }
   map.resources :users, :only => [:edit, :update, :edit_self], :collection=>{ :edit_self => :get }, :requirements => { :id => /[^\/\?\#]+/ }
 
   # You can have the root of your site routed with map.root -- just remember to delete public/index.html.

@@ -49,7 +49,7 @@ body { padding-top: 108px; }
  * Footer Section
  * ==================================================================== */ 
 #footer { width: 100%; float: left; clear: both;
-        text-align:center; font-family: Verdana,sans-serif; font-size:0.50em; 
+        text-align:center; font-family: Verdana,sans-serif; font-size:10pt; 
  }          
 div#footer { padding: 40px 0 40px 0; }
 #footer p { margin: 0px;}

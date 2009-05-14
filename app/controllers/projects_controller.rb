@@ -100,7 +100,7 @@ class ProjectsController < ApplicationController
       end
     else
       respond_to do |format|
- 	      format.html { redirect_to :controller=>"users", :action=>"icla_info" } 
+ 	      format.html { redirect_to icla_path } 
         format.xml  { render :status => 401 }
       end
     end
