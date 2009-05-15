@@ -5,9 +5,15 @@ set :default_stage, "default"
 require 'capistrano/ext/multistage'
 
 set :application, 'fuseforge'
+
+set :repository, 'ssh://git@forge.fusesource.com/fuseforge.git'
+set :scm, "git"
+set :branch, "master"
+
 set :deploy_via, :copy
-set :copy_strategy, :export
-set :repository, 'http://fusesource.com/forge/svn/fuseforge/rails/trunk'
+set :copy_cache, true
+set :copy_exclude, [".git", "materials"]
+
 
 task :after_update_code, :roles => :app do
   invoke_command "cp -f #{shared_path}/config/crowd.yml #{release_path}/config/crowd.yml" 
