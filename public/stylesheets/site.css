@@ -406,9 +406,10 @@ table.project-list td.description {
  * Application Misc
  * ==================================================================== */
 .terms_and_conditions {
+  padding: 10px;
   border : solid 1px #000000;
   width: 360px;
-  height : 100px;
+  height : 200px;
   overflow-y : auto;
   overflow-x : hidden;
   width: 100%;

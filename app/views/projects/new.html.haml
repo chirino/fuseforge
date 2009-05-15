@@ -15,7 +15,8 @@
       = render :partial => 'form', :object => f
       %div{:style=>"padding:20px"} 
         #terms_text.terms_and_conditions{ :onscroll => "check_accept_text_scroll_pos('terms_text', 'project_terms_and_conditions')" }
-          = @terms_and_conditions_text
+          %h2 Terms of Use
+          = render :partial => 'homepage/raw_terms_of_use'
         = f.check_box :terms_and_conditions
         = f.label :terms_and_conditions, "Accept Terms and Conditions? (You must scroll to the bottom before you can accept the terms)", :style => 'margin-left:10px;'
       .form_button
