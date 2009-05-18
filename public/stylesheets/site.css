@@ -247,15 +247,13 @@ div#footer { padding: 40px 0 40px 0; }
     margin: 10px;
 }
 #project-search td.search {
-    width: 100%;
+    width: 350px;
 }
 #project-search #keywords {
-    width: 300px;
+    width: 250px;
 }
 #project-search td.tag_cloud  {
     padding:10px;
-    min-width:300px;
-    max-width:300px;
 }
 
 #project-search .level-1 { font-size: .6em; }
