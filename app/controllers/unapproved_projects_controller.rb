@@ -1,4 +1,3 @@
-require 'confluence_lib/confluence_interface.rb'
 class UnapprovedProjectsController < ApplicationController
   #rescue_from 'SOAP::FaultError', :with => :handle_soap_error
   
@@ -30,17 +29,7 @@ class UnapprovedProjectsController < ApplicationController
   # PUT /unapproved_projects/1.xml
   def update
     respond_to do |format|
-      begin
-        approved = @unapproved_project.approve
-      rescue SOAP::FaultError => e
-        if e.to_s.include?('no group found for that groupName')
-          flash[:error] = 'Waiting for groups to migrate to Jira.  Please try again in a few minutes.'
-        else
-          flash[:error] = e.to_s
-        end
-      end
-        
-      if approved
+      if @unapproved_project.approve
         flash[:notice] = 'Project has been approved.'
         format.html { redirect_to(unapproved_projects_path) }
         format.xml  { head :ok }
@@ -66,15 +55,4 @@ class UnapprovedProjectsController < ApplicationController
     @unapproved_project = Project.find_unapproved_by_id(params[:id])
   end  
   
-#  def handle_soap_error(exception)
-#    case exception.to_s
-#    when /no group found for that groupName/
-#      flash[:error] = "The project was not approved because one of it's Crowd groups does not exist in Jira."
-#      redirect_to :action => :index
-#    else
-#      flash[:error] = "There was a SOAP error."
-#      logger.error exception.to_s
-#      redirect_to :action => :index
-#    end
-#  end
 end
