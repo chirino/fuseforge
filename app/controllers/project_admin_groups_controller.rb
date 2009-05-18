@@ -25,7 +25,7 @@ class ProjectAdminGroupsController < BaseProjectsController
 
   def new
     @project_admin_group = ProjectAdminGroup.new
-
+    
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @project_admin_group }
@@ -38,12 +38,8 @@ class ProjectAdminGroupsController < BaseProjectsController
 
     respond_to do |format|
       if @project_admin_group.save
-        @project.update_permissions
-#        JiraInterface.new.add_groups_to_project(@project.shortname, params[:project_admin_group][:name], "ADMIN")
-
-        Delayed::Job.enqueue(AddGroupToJiraProjectJob.new(@project.shortname, params[:project_admin_group][:name], "ADMIN")) \
-         if @project.issue_tracker.use_internal?
-
+        @project.deploy
+        
         flash[:notice] = 'Project Admin Group was successfully added.'
         format.html { redirect_to(project_project_admin_group_path(:project_id => @project.id, :id => @project_admin_group.id)) }
         format.xml  { render :xml => @project_admin_group, :status => :created, :location => @project_admin_group }
@@ -56,7 +52,7 @@ class ProjectAdminGroupsController < BaseProjectsController
 
   def destroy
     @project_admin_group.destroy
-    @project.update_permissions
+    @project.deploy
     respond_to do |format|
       format.html { redirect_to(project_project_admin_groups_path(:project_id => @project.id)) }
       format.xml  { head :ok }

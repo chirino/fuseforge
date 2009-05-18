@@ -3,6 +3,10 @@ require 'command_executor'
 class GitRepo < ActiveRecord::Base
   belongs_to :project
   
+  def before_save
+    project.deploy if use_internal_changed?
+  end
+    
   def before_destroy
     # TODO: do some archiving of the git repo?
     true
@@ -61,10 +65,6 @@ class GitRepo < ActiveRecord::Base
   rescue => error
     logger.error """Error creating the git repo: #{error}\n#{error.backtrace.join("\n")}"""
   end    
-  
-  def update_permissions
-    create_internal
-  end
   
   #
   # This is usually run by the delayed_job worker.

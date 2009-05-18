@@ -22,11 +22,10 @@ FUSESOURCE_URL="http://#{FUSESOURCE_DOMAIN}"
 FORGE_URL = "#{FUSESOURCE_URL}/forge"
 CROWD_URL = "#{FUSESOURCE_URL}/crowd"
 JIRA_URL = "#{FUSESOURCE_URL}/issues"
-CONFLUENCE_URL = "#{FUSESOURCE_URL}/wiki"
 CROWD_COOKIE_DOMAIN_NAME = ".#{FUSESOURCE_DOMAIN}" 
 
 JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'password' }
-CONFLUENCE_CONFIG = { :url => CONFLUENCE_URL, :login=>'forgeadmin', :password=>'password' }
+CONFLUENCE_CONFIG = { :url => "#{FUSESOURCE_URL}/wiki", :login=>'forgeadmin', :password=>'password' }
 DAV_CONFIG = SVN_CONFIG = {
   :user=> "www-data",
 }

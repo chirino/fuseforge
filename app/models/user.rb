@@ -10,7 +10,6 @@ class User < ActiveRecord::Base
   has_one :prospective_project_member
   belongs_to :phpbb_user, :class_name => "PhpbbUser", :foreign_key => "phpbb_user_id"
   
-  # TODO: investigate the following.. it should eliminate the need to explicitly use yaml 
   serialize :groups_cache
 
   # Disable mass assignment of the following attributes since they cannot be modified via a user form

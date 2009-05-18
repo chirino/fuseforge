@@ -24,6 +24,7 @@ class Repository < ActiveRecord::Base
 
   def before_save
     self.external_url = '' if use_internal?
+    project.deploy if use_internal_changed?
   end
   
   def before_destroy

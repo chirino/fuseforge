@@ -1,4 +1,4 @@
-require 'jira_lib/default.rb'
+require 'jira/default.rb'
 require 'soap/mapping'
 
 module DefaultJiraMappingRegistry

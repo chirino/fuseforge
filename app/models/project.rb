@@ -9,7 +9,7 @@ class Project < ActiveRecord::Base
   acts_as_taggable_on :tags
   
   has_friendly_id :shortname
-  
+    
   has_one :featured_project, :dependent => :destroy
   has_one :issue_tracker, :dependent => :destroy
   has_one :repository, :dependent => :destroy
@@ -17,6 +17,7 @@ class Project < ActiveRecord::Base
   has_one :web_dav_location, :dependent => :destroy
   has_one :forum, :dependent => :destroy
   has_one :wiki, :dependent => :destroy
+  has_one :deployment_status, :dependent => :destroy
   
   has_many :news_items, :class_name => "ProjectNewsItem", :dependent => :destroy
   has_many :prospective_members, :class_name => "ProspectiveProjectMember", :dependent => :destroy
@@ -113,7 +114,7 @@ class Project < ActiveRecord::Base
   
   def before_save
     featured_project.destroy if is_private? and not featured_project.blank?
-    update_permissions if is_private_changed? && is_active?    
+    deploy if is_private_changed? ||name_changed? || description_changed?
   end
   
   def before_create
@@ -134,22 +135,6 @@ class Project < ActiveRecord::Base
     write_attribute(:description, value)
   end  
   
-  def update_permissions
-    repository.update_permissions
-    web_dav_location.update_permissions
-    git_repo.update_permissions
-    
-    if is_private?
-      wiki.make_private
-      issue_tracker.make_private
-      forum.make_private if forum.internal_supported?
-    else
-      wiki.make_public
-      issue_tracker.make_public
-      forum.make_public if forum.internal_supported?
-    end
-  end
-  
   def is_active?
     status == ProjectStatus.active
   end  
@@ -168,7 +153,7 @@ class Project < ActiveRecord::Base
     add_default_mailing_lists
     self.status = ProjectStatus.active
     save
-    deploy_internal_components
+    deploy
     Notifier.deliver_project_approval_notification(self)
   end  
   
@@ -273,8 +258,22 @@ class Project < ActiveRecord::Base
   def key
     self.shortname.downcase
   end
+      
+  def deploy
+    # Don't deploy inactive projects...
+    return unless is_active?  
+    # Don't setup a deploy if a job is allready setup.
+    return if deployment_status.next > deployment_status.last && !deployment_status.job.nil?
+    deployment_status.next = deployment_status.last+1
+    deployment_status.job = send_later :method=>:deploy_nodelay, :run_at=>(Delayed::Job.db_time_now + 60*2)
+    deployment_status.save
+  end
   
-  def deploy_internal_components
+  def deploy_nodelay
+    deployment_status.last = deployment_status.next
+    deployment_status.job=nil;
+    deployment_status.save
+    
     repository.create_internal
     git_repo.create_internal
     web_dav_location.create_internal
@@ -282,10 +281,9 @@ class Project < ActiveRecord::Base
       ml.create_internal
     end
     forum.create_internal if forum.internal_supported?
-    issue_tracker.create_internal
     wiki.create_internal
-  end  
-  
+    issue_tracker.create_internal
+  end
   
   private
   

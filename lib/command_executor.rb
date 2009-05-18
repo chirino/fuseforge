@@ -18,7 +18,6 @@ class CommandExecutor
   
   def close
     @ssh.close && @ssh=nil if @ssh
-    return 'crap'
   end
   
   def write(content, remote_file, user=nil)

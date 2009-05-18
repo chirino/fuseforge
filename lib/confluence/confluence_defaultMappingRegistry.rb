@@ -1,4 +1,4 @@
-require 'confluence_lib/confluence_default.rb'
+require 'confluence/confluence_default.rb'
 require 'soap/mapping'
 #changed by sanjay from RemoteUser to ConfluenceRemoteUser line #s : 247,248, 580, 581, 
 #changed by sanjay from RemoteAttachment to ConfluenceRemoteAttachment line #s : 47, 50, 296,297, 629, 630

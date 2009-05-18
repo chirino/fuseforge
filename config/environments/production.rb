@@ -27,11 +27,10 @@ FUSESOURCE_URL="http://#{FUSESOURCE_DOMAIN}"
 FORGE_URL = "#{FUSESOURCE_URL}/forge"
 CROWD_URL = "#{FUSESOURCE_URL}/crowd"
 JIRA_URL = "#{FUSESOURCE_URL}/issues"
-CONFLUENCE_URL = "#{FUSESOURCE_URL}/wiki"
 CROWD_COOKIE_DOMAIN_NAME = ".#{FUSESOURCE_DOMAIN}" 
 
 JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
-CONFLUENCE_CONFIG = { :url => CONFLUENCE_URL, :login=>'forgeadmin', :password=>'forgeadmin' }
+CONFLUENCE_CONFIG = { :url => "#{FUSESOURCE_URL}/wiki", :login=>'forgeadmin', :password=>'forgeadmin' }
 DAV_CONFIG = SVN_CONFIG = {
   :user=> "www-data",
 }
@@ -51,3 +50,4 @@ GIT_CONFIG = {
   :forge_git_path => '/data/fuseforge/current/script/forge-git'  
 }
 config.action_mailer.default_url_options = { :host => FUSESOURCE_DOMAIN }
+

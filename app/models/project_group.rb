@@ -34,10 +34,12 @@ class ProjectGroup < ActiveRecord::Base
 
   def add_user(login)
     add_crowd_user(login)
+    project.deploy
   end
   
   def remove_user(login)
     remove_crowd_user(login)
+    project.deploy
   end
   
   def contains_user?(login)

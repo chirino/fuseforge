@@ -1,5 +1,5 @@
-require 'jira_lib/default.rb'
-require 'jira_lib/defaultMappingRegistry.rb'
+require 'jira/default.rb'
+require 'jira/defaultMappingRegistry.rb'
 require 'soap/rpc/driver'
 
 class JiraSoapService < ::SOAP::RPC::Driver

@@ -1,5 +1,5 @@
-require 'confluence_lib/confluence_default.rb'
-require 'confluence_lib/confluence_defaultMappingRegistry.rb'
+require 'confluence/confluence_default.rb'
+require 'confluence/confluence_defaultMappingRegistry.rb'
 require 'soap/rpc/driver'
 #changed by sanjay line number 127,322 from RemoteUser to ConfluenceRemoteUser
 class ConfluenceSoapService < ::SOAP::RPC::Driver

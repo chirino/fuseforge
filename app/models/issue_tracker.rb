@@ -1,6 +1,6 @@
 require 'net/http'
 require 'uri'
-require 'jira_lib/jira_interface.rb'
+require 'jira/jira'
 require 'benchmark_http_requests'
 
 class IssueTracker < ActiveRecord::Base
@@ -10,64 +10,126 @@ class IssueTracker < ActiveRecord::Base
   
   def before_save
     self.external_url = '' if use_internal?
+    project.deploy if use_internal_changed?
   end
   
   def before_destroy
-    return true unless exists_internally?
-    begin
-      JiraInterface.new.remove_project(self.project.shortname)
-    rescue Exception => error
-      logger.error "* [Project] #{project.name} failed to delete JIRA project #{error.class.name}: #{error.message}"
-      logger.error(error)
+    
+    Jira.open(JIRA_CONFIG) do |jira|
+      jira_project = jira.project_by_key key
+      return true unless jira_project
+      jira.remove_project(key)
     end
+
+  rescue => error
+    logger.error """ #{project.name} failed to delete JIRA project: #{error}\n#{error.backtrace.join("\n")}"""
   end
 
   def is_active?
     use_internal? or not external_url.blank?
   end
   
-  def exists_internally?
-    JiraInterface.new.project_key_exists?(self.project.shortname)
-  end  
-  
-  def create_internal
-    return true if not use_internal? or exists_internally?
-
-    Delayed::Job.enqueue CreateJiraProjectJob.new(project.name, project.shortname, project.description, project.created_by.login, 
-     JIRA_INTERNAL_URL, project.is_private?)
-  end  
-  
-  def make_private
-    reset_permissions(true)
-  end
-  
-  def make_public
-    reset_permissions(false)
-  end
-  
-  def reset_permissions(reset_to_private)
-    return true unless use_internal?
-    
-    Delayed::Job.enqueue UpdateJiraProjectJob.new(project.shortname, reset_to_private)
-  end
-  
-  def internal_url
-    "#{JIRA_INTERNAL_URL}#{project.shortname}"
-  end  
   
   def url
     use_internal? ? internal_url : external_url
   end
 
-  def recent_issues
-    Issue.recent(self,JIRA_INTERNAL_URL)
+  def internal_url
+    "#{JIRA_INTERNAL_URL}#{project.shortname}"
+  end  
+
+  def exists_internally?
+    Jira.open(JIRA_CONFIG) do |jira|
+      jira.project_key_exists?(self.project.shortname)
+    end
+  end  
+  
+  def create_internal
+    return true if not use_internal?
+
+    Jira.open(JIRA_CONFIG) do |jira|
+      
+      permission_scheme = jira.all_permission_schemes.detect {|scheme| scheme.name=='Forge Permission Scheme'}
+      notification_scheme = jira.notification_schemes.detect {|scheme| scheme.name=='Default Notification Scheme'}
+      
+      jira_project = jira.project_by_key(key)
+      if jira_project==nil
+        jira_project = jira.create_project(key, "Forge: #{project.name}", project.description, nil, lead_admin_name, permission_scheme, notification_scheme, nil)
+      else
+        # Fully load all the project settings..
+        jira_project = jira.project_with_schemes_by_id(jira_project.id)
+
+        # Update it..
+        jira_project.name = "Forge: #{project.name}"
+        jira_project.lead = lead_admin_name
+        jira_project.description = project.description
+        jira_project.notificationScheme = notification_scheme
+        jira_project.permissionScheme = permission_scheme
+        jira.update_project(jira_project)
+      end
+      
+      # Update the project roles.
+      logger.info "updating project roles"
+      jira.remove_all_role_actors_by_project(jira_project)
+      jira.all_project_roles.each do |role|
+        case role.name
+        when 'Users'
+          if !project.is_private
+            registered_users = CrowdGroup.registered_user_group.name
+            jira.add_actors_to_project_role(jira_project, role, [registered_users])
+          end
+        when 'Read-Only'
+        when 'Developers'
+          members = member_groups
+          jira.add_actors_to_project_role(jira_project, role, members)
+        when 'Administrators'
+          admins = admin_groups
+          jira.add_actors_to_project_role(jira_project, role, admins)
+        end
+      end
+    end
+    true
+  rescue => error
+    logger.error """ #{project.name} failed to create JIRA project: #{error}\n#{error.backtrace.join("\n")}"""
   end
   
-  def private_scheme_name
-    "private-#{project.shortname}-scheme"
+  private 
+  
+  def key 
+    project.shortname.upcase
   end
-
-  def public_scheme_name
-    "public-#{project.shortname}-scheme"
+    
+  def lead_admin_name
+    lead = project.admin_groups.user_names.detect { true }
+    lead = project.created_by unless lead
+    return lead
   end
+  
+  def admin_groups
+    groups = [ CrowdGroup.forge_admin_group.name ]
+    project.admin_groups.each do |group|
+        groups << group.name
+    end
+    groups
+  end
+  
+  def member_groups
+    groups = []
+    project.member_groups.each do |group|
+        groups << group.name
+    end
+    groups
+  end  
+  
+  # def get_issues_for_project(project_id,issue_url,num_results=5)
+  #   issues = @jira.getIssuesFromTextSearchWithProject(@token,[project_id],"",num_results)
+  #   arr_issues = []
+  #   
+  #   issues.each do |issue|
+  #     hsh_issue = {:title=>issue.summary,:updated_at=>issue.updated,:url=>issue_url+'/'+issue.key}
+  #     arr_issues << hsh_issue if issue.status.to_i != 6
+  #   end
+  #   arr_issues
+  # end
+    
 end

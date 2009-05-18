@@ -1,86 +1,181 @@
-require 'confluence_lib/confluence_interface.rb'
+require 'confluence/confluence.rb'
 require 'benchmark_http_requests'
+require 'set'
 
+#
+# Make it so a Hash can be a keyed
+#
+module HashedKey
+  def eql?(other)
+    self == other
+  end
+
+  def hash
+    rc=0
+    keys.each do |x|
+      rc |= x.hash
+    end
+    values.each do |x|
+      rc |= x.hash
+    end
+    rc
+  end
+end
+    
 class Wiki < ActiveRecord::Base
   belongs_to :project
+  serialize :last_permissions
 
-  CONFLUENCE_INTERNAL_URL = CONFLUENCE_URL + '/display/'
-  
   def before_save
     self.external_url = '' if use_internal?
-  end
-  
-  def after_create
+    project.deploy if use_internal_changed?
   end
   
   def before_destroy
-    return true unless exists_internally?  
-    
-    conf_inter = ConfluenceInterface.new
-    conf_inter.login
-    conf_inter.remove_space(self.project.shortname)   
-    conf_inter.logout
+    Confluence.open(CONFLUENCE_CONFIG) do |confluence|
+      return true unless confluence.space_exist?s(key)
+      confluence.remove_space(key)   
+    end
   end
   
   def is_active?
     use_internal? or not external_url.blank?
   end
   
+  def url
+    use_internal? ? internal_url : external_url
+  end
+
   def internal_url
-    CONFLUENCE_INTERNAL_URL + "#{self.project.shortname}/Home"
+    "#{CONFLUENCE_CONFIG[:url]}/display/#{key}/Home"
   end  
   
-  def exists_internally?
-    conf_inter = ConfluenceInterface.new
-    conf_inter.login
-    exist = conf_inter.space_exists?(self.project.shortname)
-    conf_inter.logout
-    exist
-  end
-  
   def create_internal
-    return true if not use_internal? or exists_internally?
-
-    confluence_interface = ConfluenceInterface.new
-    confluence_interface.login
-    confluence_interface.create_space(self.project.shortname, 
-                   self.project.name,self.project.name + " Confluence Space",
-                   CONFLUENCE_INTERNAL_URL,
-                   self.project.is_private?)
-    confluence_interface.logout
+    return true if not use_internal?
+    
+    Confluence.open(CONFLUENCE_CONFIG) do |confluence|
+      
+      # create the space.
+      space = confluence.get_space(key)
+      unless space
+        logger.info "adding space"
+        confluence.add_space(key, {:name=>"Forge: #{project.name}", :description=>project.description})
+      else
+        logger.info "got #{space.description}"
+        space.name="Forge: #{project.name}"
+        space.description=project.description
+        logger.info "made it #{space.description}"
+        confluence.store_space(space)
+      end
+      
+      reset_permissions(confluence)
+      
+    end
   rescue => error
     logger.error """Error creating the confluence wiki: #{error}\n#{error.backtrace.join("\n")}"""
   end
 
-  def url
-    use_internal? ? internal_url : external_url
+  def all_permissions
+    rc = []
+    [:read, :write, :admin].each do |perm|
+      rc << { :perm=>perm, :key=>key }
+      member_groups.each do |group|
+        rc << ( { :perm=>perm, :key=>key, :subject=>group }.extend HashedKey )
+      end
+      admin_groups.each do |group|
+        rc << ( { :perm=>perm, :key=>key, :subject=>group }.extend HashedKey )
+      end
+    end
+    rc.to_set
   end
   
-  def get_latest_activity
-    conf_inter = ConfluenceInterface.new
-    conf_inter.login
-    latest_act = conf_inter.get_latest_for_space(self.project.shortname)
-    conf_inter.logout
-    latest_act
+  private 
+  
+  def key 
+    project.shortname.upcase
+  end
+  
+  def admin_groups
+    groups = [ CrowdGroup.forge_admin_group.name ]
+    project.admin_groups.each do |group|
+        groups << group.name
+    end
+    groups
+  end
+  
+  def member_groups
+    groups = []
+    project.member_groups.each do |group|
+        groups << group.name
+    end
+    groups
   end
 
-  def make_private
-    reset_permissions(true)
+  def next_permissions
+    rc = []
+    if !project.is_private
+      rc << ({ :perm=>:read, :key=>key }.extend HashedKey)
+    end
+    member_groups.each do |group|
+      rc << ({ :perm=>:read, :key=>key, :subject=>group }.extend HashedKey)
+      rc << ({ :perm=>:write, :key=>key, :subject=>group }.extend HashedKey)
+    end
+    admin_groups.each do |group|
+      rc << ({ :perm=>:read, :key=>key, :subject=>group }.extend HashedKey)
+      rc << ({ :perm=>:write, :key=>key, :subject=>group }.extend HashedKey)
+      rc << ({ :perm=>:admin, :key=>key, :subject=>group }.extend HashedKey)
+    end
+    rc.to_set
+  end
+
+  def reset_permissions(confluence)
+    
+    perms_map = { 
+      :read=>["VIEWSPACE"],
+      :write=>["EDITSPACE", "COMMENT", "REMOVEPAGE", "REMOVECOMMENT", "REMOVEBLOG", "CREATEATTACHMENT", "REMOVEATTACHMENT", "EDITBLOG", "EXPORTPAGE", "SETPAGEPERMISSIONS"],
+      :admin=>["SETSPACEPERMISSIONS", "EXPORTSPACE", "REMOVEMAIL", "SETPAGEPERMISSIONS"]
+    }
+    
+    perms_old = last_permissions
+    perms_new = next_permissions
+    to_remove = perms_old - perms_new
+
+    #
+    # Remove the old perms that are no longer needed.
+    to_remove.each do |p|
+      perms_map[p[:perm]].each do |perm|
+        if p[:subject]
+          safe_remove_permission_from_space(confluence, p[:key], perm, p[:subject])
+        else
+          safe_remove_permission_from_space(confluence, p[:key], perm)
+        end
+      end
+    end
+    
+    #
+    # Add the new perms..
+    perms_new.each do |p|
+      perms_map[p[:perm]].each do |perm|
+        if p[:subject]
+          safe_add_permission_to_space(confluence, p[:key], perm, p[:subject])
+        else
+          safe_add_permission_to_space(confluence, p[:key], perm)
+        end
+      end
+    end
   end
   
-  def make_public
-    reset_permissions(false)
-  end
-  
-  def reset_permissions(reset_to_private)
-    return true unless use_internal?
-    
-    confluence_interface = ConfluenceInterface.new
-    confluence_interface.login
-    confluence_interface.reset_space_perm(project.shortname, reset_to_private)
-    confluence_interface.logout
-    
+  def safe_add_permission_to_space(confluence, key, perm, subject=nil)
+    confluence.add_permission_to_space(key, perm, subject)
   rescue => error
-    logger.error """Error updating the confluence wiki: #{error}\n#{error.backtrace.join("\n")}"""
-  end  
+    logger.info """Could not add permission: #{key}, #{perm}, #{subject}: #{error}"""
+  end
+  
+  def safe_remove_permission_from_space(confluence, key, perm, subject=nil)
+    confluence.remove_permission_from_space(key, perm, subject)
+  rescue => error
+    logger.info """Could not remove permission: #{key}, #{perm}, #{subject}: #{error}"""
+  end
+
+
 end

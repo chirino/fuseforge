@@ -29,5 +29,16 @@
           %li= link_to 'Inactivate', @project, :confirm => 'Are you sure?', :method => :delete
       %li= link_to 'Redeploy internal components', :action=>"redeploy_internal_components", :id => @project
           
+      - if !@project.deployment_status.job.nil?
+        .deployment_status
+          %p== Re-deployment scheduled to run at: #{@project.deployment_status.job.run_at}
+          -if @project.deployment_status.job.last_error
+            %p
+              Last redeployment error:
+              %pre><
+                %code><
+                  :preserve
+                    #{@project.deployment_status.job.last_error}
+      
     .bottom_links
       = link_to 'Back to Project Home', project_path(@project)

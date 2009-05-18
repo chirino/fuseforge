@@ -1,5 +1,3 @@
-require 'jira_lib/jira_interface.rb'
-
 class ProjectMemberGroupsController < BaseProjectsController
   before_filter :get_project
   before_filter :get_project_member_group, :only => [:show, :destroy]
@@ -39,19 +37,8 @@ class ProjectMemberGroupsController < BaseProjectsController
 
     respond_to do |format|
       if @project_member_group.save
+        @project.deploy
         
-#        JiraInterface.new.add_groups_to_project(@project.shortname, params[:project_member_group][:name], "USER")
-
-        Delayed::Job.enqueue(AddGroupToJiraProjectJob.new(@project.shortname, params[:project_member_group][:name], "USER")) \
-         if @project.issue_tracker.use_internal?
-
-        if @project.wiki.use_internal?
-          confl_interface = ConfluenceInterface.new
-          confl_interface.login
-          confl_interface.add_remove_groups_to_space(@project.shortname,[params[:project_member_group][:name]],nil)
-          confl_interface.logout
-        end
-                
         flash[:notice] = 'Project Member Group was successfully added.'
         format.html { redirect_to(project_project_member_group_path(:project_id => @project.id, :id => @project_member_group.id)) }
         format.xml  { render :xml => @project_member_group, :status => :created, :location => @project_member_group }
@@ -64,6 +51,7 @@ class ProjectMemberGroupsController < BaseProjectsController
 
   def destroy
     @project_member_group.destroy
+    @project.deploy
 
     respond_to do |format|
       format.html { redirect_to(project_project_member_groups_path(:project_id => @project.id)) }

@@ -155,6 +155,9 @@ ActiveRecord::Schema.define(:version => 20090506123819) do
     t.string   "external_url"
     t.integer  "license_id"
     t.string   "other_license_url"
+    t.integer  "next_deployment",        :default => 0
+    t.integer  "last_deployment",        :default => 0
+    t.datetime "deployment_enqueued_at"
   end
 
   create_table "prospective_project_members", :force => true do |t|

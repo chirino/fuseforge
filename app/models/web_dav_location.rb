@@ -19,6 +19,7 @@ class WebDavLocation < ActiveRecord::Base
   
   def before_save
     self.external_url = '' if use_internal?
+    project.deploy if use_internal_changed?
   end
   
   def before_destroy
@@ -32,11 +33,7 @@ class WebDavLocation < ActiveRecord::Base
     # close_conn(conn)
     true
   end
-  
-  def after_update
-    create_internal
-  end
-  
+    
   def is_active?
     use_internal? or not external_url.blank?
   end

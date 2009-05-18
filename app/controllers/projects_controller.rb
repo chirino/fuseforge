@@ -1,5 +1,3 @@
-require 'jira_lib/jira_interface.rb'
-
 class ProjectsController < ApplicationController
   layout "new_look"
 	skip_before_filter :login_required, :only => [:index, :show, :source, :has_git_access]
