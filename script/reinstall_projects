@@ -12,7 +12,8 @@ require RAILS_ROOT + '/config/environment'
 Project.all.each do |project|
   
   if project.status == ProjectStatus.active
-    puts "Deploying: #{project.name}"
+    Rails.logger.info "Deploying: #{project.name}"
+    Rails.logger.flush
     project.deploy_nodelay
   end
   

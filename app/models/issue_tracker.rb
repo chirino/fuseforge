@@ -89,8 +89,6 @@ class IssueTracker < ActiveRecord::Base
       end
     end
     true
-  rescue => error
-    logger.error """ #{project.name} failed to create JIRA project: #{error}\n#{error.backtrace.join("\n")}"""
   end
   
   private 

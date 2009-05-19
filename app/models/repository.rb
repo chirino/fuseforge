@@ -105,8 +105,6 @@ class Repository < ActiveRecord::Base
     end
     true
     
-  rescue => error
-    logger.error """Error creating the svn repo: #{error}\n#{error.backtrace.join("\n")}"""
   end    
   
   def update_permissions

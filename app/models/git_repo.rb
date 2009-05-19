@@ -62,8 +62,6 @@ class GitRepo < ActiveRecord::Base
     end
         
     true
-  rescue => error
-    logger.error """Error creating the git repo: #{error}\n#{error.backtrace.join("\n")}"""
   end    
   
   #

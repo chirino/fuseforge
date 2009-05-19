@@ -78,10 +78,7 @@ class WebDavLocation < ActiveRecord::Base
     
     end
     true
-
     
-  rescue => error
-    logger.error """Error creating the web dav directory: #{error}\n#{error.backtrace.join("\n")}"""
   end 
   
   def update_permissions

@@ -274,15 +274,25 @@ class Project < ActiveRecord::Base
     deployment_status.job=nil;
     deployment_status.save
     
-    repository.create_internal
-    git_repo.create_internal
-    web_dav_location.create_internal
+    resources = [repository, git_repo, web_dav_location, wiki, issue_tracker]
     mailing_lists.each do  |ml|
-      ml.create_internal
+      resources << ml
     end
-    forum.create_internal if forum.internal_supported?
-    wiki.create_internal
-    issue_tracker.create_internal
+    resources << forum if forum.internal_supported?
+    
+    first_error=nil
+    resources.each do |resource|
+      # try to deploy all the resources..
+      begin 
+        resource.create_internal
+        logger.flush
+      rescue => e
+        first_error = e if first_error==nil
+      end
+    end
+    
+    # But throw the first error the we caught
+    raise first_error if first_error
   end
   
   private

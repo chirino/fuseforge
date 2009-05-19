@@ -71,8 +71,6 @@ class Wiki < ActiveRecord::Base
       reset_permissions(confluence)
       
     end
-  rescue => error
-    logger.error """Error creating the confluence wiki: #{error}\n#{error.backtrace.join("\n")}"""
   end
 
   def all_permissions
@@ -157,20 +155,14 @@ class Wiki < ActiveRecord::Base
     perms_new.each do |p|
       perms_map[p[:perm]].each do |perm|
         if p[:subject]
-          safe_add_permission_to_space(confluence, p[:key], perm, p[:subject])
+          confluence.add_permission_to_space(p[:key], perm, p[:subject])
         else
-          safe_add_permission_to_space(confluence, p[:key], perm)
+          confluence.add_permission_to_space(p[:key], perm)
         end
       end
     end
   end
-  
-  def safe_add_permission_to_space(confluence, key, perm, subject=nil)
-    confluence.add_permission_to_space(key, perm, subject)
-  rescue => error
-    logger.info """Could not add permission: #{key}, #{perm}, #{subject}: #{error}"""
-  end
-  
+
   def safe_remove_permission_from_space(confluence, key, perm, subject=nil)
     confluence.remove_permission_from_space(key, perm, subject)
   rescue => error
