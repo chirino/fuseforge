@@ -24,9 +24,13 @@ class ProjectsController < ApplicationController
     search_params.delete("conditions")
     
     if current_user.is_site_admin?
-      @search = params[:advanced_search] ? Project.new_search(search_params) : Project.approved.new_search(search_params)
+      if params[:advanced_search]
+        @search = Project.new_search(search_params)
+      else
+        @search = Project.active.new_search(search_params)
+      end
     else
-      @search = Project.approved.visibile_to(current_user).new_search(search_params)
+      @search = Project.active.visibile_to(current_user).new_search(search_params)
     end
 
     @search.conditions.any = false

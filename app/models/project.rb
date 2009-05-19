@@ -159,10 +159,10 @@ class Project < ActiveRecord::Base
   
   def inactivate
     groups.reject { |group| group.default? }.each { |group| group.destroy }
-    default_administrators.each { |login| remove_administrator(login) }
-    default_members.each { |login| remove_member(login) }
+    admin_groups.default.user_names.each { |name| admin_groups.default.remove_user(name) }
+    member_groups.default.user_names.each { |name| member_groups.default.remove_user(name) }
     self.status = ProjectStatus.inactive
-    save
+    save    
   end  
 
   def administrators
