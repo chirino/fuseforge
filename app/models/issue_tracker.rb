@@ -61,7 +61,7 @@ class IssueTracker < ActiveRecord::Base
 
         # Update it..
         jira_project.name = "Forge: #{project.name}"
-        jira_project.lead = lead_admin_name
+        # jira_project.lead = lead_admin_name
         jira_project.description = project.description
         jira_project.notificationScheme = notification_scheme
         jira_project.permissionScheme = permission_scheme

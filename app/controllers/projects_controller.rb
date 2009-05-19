@@ -29,24 +29,30 @@ class ProjectsController < ApplicationController
       @search = Project.approved.visibile_to(current_user).new_search(search_params)
     end
 
+    @search.conditions.any = false
     if params[:search]
-      @search.conditions.any = true
-      
       if params[:advanced_search]
         @advanced_search = true
         @search.conditions.name_kw_using_or = params[:search][:conditions][:name_kw_using_or]
         @search.conditions.shortname_kw_using_or = params[:search][:conditions][:shortname_kw_using_or]
         @search.conditions.description_kw_using_or = params[:search][:conditions][:description_kw_using_or]
         @search.conditions.tags.name_kw_using_or = params[:search][:conditions][:tags][:name_kw_using_or]
-        @search.conditions.project_status_id = params[:search][:conditions][:project_status_id]
-        @search.conditions.project_maturity_id = params[:search][:conditions][:project_maturity_id]
-        @search.conditions.project_category_id = params[:search][:conditions][:project_category_id]
+        @search.conditions.project_status_id = params[:search][:conditions][:project_status_id] unless params[:search][:conditions][:project_status_id].empty?
+        @search.conditions.project_maturity_id = params[:search][:conditions][:project_maturity_id] unless params[:search][:conditions][:project_maturity_id].empty?
+        @search.conditions.project_category_id = params[:search][:conditions][:project_category_id] unless params[:search][:conditions][:project_category_id].empty?
       else
-        @keywords = @search.conditions.name_kw_using_or = @search.conditions.shortname_kw_using_or = \
-         @search.conditions.description_kw_using_or = @search.conditions.tags.name_kw_using_or = params[:keywords]
+        @search.conditions.any = true
+        @keywords = \
+          @search.conditions.name_kw_using_or = \
+          @search.conditions.shortname_kw_using_or = \
+          @search.conditions.description_kw_using_or = \
+          @search.conditions.tags.name_kw_using_or = \
+          params[:keywords]
       end  
     end
-    
+
+    puts "after: #{@search.inspect}"
+        
     # The user clicked on a tag item link either on project show or projects index.
     if params[:tag]
       @advanced_search = true
@@ -60,6 +66,13 @@ class ProjectsController < ApplicationController
     @projects = @search.all
     @projects_count = @search.count
     
+    @search.conditions.project_status_id = ProjectStatus.active.id.to_s unless params[:advanced_search]
+    @search.conditions.name_kw_using_or = \
+      @search.conditions.shortname_kw_using_or = \
+      @search.conditions.description_kw_using_or = \
+      @search.conditions.tags.name_kw_using_or = \
+      "" unless params[:advanced_search]
+      
     respond_to do |format|
       format.html
       format.xml  { render :xml => @projects }
