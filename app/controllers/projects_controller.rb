@@ -24,7 +24,7 @@ class ProjectsController < ApplicationController
     search_params.delete("conditions")
     
     if current_user.is_site_admin?
-      @search = Project.new_search(search_params)
+      @search = params[:advanced_search] ? Project.new_search(search_params) : Project.approved.new_search(search_params)
     else
       @search = Project.approved.visibile_to(current_user).new_search(search_params)
     end
@@ -51,8 +51,6 @@ class ProjectsController < ApplicationController
       end  
     end
 
-    puts "after: #{@search.inspect}"
-        
     # The user clicked on a tag item link either on project show or projects index.
     if params[:tag]
       @advanced_search = true
