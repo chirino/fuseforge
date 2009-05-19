@@ -288,6 +288,7 @@ class Project < ActiveRecord::Base
         logger.flush
       rescue => e
         first_error = e if first_error==nil
+        logger.error """Deployment error: #{e}\n#{e.backtrace.join("\n")}"""
       end
     end
     

@@ -14,7 +14,11 @@ Project.all.each do |project|
   if project.status == ProjectStatus.active
     Rails.logger.info "Deploying: #{project.name}"
     Rails.logger.flush
-    project.deploy_nodelay
+    begin
+      project.deploy_nodelay
+    rescue => e
+      logger.error """#{project.name} deployment error: #{e}\n"""
+    end
   end
   
 end
