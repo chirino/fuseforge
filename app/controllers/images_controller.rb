@@ -3,7 +3,7 @@ class ImagesController < ApplicationController
 
   before_filter :get_project
 
-  deny :show, :exec => :project_private_and_user_not_member?, :redirect_to => :homepage
+  deny :show, :exec => :project_private_and_user_not_member?
 
   def show
     send_file(@project.image.path(params[:id]))

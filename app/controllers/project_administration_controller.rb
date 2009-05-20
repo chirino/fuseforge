@@ -2,7 +2,7 @@ class ProjectAdministrationController < ApplicationController
   layout "new_look", :except => [:remove_tag, :add_tag, :auto_complete_for_tag]
   before_filter :get_project, :except => [:auto_complete_for_tag]
 
-  allow :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
+  allow :user => :is_project_administrator_for?, :object => :project
   protect_from_forgery :except => [:auto_complete_for_tag]
   
   def index

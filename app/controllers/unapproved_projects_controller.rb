@@ -3,7 +3,7 @@ class UnapprovedProjectsController < ApplicationController
   
   before_filter :get_unapproved_project, :only => [:show, :update, :destroy]
   
-  allow :user => :is_site_admin?, :redirect_to => :homepage
+  allow :user => :is_site_admin?
   
   # GET /unapproved_projects
   # GET /unapproved_projects.xml

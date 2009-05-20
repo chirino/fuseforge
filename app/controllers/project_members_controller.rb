@@ -3,7 +3,7 @@ class ProjectMembersController < ApplicationController
   before_filter :get_project
   before_filter :get_project_user, :only => [:show, :destroy]
   
-  allow :create, :destroy, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
+  allow :create, :destroy, :user => :is_project_administrator_for?, :object => :project
   
   def index
     @users = @group.user_names

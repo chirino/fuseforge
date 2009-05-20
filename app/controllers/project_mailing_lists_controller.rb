@@ -5,8 +5,8 @@ class ProjectMailingListsController < ApplicationController
   before_filter :get_project
   before_filter :get_project_mailing_list, :only => [:show, :edit, :update, :destroy]
 
-  deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => :homepage
-  allow :new, :create, :edit, :update, :destroy, :reset_admin_password, :user => :is_project_administrator_for?, :object => :project, :redirect_to => :homepage
+  deny :index, :show, :exec => :project_private_and_user_not_member?
+  allow :new, :create, :edit, :update, :destroy, :reset_admin_password, :user => :is_project_administrator_for?, :object => :project
 
   def index
     @project_mailing_lists = @project.mailing_lists

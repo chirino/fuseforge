@@ -2,9 +2,9 @@ class ProjectMemberGroupsController < BaseProjectsController
   before_filter :get_project
   before_filter :get_project_member_group, :only => [:show, :destroy]
 
-  deny :index, :show, :exec => :project_private_and_user_not_member?, :redirect_to => :homepage
+  deny :index, :show, :exec => :project_private_and_user_not_member?
 
-  allow :new, :create, :destroy, :exec => :user_is_administrator_for_project_and_company_employee?, :redirect_to => :homepage
+  allow :new, :create, :destroy, :exec => :user_is_administrator_for_project_and_company_employee?
 
   def index
     @project_member_groups = @project.member_groups

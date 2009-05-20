@@ -1,7 +1,7 @@
 class ProjectStatusesController < ApplicationController
   before_filter :get_project_status, :only => [:show, :edit, :update, :destroy]
 
-  allow :index, :show, :new, :create, :edit, :update, :destroy, :user => :is_site_admin?, :redirect_to => :homepage
+  allow :index, :show, :new, :create, :edit, :update, :destroy, :user => :is_site_admin?
 
   def index
     @project_statuses = ProjectStatus.find(:all, :order => :position)

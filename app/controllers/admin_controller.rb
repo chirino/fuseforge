@@ -1,5 +1,5 @@
 class AdminController < ApplicationController
-  allow :user => :is_site_admin?, :redirect_to => :homepage
+  allow :user => :is_site_admin?
 
   def index
     respond_to do |format|
