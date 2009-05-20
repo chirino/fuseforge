@@ -56,12 +56,12 @@ class IssueTracker < ActiveRecord::Base
       end
       
       permission_scheme = jira.all_permission_schemes.detect do |scheme| 
-        if( project.is_active? )
-          return scheme.name=='Forge Inactive Permission Scheme'
+        if( !project.is_active? )
+          scheme.name=='Forge Inactive Permission Scheme'
         elsif( project.is_private )
-          return scheme.name=='Forge Private Permission Scheme'
+          scheme.name=='Forge Private Permission Scheme'
         else
-          return scheme.name=='Forge Public Permission Scheme'
+          scheme.name=='Forge Public Permission Scheme'
         end
       end
       
