@@ -48,12 +48,25 @@ class IssueTracker < ActiveRecord::Base
     return true if not use_internal?
 
     Jira.open(JIRA_CONFIG) do |jira|
-      
-      permission_scheme = jira.all_permission_schemes.detect {|scheme| scheme.name=='Forge Permission Scheme'}
-      notification_scheme = jira.notification_schemes.detect {|scheme| scheme.name=='Default Notification Scheme'}
-      
       jira_project = jira.project_by_key(key)
+      
+      # No need to do deploy if not active and the jira project does not exist
+      if !project.is_active? && jira_project==nil
+        return true
+      end
+      
+      permission_scheme = jira.all_permission_schemes.detect do |scheme| 
+        if( project.is_active? )
+          return scheme.name=='Forge Inactive Permission Scheme'
+        elsif( project.is_private )
+          return scheme.name=='Forge Private Permission Scheme'
+        else
+          return scheme.name=='Forge Public Permission Scheme'
+        end
+      end
+      
       if jira_project==nil
+        notification_scheme = jira.notification_schemes.detect {|scheme| scheme.name=='Default Notification Scheme'}
         jira_project = jira.create_project(key, "Forge: #{project.name}", project.description, nil, lead_admin_name, permission_scheme, notification_scheme, nil)
       else
         # Fully load all the project settings..
@@ -62,8 +75,8 @@ class IssueTracker < ActiveRecord::Base
         # Update it..
         jira_project.name = "Forge: #{project.name}"
         # jira_project.lead = lead_admin_name
+        # jira_project.notificationScheme = notification_scheme
         jira_project.description = project.description
-        jira_project.notificationScheme = notification_scheme
         jira_project.permissionScheme = permission_scheme
         jira.update_project(jira_project)
       end
@@ -74,10 +87,6 @@ class IssueTracker < ActiveRecord::Base
       jira.all_project_roles.each do |role|
         case role.name
         when 'Users'
-          if !project.is_private
-            registered_users = CrowdGroup.registered_user_group.name
-            jira.add_actors_to_project_role(jira_project, role, [registered_users])
-          end
         when 'Read-Only'
         when 'Developers'
           members = member_groups
