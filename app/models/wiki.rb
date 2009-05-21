@@ -134,7 +134,7 @@ class Wiki < ActiveRecord::Base
       :admin=>["SETSPACEPERMISSIONS", "EXPORTSPACE", "REMOVEMAIL", "SETPAGEPERMISSIONS"]
     }
     
-    perms_old = last_permissions
+    perms_old = last_permissions || {}
     perms_new = next_permissions
     to_remove = perms_old - perms_new
 
