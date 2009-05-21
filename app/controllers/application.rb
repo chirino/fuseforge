@@ -141,6 +141,8 @@ class ApplicationController < ActionController::Base
 	  case e 
   	  when ActiveRecord::RecordNotFound 
   	    render_404 
+  	  when ActionController::RoutingError
+  	    render_404 
   	  else 
   	    @exception = e
         @rescues_path = File.dirname(rescues_path("stub"))
