@@ -152,6 +152,7 @@ class Project < ActiveRecord::Base
     add_default_groups
     add_default_mailing_lists
     self.status = ProjectStatus.active
+    self.deployment_status = DeploymentStatus.new
     save
     deploy
     Notifier.deliver_project_approval_notification(self)
