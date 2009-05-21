@@ -12,4 +12,12 @@ class Notifier < ActionMailer::Base
     subject    "A new FUSE Forge project, #{project.name}, is awaiting approval."
     body       :project => project
   end
+  
+  def website_error(content)
+    recipients "Forge Administrator <root@localhost>"
+    from       FUSEFORGE_EMAIL_ADDRESS
+    subject    "Fuse Forge Website Error"
+    content_type "text/html"
+    body       :body=>content
+  end
 end

@@ -106,6 +106,14 @@ class ApplicationController < ActionController::Base
 	  true 
   end
   
+  def render_http_status(status_code, messages=[])
+	  respond_to do |format| 
+	    format.html { render :file => "#{RAILS_ROOT}/app/views/shared/http_status.html.haml", :layout=>"new_look", :status => status_code, :locals => {:status_code => status_code, :messages=>messages} } 
+      format.xml  { render :nothing => true, :status => status_code } 
+	  end 
+	  true 
+  end  
+  
   def external_url_to(uri)
     if request.env['HTTP_X_FORWARDED_HOST']
       host = request.env['HTTP_X_FORWARDED_HOST'].to_s.split(/,\s*/).first
@@ -134,9 +142,18 @@ class ApplicationController < ActionController::Base
   	  when ActiveRecord::RecordNotFound 
   	    render_404 
   	  else 
-  	    super 
+
+  	    @exception = e
+        @rescues_path = File.dirname(rescues_path("stub"))
+        @contents = render_to_string :file=>rescues_path('diagnostics'), :layout=>false
+        puts rescues_path("layout")
+        message = render_to_string :file=>rescues_path("layout"), :layout=>false
+        Notifier.deliver_website_error(message)
+  	    
+  	    response = response_code_for_rescue(e)
+  	    satus_code = interpret_status(response)
+  	    render_http_status satus_code, ["We're sorry, but something went wrong.", "We've been notified about this issue and we'll take a look at it shortly."]
 	  end 
 	end
-
 
 end
