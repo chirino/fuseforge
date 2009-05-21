@@ -1,0 +1,7 @@
+<p><code>RAILS_ROOT: <%= defined?(RAILS_ROOT) ? RAILS_ROOT : "unset" %></code></p>
+
+<div id="traces">
+  <div>
+    <pre><code><%= @exception.clean_backtrace.join "\n" %></code></pre>
+  </div>
+</div>

@@ -1,0 +1,22 @@
+<% unless @exception.blamed_files.blank? %>
+  <pre id="blame_trace"><code><%=h @exception.describe_blame %></code></pre>
+<% end %>
+
+<%
+  clean_params = request.parameters.clone
+  clean_params.delete("action")
+  clean_params.delete("controller")
+  request_dump = clean_params.empty? ? 'None' : clean_params.inspect.gsub(',', ",\n")
+%>
+
+<h2 style="margin-top: 30px">Request</h2>
+<p><b>Uri</b>: <pre><%=h request.request_uri()  %></pre></p>
+<p><b>Parameters</b>: <pre><%=h request_dump %></pre></p>
+<p><b>Headers</b>: <pre><%=h request.headers.inspect.gsub(',', ",\n") %></pre></p>
+
+<h2 style="margin-top: 30px">Response</h2>
+<p><b>Headers</b>: <pre><%=h response ? response.headers.inspect.gsub(',', ",\n") : 'None' %></pre></p>
+
+<h2 style="margin-top: 30px">Session Sump</h2
+<div id="session_dump"><%= debug(request.session.instance_variable_get("@data")) %></div>
+

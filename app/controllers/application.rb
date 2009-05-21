@@ -8,7 +8,6 @@ class ApplicationController < ActionController::Base
   before_filter :login_current_user
   before_filter :login_required
   before_filter :set_observers_current_user
-  before_filter :set_return_to
 
   helper :all # include all helpers, all the time
 
@@ -22,10 +21,6 @@ class ApplicationController < ActionController::Base
   # filter_parameter_logging :password
   
   private
-  
-  def set_return_to
-    session[:return_to] = request.env['HTTP_REFERER']
-  end
   
   def set_observers_current_user
     UserActionObserver.current_user = ProjectObserver.current_user = @current_user
@@ -144,11 +139,12 @@ class ApplicationController < ActionController::Base
   	  when ActionController::RoutingError
   	    render_404 
   	  else 
+  	    
   	    @exception = e
-        @rescues_path = File.dirname(rescues_path("stub"))
-        @contents = render_to_string :file=>rescues_path('diagnostics'), :layout=>false
-        puts rescues_path("layout")
-        message = render_to_string :file=>rescues_path("layout"), :layout=>false
+        @rescues_path = "#{RAILS_ROOT}/app/views/rescues"
+        template = rescue_templates[e.class.name]
+        @contents = render_to_string :file=>"#{@rescues_path}/#{template}.erb", :layout=>false
+        message = render_to_string :file=>"#{@rescues_path}/layout.erb", :layout=>false
         Notifier.deliver_website_error(message)
   	    
   	    response = response_code_for_rescue(e)
