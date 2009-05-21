@@ -161,6 +161,9 @@ class Wiki < ActiveRecord::Base
         end
       end
     end
+    
+    last_permissions = perms_new
+    save
   end
 
   def safe_remove_permission_from_space(confluence, key, perm, subject=nil)
