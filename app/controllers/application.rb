@@ -142,7 +142,6 @@ class ApplicationController < ActionController::Base
   	  when ActiveRecord::RecordNotFound 
   	    render_404 
   	  else 
-
   	    @exception = e
         @rescues_path = File.dirname(rescues_path("stub"))
         @contents = render_to_string :file=>rescues_path('diagnostics'), :layout=>false
