@@ -32,7 +32,7 @@ class ApplicationController < ActionController::Base
   end
       
   def logged_in?
-    @current_user != false
+    current_user != false
   end
   
   def current_user
@@ -136,7 +136,7 @@ class ApplicationController < ActionController::Base
   	    super 
 	  end 
   end
-  
+
   def rescue_action_in_public(e) 
 	  case e 
   	  when ActiveRecord::RecordNotFound 
