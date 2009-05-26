@@ -10,7 +10,7 @@
 %>
 
 <h2 style="margin-top: 30px">Request</h2>
-<p><b>Uri</b>: <pre><%=h request.request_uri()  %></pre></p>
+<p><b>Uri</b>: <pre><%=h request.method()%> <%=h request.request_uri()  %></pre></p>
 <p><b>Parameters</b>: <pre><%=h request_dump %></pre></p>
 <p><b>Headers</b>: <pre><%=h request.headers.inspect.gsub(',', ",\n") %></pre></p>
 
