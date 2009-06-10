@@ -36,7 +36,7 @@ class GitRepo < ActiveRecord::Base
     
       # Only create the repo if it does not exist
       if !x.dir_exists?(repo_filepath, git_user)
-        x.system("mkdir -p #{repo_filepath} && cd #{repo_filepath} && git --bare init", git_user)==0 or raise 'Error creating git repo!'
+        x.system("sh -c 'mkdir -p #{repo_filepath} && cd #{repo_filepath} && git --bare init'", git_user)==0 or raise 'Error creating git repo!'
       end      
       x.write("#{project.name}\n", "#{repo_filepath}/description", git_user) 
 
