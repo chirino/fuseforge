@@ -32,10 +32,10 @@ class Wiki < ActiveRecord::Base
   end
   
   def before_destroy
-    Confluence.open(CONFLUENCE_CONFIG) do |confluence|
-      return true unless confluence.space_exist?s(key)
-      confluence.remove_space(key)   
-    end
+    # Confluence.open(CONFLUENCE_CONFIG) do |confluence|
+    #   return true unless confluence.space_exist?(key)
+    #   confluence.remove_space(key)   
+    # end
   end
   
   def is_active?
