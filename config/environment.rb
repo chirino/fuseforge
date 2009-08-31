@@ -24,16 +24,16 @@ Rails::Initializer.run do |config|
 
   # Specify gems that this application depends on. 
   # They can then be installed with "rake gems:install" on new installations.
-  # config.gem "bj"
-  # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
-  # config.gem "aws-s3", :lib => "aws/s3"
-  config.gem "paperclip"
-  config.gem "searchlogic"
-  config.gem "friendly_id"
-#  config.gem "rspec"
-#  config.gem "rspec-rails"
-#  config.gem "crowd"
-
+  config.gem "paperclip",   :version => '2.1.2'
+  config.gem "searchlogic", :version => '1.6.6'
+  config.gem "friendly_id", :version => '2.1.1'
+  config.gem "haml",        :version => '2.0.9'
+  config.gem "composite_primary_keys", :version => '2.2.2'
+  config.gem "rspec",       :version => '1.2.6',   :lib => "spec"
+  config.gem "net-ssh",     :version => '2.0.11',  :lib => "net/ssh"
+  config.gem "soap4r",      :version => '1.5.8',   :lib => "soap/soap"
+  config.gem "rubycrowd",   :version => '0.0.10',  :lib => "crowd"
+  
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named
