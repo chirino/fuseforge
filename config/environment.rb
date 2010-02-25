@@ -50,6 +50,8 @@ Rails::Initializer.run do |config|
   config.gem "net-ssh",     :version => '2.0.11',  :lib => "net/ssh"
   config.gem "soap4r",      :version => '1.5.8',   :lib => "soap/soap"
   config.gem "rubycrowd",   :version => '0.0.10',  :lib => "crowd"
+  config.gem "rest-client", :version => '1.3.1',   :lib => "rest_client"
+  config.gem "json",        :version => '1.2.0',   :lib => "json"
   
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
