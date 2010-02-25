@@ -162,6 +162,8 @@ class WebDavLocation < ActiveRecord::Base
       # Setup the role for members.
       #
       roles_by_name = nexus.get_roles_by_name
+      privileges_by_name = nexus.get_privileges_by_name;
+      
       roles = []
       roles << roles_by_name["Staging: Deployer (#{group_id})"]
       roles << roles_by_name["Nexus Developer Role"]
