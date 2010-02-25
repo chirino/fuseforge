@@ -18,6 +18,9 @@ require 'rubygems'
 require 'rest_client'
 require 'json'
 
+# Provides a simple interface to Nexus restful services.
+# 
+# @author <a href="http://hiramchirino.com">Hiram Chirino</a>
 class Nexus
     
   def self.open(config, &block)
@@ -34,7 +37,7 @@ class Nexus
   end
 
   def initialize(config)
-    @config = config
+    @url = config
   end
   
   def close
@@ -43,7 +46,7 @@ class Nexus
 private
     
   def url_base
-    "#{@config[:url]}/service/local"
+    "#{@url}/service/local"
   end
   
   def dc    
@@ -232,115 +235,3 @@ public
     Hash[ *get_privileges.collect {|x| [x["name"], x["id"]] }.flatten ]
   end 
 end
-
-conf = {
-  :url => 'http://admin:password@repo.fusesource.com/nexus',
-}
-
-Nexus.open(conf) do |nexus|
-  project_id = "scalate"
-  
-  group_id = "org.fusesource.#{project_id}"
-  target_id = nexus.get_repo_targets_by_name[group_id]
-  if( target_id == nil )
-    puts "creating the repo target"
-    target_id = nexus.post_repo_target("name"=>group_id, "patterns"=>[".*/org/fusesource/#{project_id}/.*"])["id"]
-  end
-  puts "repo target id is: #{target_id}"
-
-  staging_rule_set_id = nexus.get_staging_rule_sets_by_name["Maven Central Sync Validation"]
-
-  staging_profile_id = nexus.get_staging_profile_by_name[group_id]
-  if( !staging_profile_id ) 
-    staging_profile = {
-        "name"=>group_id,
-        "repositoryTargetId"=>target_id,
-        "promotionTargetRepository"=>"releases-to-central",
-        "closeRuleSets"=>[staging_rule_set_id]
-    }
-    staging_profile_id = nexus.post_staging_profile(staging_profile)["id"]
-  end
-  
-  privileges_by_name = nexus.get_privileges_by_name;
-  create_id = privileges_by_name["#{group_id} - all - (create)"]
-  read_id = privileges_by_name["#{group_id} - all - (read)"]
-  update_id = privileges_by_name["#{group_id} - all - (update)"]
-  delete_id = privileges_by_name["#{group_id} - all - (delete)"]
-
-  # Do we need to cerate the privileges??
-  if( !create_id || !read_id || !update_id )        
-    nexus.delete_privilege(create_id) if create_id
-    nexus.delete_privilege(read_id) if read_id
-    nexus.delete_privilege(update_id) if update_id
-    nexus.delete_privilege(delete_id) if delete_id
-    
-    rc = nexus.post_privileges_target("name"=>"#{group_id} - all", 
-        "repositoryTargetId"=>target_id,
-        "description"=>"#{group_id} - all").inspect
-
-    privileges_by_name = nexus.get_privileges_by_name;
-    delete_id = privileges_by_name["#{group_id} - all - (delete)"]
-  end
-  # Don't need the delete priv
-  nexus.delete_privilege(delete_id) if delete_id
-  
-  create_id = privileges_by_name["#{group_id} - snapshots - (create)"]
-  read_id = privileges_by_name["#{group_id} - snapshots - (read)"]
-  update_id = privileges_by_name["#{group_id} - snapshots - (update)"]
-  delete_id = privileges_by_name["#{group_id} - snapshots - (delete)"]
-  
-  if( !delete_id )        
-    nexus.delete_privilege(create_id) if create_id
-    nexus.delete_privilege(read_id) if read_id
-    nexus.delete_privilege(update_id) if update_id
-    nexus.delete_privilege(delete_id) if delete_id
-    
-    snapshot_repo_id = nexus.get_repositories_by_name["Snapshots"]
-    puts "snapshot repo id is: #{snapshot_repo_id}"
-
-    rc = nexus.post_privileges_target("name"=>"#{group_id} - snapshots", 
-        "repositoryTargetId"=>target_id,
-        "repositoryId"=>snapshot_repo_id,
-        "description"=>"#{group_id} - snapshots").inspect
-        
-    privileges_by_name = nexus.get_privileges_by_name;
-    create_id = privileges_by_name["#{group_id} - snapshots - (create)"]
-    read_id = privileges_by_name["#{group_id} - snapshots - (read)"]
-    update_id = privileges_by_name["#{group_id} - snapshots - (update)"]
-  end
-  # Don't need the these privs
-  nexus.delete_privilege(create_id) if create_id
-  nexus.delete_privilege(read_id) if read_id
-  nexus.delete_privilege(update_id) if update_id
-  
-  #
-  # Create the Role
-  #
-  roles_by_name = nexus.get_roles_by_name
-  roles = []
-  roles << roles_by_name["Staging: Deployer (#{group_id})"]
-  roles << roles_by_name["Nexus Developer Role"]
-  roles << roles_by_name["UI: Staging Repositories"]
-  roles << roles_by_name["Repo: All Repositories (Read)"]
-  
-  privileges = []
-  privileges << privileges_by_name["#{group_id} - all - (create)"]
-  privileges << privileges_by_name["#{group_id} - all - (read)"]
-  privileges << privileges_by_name["#{group_id} - all - (update)"]
-  privileges << privileges_by_name["#{group_id} - snapshots - (delete)"]
-  privileges << privileges_by_name["Staging: Profile #{group_id} - (promote)"]
-  
-  role = {"id"=>"forge-#{project_id}-members","name"=>"forge-#{project_id}-members",
-      "description"=>"Forge Role: forge-#{project_id}-members",
-      "sessionTimeout"=>60,"roles"=>roles,"privileges"=>privileges}
-      
-  if( roles_by_name["forge-#{project_id}-members"] ) 
-    puts "updating role: #{role.to_json}"
-    nexus.put_role(role)
-  else 
-    puts "creating role: #{role.to_json}"
-    nexus.post_role(role)
-  end
-
-
-end 

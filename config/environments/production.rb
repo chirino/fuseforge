@@ -66,5 +66,7 @@ GIT_CONFIG = {
   :home => '/var/forge/git',
   :forge_git_path => '/data/fuseforge/current/script/forge-git'  
 }
+NEXUS_CONFIG = { :url => "http://admin:password@repo.#{FUSESOURCE_DOMAIN}/nexus" }
+
 config.action_mailer.default_url_options = { :host => FUSESOURCE_DOMAIN }
 

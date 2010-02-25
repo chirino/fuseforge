@@ -16,6 +16,7 @@
 # ===========================================================================
 
 require 'command_executor'
+require 'nexus'
 
 class WebDavLocation < ActiveRecord::Base
   belongs_to :project
@@ -94,9 +95,109 @@ class WebDavLocation < ActiveRecord::Base
       end
     
     end
+    
+    # Now ask nexus to this project to deploy to it:
+    deploy_nexus_config
     true
     
   end 
+  
+  def deploy_nexus_config
+    Nexus.open(NEXUS_CONFIG[:url]) do |nexus|
+      group_id = "org.fusesource.#{key}"
+  
+      #
+      # Setup the repo target
+      #
+      target_id = nexus.get_repo_targets_by_name[group_id]
+      if( target_id == nil )
+        puts "creating the repo target"
+        target_id = nexus.post_repo_target("name"=>group_id, "patterns"=>[".*/org/fusesource/#{key}/.*"])["id"]
+      end
+
+      #
+      # Setup the staging profile
+      #
+      staging_rule_set_id = nexus.get_staging_rule_sets_by_name["Maven Central Sync Validation"]
+      staging_profile_id = nexus.get_staging_profile_by_name[group_id]
+      if( !staging_profile_id ) 
+        staging_profile = {
+            "name"=>group_id,
+            "repositoryTargetId"=>target_id,
+            "promotionTargetRepository"=>"releases-to-central",
+            "closeRuleSets"=>[staging_rule_set_id]
+        }
+        staging_profile_id = nexus.post_staging_profile(staging_profile)["id"]
+      end
+  
+      #
+      # Setup the repo target permissions
+      #
+      privileges_by_name = nexus.get_privileges_by_name;
+      names = ["create","read", "update", "delete"].collect {|x| "#{group_id} - all - (#{x})"}
+      privilege_ids = privileges_by_name.values_at(*names).compact
+      if( privilege_ids.length !=4 )
+        privilege_ids.each {|x| nexus.delete_privilege(x)}
+        nexus.post_privileges_target("name"=>"#{group_id} - all", 
+            "repositoryTargetId"=>target_id,
+            "description"=>"#{group_id} - all").inspect
+      end
+      exit 1
+  
+      names = ["create","read", "update", "delete"].collect {|x| "#{group_id} - snapshots - (#{x})"}
+      privilege_ids = privileges_by_name.values_at(*names).compact
+      if( privilege_ids.length !=4 )
+        privilege_ids.each {|x| nexus.delete_privilege(x)}
+        nexus.post_privileges_target("name"=>"#{group_id} - snapshots", 
+            "repositoryTargetId"=>target_id,
+            "repositoryId"=>snapshot_repo_id,
+            "description"=>"#{group_id} - snapshots").inspect
+      end
+  
+      #
+      # Setup the role for members.
+      #
+      roles_by_name = nexus.get_roles_by_name
+      roles = []
+      roles << roles_by_name["Staging: Deployer (#{group_id})"]
+      roles << roles_by_name["Nexus Developer Role"]
+      roles << roles_by_name["UI: Staging Repositories"]
+      roles << roles_by_name["Repo: All Repositories (Read)"]
+  
+      privileges = []
+      privileges << privileges_by_name["#{group_id} - all - (create)"]
+      privileges << privileges_by_name["#{group_id} - all - (read)"]
+      privileges << privileges_by_name["#{group_id} - all - (update)"]
+      privileges << privileges_by_name["#{group_id} - snapshots - (delete)"]
+      privileges << privileges_by_name["Staging: Profile #{group_id} - (promote)"]
+  
+      role_id = "forge-#{key}-members"
+      role = {"id"=>role_id,"name"=>role_id,
+          "description"=>"Forge Role: #{role_id}",
+          "sessionTimeout"=>60,"roles"=>roles,"privileges"=>privileges}
+      
+      if( roles_by_name["forge-#{key}-members"] ) 
+        nexus.put_role(role)
+      else 
+        nexus.post_role(role)
+      end
+
+      #
+      # Setup the role for admins.
+      #
+      role_id = "forge-#{key}-admins"
+      role = {"id"=>role_id,"name"=>role_id,
+          "description"=>"Forge Role: #{role_id}",
+          "sessionTimeout"=>60,"roles"=>["forge-#{key}-members"]}
+      if( roles_by_name[role_id] ) 
+        nexus.put_role(role)
+      else 
+        nexus.post_role(role)
+      end
+
+    end 
+    
+  end
   
   def update_permissions
     return true unless use_internal?
