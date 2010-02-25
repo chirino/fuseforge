@@ -33,7 +33,7 @@ require 'core_ext'
 # You can optionaly store the passwords this app uses in a seperate secrets.rb 
 # file.
 #
-if File.exists( File.join(File.dirname(__FILE__), 'secrets')+".rb" )
+if File.exists?( File.join(File.dirname(__FILE__), 'secrets')+".rb" )
   require File.join(File.dirname(__FILE__), 'secrets')
 end
 
