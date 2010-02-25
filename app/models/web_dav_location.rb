@@ -147,7 +147,6 @@ class WebDavLocation < ActiveRecord::Base
             "repositoryTargetId"=>target_id,
             "description"=>"#{group_id} - all").inspect
       end
-      exit 1
   
       names = ["create","read", "update", "delete"].collect {|x| "#{group_id} - snapshots - (#{x})"}
       privilege_ids = privileges_by_name.values_at(*names).compact
@@ -181,7 +180,7 @@ class WebDavLocation < ActiveRecord::Base
           "description"=>"Forge Role: #{role_id}",
           "sessionTimeout"=>60,"roles"=>roles,"privileges"=>privileges}
       
-      if( roles_by_name["forge-#{key}-members"] ) 
+      if( roles_by_name[role_id] ) 
         nexus.put_role(role)
       else 
         nexus.post_role(role)
