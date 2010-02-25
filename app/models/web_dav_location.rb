@@ -154,7 +154,7 @@ class WebDavLocation < ActiveRecord::Base
         privilege_ids.each {|x| nexus.delete_privilege(x)}
         nexus.post_privileges_target("name"=>"#{group_id} - snapshots", 
             "repositoryTargetId"=>target_id,
-            "repositoryId"=>snapshot_repo_id,
+            "repositoryId"=>"snapshots",
             "description"=>"#{group_id} - snapshots").inspect
       end
   
