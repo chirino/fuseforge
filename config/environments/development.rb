@@ -41,8 +41,12 @@ CROWD_URL = "#{FUSESOURCE_URL}/crowd"
 JIRA_URL = "#{FUSESOURCE_URL}/issues"
 CROWD_COOKIE_DOMAIN_NAME = ".#{FUSESOURCE_DOMAIN}" 
 
-JIRA_CONFIG = { :url => JIRA_URL, :login=>'forgeadmin', :password=>'password' }
-CONFLUENCE_CONFIG = { :url => "#{FUSESOURCE_URL}/wiki", :login=>'forgeadmin', :password=>'password' }
+FORGEADMIN_USER_LOGIN = "forgeadmin" unless defined? FORGEADMIN_USER_LOGIN
+FORGEADMIN_USER_PASSWORD = "password" unless defined? FORGEADMIN_USER_PASSWORD
+
+JIRA_CONFIG = { :url => JIRA_URL, :login=>FORGEADMIN_USER_LOGIN, :password=>FORGEADMIN_USER_PASSWORD }
+CONFLUENCE_CONFIG = { :url => "#{FUSESOURCE_URL}/wiki", :login=>FORGEADMIN_USER_LOGIN, :password=>FORGEADMIN_USER_PASSWORD }
+
 DAV_CONFIG = SVN_CONFIG = {
   :user=> "www-data",
 }
@@ -61,6 +65,6 @@ GIT_CONFIG = {
   :home => '/var/forge/git',
   :forge_git_path => '/data/fuseforge/current/script/forge-git'  
 }
-NEXUS_CONFIG = { :url => "http://admin:password@repo.#{FUSESOURCE_DOMAIN}/nexus" }
+NEXUS_CONFIG = { :url => "http://#{FORGEADMIN_USER_LOGIN}:#{FORGEADMIN_USER_PASSWORD}@repo.#{FUSESOURCE_DOMAIN}/nexus" }
 
 config.action_mailer.default_url_options = { :host => FUSESOURCE_DOMAIN }

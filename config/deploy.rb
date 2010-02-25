@@ -100,9 +100,10 @@ end
 # after "deploy:restart", "delayed_job:restart" 
 
 namespace :db do
-  desc "Make symlink for database yaml" 
+  desc "Make symlink for configuration files" 
   task :symlink do
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml" 
+    run "ln -nfs #{shared_path}/config/secrets.rb #{release_path}/config/secrets.rb" 
   end
 end
 

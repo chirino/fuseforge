@@ -29,6 +29,16 @@ require File.join(File.dirname(__FILE__), 'boot')
 
 require 'core_ext'
 
+#
+# You can optionaly store the passwords this app uses in a seperate secrets.rb 
+# file.
+#
+if File.exists( File.join(File.dirname(__FILE__), 'secrets')+".rb" )
+  require File.join(File.dirname(__FILE__), 'secrets')
+end
+
+COOKIE_SECRET = "1dc282af8b4f69fa721068b" unless defined? COOKIE_SECRET
+
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
@@ -76,7 +86,7 @@ Rails::Initializer.run do |config|
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
     :session_key => '_fuseforge_session',
-    :secret      => '1dc282af8b4f69fa721068b7442e452a1a5aca456b3d854969daf585725b4282c6e15e01d39122abbf1b7d81ff0d025eb1ec71de4e4312ec479af94b85f947cb'
+    :secret      => COOKIE_SECRET
   }
 
   # Use the database for sessions instead of the cookie-based default,
