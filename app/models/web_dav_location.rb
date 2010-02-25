@@ -102,6 +102,11 @@ class WebDavLocation < ActiveRecord::Base
     
   end 
   
+  #
+  # One day perhaps this should move to it's own class so that
+  # uses can disable web dav but enable nexues support.  But for now,
+  # web dav support implies nexus support.
+  #
   def deploy_nexus_config
     Nexus.open(NEXUS_CONFIG[:url]) do |nexus|
       group_id = "org.fusesource.#{key}"
@@ -194,7 +199,6 @@ class WebDavLocation < ActiveRecord::Base
       else 
         nexus.post_role(role)
       end
-
     end 
     
   end
