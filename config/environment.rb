@@ -37,7 +37,7 @@ if File.exists?( File.join(File.dirname(__FILE__), 'secrets')+".rb" )
   require File.join(File.dirname(__FILE__), 'secrets')
 end
 
-COOKIE_SECRET = "1dc282af8b4f69fa721068b" unless defined? COOKIE_SECRET
+COOKIE_SECRET = "72a16034d1b37d5dbf85ce46fd789438" unless defined? COOKIE_SECRET
 
 Rails::Initializer.run do |config|
   # Settings in config/environments/* take precedence over those specified here.
