@@ -23,99 +23,76 @@
     
 #overview
   .wrapper
-    .details
-      - if @project.is_private?
-        %div
-          .label
-            Visibility:
-          *** Private ***
-      %div
-        .label
-          Category:
-        = h @project.category.name
-      %div
-        .label
-          Status:
-        = h @project.status.name
-      %div
-        .label
-          Maturity:
-        = h @project.maturity.name
-      - unless @project.license.blank?
-        %div
-          .label
-            License:
-          - if @project.license == ProjectLicense.other
-            = link_to(h(@project.license.name), @project.other_license_url, :popup => true)
-          - else
-            = link_to(h(@project.license.name), @project.license.url, :popup => true)
-      %div
-        .label
-          Tags:
-        - @project.tags.each do |tag|
-          = link_to tag.name, projects_path(:tag => tag.name, :show_search_form => true)
     .logo
       = image_tag @project.image.url(:medium) if @project.image.valid?
     .message
       %h1
         = @project.name
       = sanitize @project.description
-#spot
-  .wrapper
-    .title
-    .content
-      %table
-        %tr
-          - if !@project.external_website.blank?
-            %td
-              %h2
-                Learn More
-              %a{ :href => url_for(@project.external_website) }
-                = image_tag('spot-learn-more.jpg', :alt => "Learn More")
-                %br
-                Documentation
-            %td
-              %h2
-                Get Started
-              %a{ :href => "#{url_for(@project.external_website)}/downloads" }
-                = image_tag('spot-download-releases.jpg', :alt => "Download Releases")
-                %br
-                Get the latest version here
-          %td
-            %h2
-              Get Involved
-            .spot-balloon
-              %ul
-                - if @project.forum.is_active?
-                  %li
-                    = link_to("Forums", @project.forum.url)
-                - unless @project.mailing_lists.empty?
-                  %li
-                    = link_to "Mailing Lists", project_mailing_lists_path(@project)
-                - if @project.issue_tracker.is_active?
-                  %li
-                    = link_to("Issue Tracker", @project.issue_tracker.url)
-                - if @project.wiki.is_active?
-                  %li
-                    = link_to("Wiki", @project.wiki.url)
-                - if @project.repository.is_active? || @project.git_repo.is_active?
-                  %li
-                    = link_to 'Source Code', source_project_path(:id => @project)  
-                - if @project.web_dav_location.is_active?
-                  %li
-                    = link_to("WebDAV", @project.web_dav_location.url)
-            Join the community!
-#news
-  .wrapper
-    %h1
-      Recent News
-    - @project.news_items.recent.each do |i|
-      .post
-        %h2
-          = link_to truncate(h(i.title), 55), project_project_news_item_path(:project_id => @project, :id => i)
-        = sanitize truncate(i.contents, 800)
-        .details
-          Posted by
-          = i.created_by.full_name
-          on
-          = i.created_at
+      
+.wrapper
+  #resources
+    %h3 Resource Links
+    - if !@project.external_website.blank?
+      %div
+        = link_to("Homepage", @project.forum.url)
+    - if @project.forum.is_active?
+      %div
+        = link_to("Forums", @project.forum.url)
+    - unless @project.mailing_lists.empty?
+      %div
+        = link_to "Mailing Lists", project_mailing_lists_path(@project)
+    - if @project.issue_tracker.is_active?
+      %div
+        = link_to("Issue Tracker", @project.issue_tracker.url)
+    - if @project.wiki.is_active?
+      %div
+        = link_to("Wiki", @project.wiki.url)
+    - if @project.repository.is_active? || @project.git_repo.is_active?
+      %div
+        = link_to 'Source Code', source_project_path(:id => @project)  
+    - if @project.web_dav_location.is_active?
+      %div
+        = link_to("WebDAV", @project.web_dav_location.url)
+  #classification
+    %h3 Classification
+    .details
+      - if @project.is_private?
+        %div
+          .label Visibility:
+          *** Private ***
+      %div
+        .label Category:
+        = h @project.category.name
+      %div
+        .label Status:
+        = h @project.status.name
+      %div
+        .label Maturity:
+        = h @project.maturity.name
+      - unless @project.license.blank?
+        %div
+          .label License:
+          - if @project.license == ProjectLicense.other
+            = link_to(h(@project.license.name), @project.other_license_url, :popup => true)
+          - else
+            = link_to(h(@project.license.name), @project.license.url, :popup => true)
+      %div
+        .label Tags:
+        - @project.tags.each do |tag|
+          = link_to tag.name, projects_path(:tag => tag.name, :show_search_form => true)
+          
+  - news_items = @project.news_items.recent          
+  - if news_items.size > 0
+    #news
+      %h1 Recent News
+      - news_items.each do |i|
+        .post
+          %h2
+            = link_to truncate(h(i.title), 55), project_project_news_item_path(:project_id => @project, :id => i)
+          = sanitize truncate(i.contents, 800)
+          .details
+            Posted by
+            = i.created_by.full_name
+            on
+            = i.created_at
