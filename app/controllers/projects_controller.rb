@@ -138,7 +138,7 @@ class ProjectsController < ApplicationController
   
   def validate_proj_sname
     if params[:proj_sname] && params[:proj_sname].length > 0
-      if (params[:proj_sname] =~ /\A([A-Z]+)\Z/)==nil
+      if (params[:proj_sname] =~ /\A([a-z]+)\Z/)==nil
         render :text=>"<font color='red'><b>Invalid Project Short Name</b></font>"
       elsif Project.exists?(:shortname=>params[:proj_sname])
         render :text=>"<font color='red'><b>Invalid Project Short Name - Project Short Name already taken</b></font>"
