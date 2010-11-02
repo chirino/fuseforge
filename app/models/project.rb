@@ -257,7 +257,8 @@ class Project < ActiveRecord::Base
   end  
   
   def external_website
-    external_url.blank? ? web_dav_location.website_url : external_url
+    # external_url.blank? ? web_dav_location.website_url : external_url
+    external_url
   end    
     
   def self.find_unapproved_by_id(project_shortname)
