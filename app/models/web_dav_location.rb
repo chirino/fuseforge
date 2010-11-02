@@ -62,7 +62,7 @@ class WebDavLocation < ActiveRecord::Base
     
   def website_url
     if use_internal?
-       "#{FORGE_URL}/sites/#{key}"
+       PROJECT_HOMEPAGE_PATTERN.gsub("@PROJECT@", key) 
     else
       nil
     end  

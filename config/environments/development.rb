@@ -34,6 +34,7 @@ config.action_controller.perform_caching             = false
 config.action_mailer.raise_delivery_errors = false
 
 FUSESOURCE_DOMAIN="fusesourcedev.com"
+PROJECT_HOMEPAGE_PATTERN="http://@PROJECT@.fusesourcedev.com"
 
 FUSESOURCE_URL="http://#{FUSESOURCE_DOMAIN}"
 FORGE_URL = "#{FUSESOURCE_URL}/forge"

@@ -43,6 +43,7 @@ config.action_controller.allow_forgery_protection    = false
 config.action_mailer.delivery_method = :test
 
 FUSESOURCE_DOMAIN="fusesourcedev.com"
+PROJECT_HOMEPAGE_PATTERN="http://@PROJECT@.fusesourcedev.com"
 
 FUSESOURCE_URL="http://#{FUSESOURCE_DOMAIN}"
 FORGE_URL = "#{FUSESOURCE_URL}/forge"

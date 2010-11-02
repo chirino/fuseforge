@@ -30,12 +30,17 @@
         = @project.name
       = sanitize @project.description
       
+    - if !@project.external_website.blank?
+    
+      %div{:style=>"padding:20px;"}
+        For more information, please visit: 
+        %div{:style=>"font-size:160%; font-weight:bold;"}
+          = link_to("The #{@project.name} Homepage", @project.external_website)
+      
 .wrapper
   #resources
+        
     %h3 Resource Links
-    - if !@project.external_website.blank?
-      %div
-        = link_to("Homepage", @project.forum.url)
     - if @project.forum.is_active?
       %div
         = link_to("Forums", @project.forum.url)
