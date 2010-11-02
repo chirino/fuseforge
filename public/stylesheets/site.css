@@ -219,7 +219,7 @@ div#footer { padding: 40px 0 20px 0; }
   width:520px;
   text-align:left;
 }
-#section div.left h1,#content div.right h1 {
+#section div.left h1,#main div.right h1 {
   font-size: 18pt;
 }
 
@@ -360,19 +360,19 @@ table.project-list td.description {
 /* ==================================================================== *
  * Form Sections
  * ==================================================================== */
-#content table.fieldset {
+#main table.fieldset {
   border-bottom: 1px solid #DFD3C3;
   margin: 10px;
   padding: 0px;
   width: 100%;
 }
-#content table.fieldset td, #content table.fieldset th {
+#main table.fieldset td, #main table.fieldset th {
   background-color: white;
   border-top: 1px solid #DFD3C3;
   color: inherit;
   padding: 6px;
 }
-#content table.fieldset th.label {
+#main table.fieldset th.label {
   padding-top: 10px;
   padding-right: 8px;
   vertical-align: top;
@@ -380,34 +380,34 @@ table.project-list td.description {
   width: 1%;
   text-align: left;
 }
-#content .fieldset label {
+#main .fieldset label {
   font-weight: normal;
 }
-#content table.fieldset th.label .optional {
+#main table.fieldset th.label .optional {
   color: #929488;
 }
-#content table.fieldset td.field {
+#main table.fieldset td.field {
   padding-left: 0px;
   padding-right: 10px;
   text-align: left;
 }
-#content #extended-metadata .fieldset td.field {
+#main #extended-metadata .fieldset td.field {
   width: 100%;
 }
-#content table.fieldset td.field .textbox,
-#content table.fieldset td.field textarea {
+#main table.fieldset td.field .textbox,
+#main table.fieldset td.field textarea {
   width: 99.5%;
   margin-right: -5px;
 }
-#content table.fieldset td.help {
+#main table.fieldset td.help {
   background-color: #E5EDF5;
   font-size: 80%;
   width: 31%;
 }
-#content table.fieldset input {
+#main table.fieldset input {
   font-size: 100%;
 }
-#content table.fieldset .checkbox {
+#main table.fieldset .checkbox {
   display: block;
   float: left;
   padding-top: 4px;
@@ -415,18 +415,18 @@ table.project-list td.description {
   width: 10em;
   text-align: left;
 }
-#content table.fieldset textarea {
+#main table.fieldset textarea {
   font-family: "Lucida Grande", "Bitstream Vera Sans", Helvetica, Verdana, Arial, sans-serif;
   font-size: 100%;
   width: 100%;
   margin-top: 4px;
   margin-bottom: 4px;  
 }
-#content table.fieldset .error-with-field small {
+#main table.fieldset .error-with-field small {
   color: red;
 }
 
-#content table.fieldset .ssh_key textarea {
+#main table.fieldset .ssh_key textarea {
   font-size: 8pt;
 }
 
