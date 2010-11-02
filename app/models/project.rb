@@ -27,7 +27,7 @@ class Project < ActiveRecord::Base
   
   has_friendly_id :shortname
   
-  def self.find_by_shortname(id, options)
+  def self.find_by_shortname(id, options={})
     super(id.downcase, options)
   end
   
