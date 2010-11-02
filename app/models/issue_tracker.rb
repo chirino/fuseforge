@@ -52,12 +52,12 @@ class IssueTracker < ActiveRecord::Base
   end
 
   def internal_url
-    "#{JIRA_INTERNAL_URL}#{project.shortname}"
+    "#{JIRA_INTERNAL_URL}#{project.shortname.upcase}"
   end  
 
   def exists_internally?
     Jira.open(JIRA_CONFIG) do |jira|
-      jira.project_key_exists?(self.project.shortname)
+      jira.project_key_exists?(self.project.shortname.upcase)
     end
   end  
   

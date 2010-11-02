@@ -32,7 +32,7 @@
         = form.text_field :shortname, :class => 'textbox'
         #status
         = observe_field  "project_shortname", :frequency => 0.10, :url => { :action=>'validate_proj_sname' },  :with => "'proj_sname='+escape(value)", :update => "status"
-      %td.help Required. Must be between 3-16 uppercase, alphabetic characters.  No numbers, spaces, hyphens, or underscores.
+      %td.help Required. Must be between 3-16 lowercase, alphabetic characters.  No numbers, spaces, hyphens, or underscores.
   %tr
     %th.label
       = form.label :image, "Logo"

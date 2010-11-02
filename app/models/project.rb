@@ -26,7 +26,15 @@ class Project < ActiveRecord::Base
   acts_as_taggable_on :tags
   
   has_friendly_id :shortname
-    
+  
+  def self.find_by_shortname(id, options)
+    super(id.downcase, options)
+  end
+  
+  def shortname()
+    super().downcase
+  end
+
   has_one :featured_project, :dependent => :destroy
   has_one :issue_tracker, :dependent => :destroy
   has_one :repository, :dependent => :destroy
@@ -114,7 +122,7 @@ class Project < ActiveRecord::Base
   validates_presence_of :other_license_url, :if => Proc.new { |x| x.license_id == ProjectLicense.other.id }
   
   validates_uniqueness_of :name, :shortname
-  validates_format_of :shortname, :with => /\A([A-Z0-9]+)\Z/, :allow_blank => true
+  validates_format_of :shortname, :with => /\A([a-z0-9]+)\Z/, :allow_blank => true
   
   validates_associated :status, :maturity, :updated_by, :license
   validates_associated :created_by, :on => :create
@@ -251,9 +259,9 @@ class Project < ActiveRecord::Base
   def external_website
     external_url.blank? ? web_dav_location.website_url : external_url
   end    
-  
+    
   def self.find_unapproved_by_id(project_shortname)
-    self.find(:first, :conditions => ['shortname = ? AND project_status_id = ?', project_shortname.upcase, ProjectStatus.unapproved.id])
+    self.find(:first, :conditions => ['shortname = ? AND project_status_id = ?', project_shortname, ProjectStatus.unapproved.id])
   end 
   
   def self.unfeatured
