@@ -242,7 +242,11 @@ class WebDavLocation < ActiveRecord::Base
     Options Indexes MultiViews FollowSymlinks
     AllowOverride FileInfo
     Order allow,deny
-    allow from all 
+    allow from all
+    <Files ~ "^\.ht">
+      Order deny,allow
+      Allow from all
+    </Files>
   </Directory>  
   <Location #{dav_prefix}/#{key}>
     Dav On
