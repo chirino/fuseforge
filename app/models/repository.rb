@@ -194,7 +194,7 @@ EOF
 
   PerlSetVar CrowdCacheEnabled on
   PerlSetVar CrowdCacheLocation #{SVN_ROOT}/crowd-cache
-  PerlSetVar CrowdCacheExpiry 300
+  PerlSetVar CrowdCacheExpiry 3600
 
   require valid-user
 

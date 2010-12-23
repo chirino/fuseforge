@@ -22,7 +22,7 @@ require 'capistrano/ext/multistage'
 
 set :application, 'fuseforge'
 
-set :repository, 'ssh://git@forge.fusesource.com/fuseforge.git'
+set :repository, 'git://github.com/chirino/fuseforge.git'
 set :scm, "git"
 set :branch, "master"
 
