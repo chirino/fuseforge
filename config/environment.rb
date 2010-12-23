@@ -102,6 +102,9 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # config.active_record.observers = :cacher, :garbage_collector
   config.active_record.observers = :user_action_observer, :project_observer
+  
+  require ‘openssl’
+  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
 end
 
 REDIRECT_BACK_COOKIE_NAME = 'fusesource.redirect_back'
