@@ -142,10 +142,10 @@ class Repository < ActiveRecord::Base
   end
 
   def crowd_app_name
-    CROWD_CONFIG["application_name"]
+    CROWD_CONFIG["http_application_name"]
   end
   def crowd_password
-    CROWD_CONFIG["application_password"]
+    CROWD_CONFIG["http_application_password"]
   end
   
   def post_commit_hook_content(ml)

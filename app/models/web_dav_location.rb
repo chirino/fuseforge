@@ -236,10 +236,10 @@ class WebDavLocation < ActiveRecord::Base
   end
   
   def crowd_app_name
-    CROWD_CONFIG["application_name"]
+    CROWD_CONFIG["http_application_name"]
   end
   def crowd_password
-    CROWD_CONFIG["application_password"]
+    CROWD_CONFIG["http_application_password"]
   end
 
   def apache_dav_file
