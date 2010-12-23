@@ -234,6 +234,13 @@ class WebDavLocation < ActiveRecord::Base
     end
     return groups
   end
+  
+  def crowd_app_name
+    CROWD_CONFIG["application_name"]
+  end
+  def crowd_password
+    CROWD_CONFIG["application_password"]
+  end
 
   def apache_dav_file
     rc = <<EOF
@@ -253,13 +260,13 @@ class WebDavLocation < ActiveRecord::Base
     AuthType Basic
     AuthName "FUSE Source Login"
     PerlAuthenHandler Apache::CrowdAuth
-    PerlSetVar CrowdAppName ruby
-    PerlSetVar CrowdAppPassword password
+    PerlSetVar CrowdAppName #{crowd_app_name}
+    PerlSetVar CrowdAppPassword #{crowd_password}
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
     PerlSetVar CrowdCacheEnabled on
-    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache/#{key}
+    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache
     PerlSetVar CrowdCacheExpiry 300
     require valid-user
   </Location>
@@ -279,13 +286,13 @@ EOF
     AuthType Basic
     AuthName "FUSE Source Login"
     PerlAuthenHandler Apache::CrowdAuth
-    PerlSetVar CrowdAppName ruby
-    PerlSetVar CrowdAppPassword password
+    PerlSetVar CrowdAppName #{crowd_app_name}
+    PerlSetVar CrowdAppPassword #{crowd_password}
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
     PerlSetVar CrowdCacheEnabled on
-    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache/#{key}
+    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache
     PerlSetVar CrowdCacheExpiry 300
     require valid-user
   </Location>
@@ -314,13 +321,13 @@ EOF
     AuthType Basic
     AuthName "FUSE Source Login"
     PerlAuthenHandler Apache::CrowdAuth
-    PerlSetVar CrowdAppName ruby
-    PerlSetVar CrowdAppPassword password
+    PerlSetVar CrowdAppName #{crowd_app_name}
+    PerlSetVar CrowdAppPassword #{crowd_password}
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
     PerlSetVar CrowdCacheEnabled on
-    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache/#{key}
+    PerlSetVar CrowdCacheLocation #{DAV_ROOT}/crowd-cache
     PerlSetVar CrowdCacheExpiry 300
     require valid-user
   </Location>

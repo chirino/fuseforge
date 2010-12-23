@@ -141,6 +141,13 @@ class Repository < ActiveRecord::Base
     self.project.shortname.downcase
   end
 
+  def crowd_app_name
+    CROWD_CONFIG["application_name"]
+  end
+  def crowd_password
+    CROWD_CONFIG["application_password"]
+  end
+  
   def post_commit_hook_content(ml)
     rc = <<EOS
 #!/bin/bash
@@ -178,15 +185,15 @@ EOF
   AuthName "FUSE Forge Repository"
 
   PerlAuthenHandler Apache::CrowdAuth
-  PerlSetVar CrowdAppName ruby
-  PerlSetVar CrowdAppPassword password
+  PerlSetVar CrowdAppName #{crowd_app_name}
+  PerlSetVar CrowdAppPassword #{crowd_app_password}
   PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
 
   PerlAuthzHandler Apache::CrowdAuthz
   PerlSetVar CrowdAuthzSVNAccessFile #{authz_filepath}
 
   PerlSetVar CrowdCacheEnabled on
-  PerlSetVar CrowdCacheLocation #{SVN_ROOT}/crowd-cache/#{key}
+  PerlSetVar CrowdCacheLocation #{SVN_ROOT}/crowd-cache
   PerlSetVar CrowdCacheExpiry 300
 
   require valid-user
