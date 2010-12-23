@@ -103,6 +103,8 @@ Rails::Initializer.run do |config|
   # config.active_record.observers = :cacher, :garbage_collector
   config.active_record.observers = :user_action_observer, :project_observer
   
+  CROWD_CONFIG = YAML::load(IO.read(File.join(RAILS_ROOT, 'config/crowd.yml')))
+  
 end
 
 REDIRECT_BACK_COOKIE_NAME = 'fusesource.redirect_back'
