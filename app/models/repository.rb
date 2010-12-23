@@ -144,7 +144,7 @@ class Repository < ActiveRecord::Base
   def crowd_app_name
     CROWD_CONFIG["http_application_name"]
   end
-  def crowd_password
+  def crowd_app_password
     CROWD_CONFIG["http_application_password"]
   end
   

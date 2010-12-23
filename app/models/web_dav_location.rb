@@ -238,7 +238,7 @@ class WebDavLocation < ActiveRecord::Base
   def crowd_app_name
     CROWD_CONFIG["http_application_name"]
   end
-  def crowd_password
+  def crowd_app_password
     CROWD_CONFIG["http_application_password"]
   end
 
@@ -261,7 +261,7 @@ class WebDavLocation < ActiveRecord::Base
     AuthName "FUSE Source Login"
     PerlAuthenHandler Apache::CrowdAuth
     PerlSetVar CrowdAppName #{crowd_app_name}
-    PerlSetVar CrowdAppPassword #{crowd_password}
+    PerlSetVar CrowdAppPassword #{crowd_app_password}
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
@@ -287,7 +287,7 @@ EOF
     AuthName "FUSE Source Login"
     PerlAuthenHandler Apache::CrowdAuth
     PerlSetVar CrowdAppName #{crowd_app_name}
-    PerlSetVar CrowdAppPassword #{crowd_password}
+    PerlSetVar CrowdAppPassword #{crowd_app_password}
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
@@ -322,7 +322,7 @@ EOF
     AuthName "FUSE Source Login"
     PerlAuthenHandler Apache::CrowdAuth
     PerlSetVar CrowdAppName #{crowd_app_name}
-    PerlSetVar CrowdAppPassword #{crowd_password}
+    PerlSetVar CrowdAppPassword #{crowd_app_password}
     PerlSetVar CrowdSOAPURL #{CROWD_URL}/services/SecurityServer
     PerlAuthzHandler Apache::CrowdAuthz
     PerlSetVar CrowdAllowedGroups #{apache_write_groups}
