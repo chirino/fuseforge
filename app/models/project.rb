@@ -253,7 +253,7 @@ class Project < ActiveRecord::Base
   end
   
   def unapproved_url
-    "#{FORGE_URL}/unapproved_projects/#{shortname.downcase}"
+    "#{FORGE_URL}/admin/unapproved_projects/#{shortname.downcase}"
   end  
   
   def external_website
